@@ -87,7 +87,6 @@ endif
 # bitcredit core #
 BITCREDIT_CORE_H = \
   addrman.h \
-  alert.h \
   base58.h \
   bidtracker.h \
   bloom.h \
@@ -153,6 +152,7 @@ BITCREDIT_CORE_H = \
   utilmoneystr.h \
   utiltime.h \
   validationinterface.h \
+  versionbits.h \
   wallet/crypter.h \
   wallet/db.h \
   wallet/rpcwallet.h \
@@ -176,7 +176,6 @@ libbitcredit_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCREDIT_INCLUDES) $(MINIUPNP
 libbitcredit_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcredit_server_a_SOURCES = \
   addrman.cpp \
-  alert.cpp \
   bidtracker.cpp \
   bloom.cpp \
   chain.cpp \
@@ -206,6 +205,7 @@ libbitcredit_server_a_SOURCES = \
   txdb.cpp \
   txmempool.cpp \
   validationinterface.cpp \
+  versionbits.cpp \
   $(BITCREDIT_CORE_H)
 
 if ENABLE_ZMQ

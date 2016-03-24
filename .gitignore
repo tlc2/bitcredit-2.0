@@ -1,12 +1,12 @@
 *.tar.gz
 
 *.exe
-src/bitcoin
-src/bitcoind
-src/bitcoin-cli
-src/bitcoin-tx
-src/test/test_bitcoin
-src/qt/test/test_bitcoin-qt
+src/bitcredit
+src/bitcreditd
+src/bitcredit-cli
+src/bitcredit-tx
+src/test/test_bitcredit
+src/qt/test/test_bitcredit-qt
 
 # autoreconf
 Makefile.in
@@ -29,8 +29,8 @@ config.log
 config.status
 configure
 libtool
-src/config/bitcoin-config.h
-src/config/bitcoin-config.h.in
+src/config/bitcredit-config.h
+src/config/bitcredit-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
@@ -43,6 +43,8 @@ src/qt/forms/ui_*.h
 
 src/qt/test/moc*.cpp
 
+cache.db
+*__pycache__
 .deps
 .dirstamp
 .libs
@@ -55,7 +57,7 @@ src/qt/test/moc*.cpp
 *.o
 *.o-*
 *.patch
-.bitcoin
+.bitcredit
 *.a
 *.pb.cc
 *.pb.h
@@ -74,16 +76,19 @@ src/qt/test/moc*.cpp
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-bitcoin-qt
-Bitcoin-Qt.app
+bitcredit-qt
+Bitcredit-Qt.app
 
 # Unit-tests
 Makefile.test
-bitcoin-qt_test
+bitcredit-qt_test
 src/test/buildenv.py
 
 # Resources cpp
 qrc_*.cpp
+
+# Qt creator
+*.pro.user
 
 # Mac specific
 .DS_Store
@@ -91,9 +96,8 @@ build
 
 #lcov
 *.gcno
-*.gcda
 /*.info
-test_bitcoin.coverage/
+test_bitcredit.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -101,16 +105,13 @@ coverage_percent.txt
 linux-coverage-build
 linux-build
 win32-build
-qa/pull-tester/run-bitcoind-for-test.sh
-qa/pull-tester/tests_config.py
+qa/pull-tester/run-bitcreditd-for-test.sh
+qa/pull-tester/tests-config.sh
 qa/pull-tester/cache/*
 qa/pull-tester/test.*/*
-qa/tmp
-cache/
-share/BitcoindComparisonTool.jar
 
 !src/leveldb*/Makefile
 
 /doc/doxygen/
 
-libbitcoinconsensus.pc
+libbitcreditconsensus.pc

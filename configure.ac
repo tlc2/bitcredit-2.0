@@ -87,12 +87,6 @@ AC_ARG_WITH([miniupnpc],
   [use_upnp=$withval],
   [use_upnp=auto])
 
-AC_ARG_WITH([curl],
-  [AS_HELP_STRING([--with-curl],
-  [enable CURL (default is yes if libcurl is found)])],
-  [use_curl=$withval],
-  [use_curl=auto])
-
 AC_ARG_ENABLE([upnp-default],
   [AS_HELP_STRING([--enable-upnp-default],
   [if UPNP is enabled, turn it on at startup (default is no)])],
