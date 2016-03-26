@@ -27,9 +27,10 @@
 #include "script/standard.h"
 #include "script/sigcache.h"
 #include "scheduler.h"
+#include "torcontrol.h"
+#include "trust.h"
 #include "txdb.h"
 #include "txmempool.h"
-#include "torcontrol.h"
 #include "ui_interface.h"
 #include "util.h"
 #include "utilmoneystr.h"
@@ -1245,6 +1246,20 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     if(!(boost::filesystem::exists(rawdata)))
         boost::filesystem::create_directory(rawdata);
+    
+    TrustEngine db;       
+	
+	if(!(boost::filesystem::exists(trustdb)))	
+		db.createdb();    
+
+    if(!(boost::filesystem::exists(biddir)))
+        boost::filesystem::create_directory(biddir);
+
+    fReindex = GetBoolArg("-reindex", false);
+	if (fReindex){
+		remove((GetDataDir() /"ratings/balances.dat").string().c_str());
+		remove((GetDataDir() / "ratings/rawdata.db" ).string().c_str());
+	}
         
     fReindex = GetBoolArg("-reindex", false);
 

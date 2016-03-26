@@ -3,7 +3,7 @@ DIST_SUBDIRS = secp256k1 univalue
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
 AM_CXXFLAGS = $(HARDENED_CXXFLAGS)
 AM_CPPFLAGS = $(HARDENED_CPPFLAGS)
-LIBS = -lcurl -lanl
+LIBS = -lcurl -lanl -lsqlite3
 if EMBEDDED_UNIVALUE
 LIBUNIVALUE = univalue/libunivalue.la
 
@@ -144,6 +144,7 @@ BITCREDIT_CORE_H = \
   threadsafety.h \
   timedata.h \
   torcontrol.h \
+  trust.h \
   txdb.h \
   txmempool.h \
   ui_interface.h \
@@ -202,6 +203,7 @@ libbitcredit_server_a_SOURCES = \
   script/sigcache.cpp \
   timedata.cpp \
   torcontrol.cpp \
+  trust.cpp \
   txdb.cpp \
   txmempool.cpp \
   validationinterface.cpp \
