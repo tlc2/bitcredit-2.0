@@ -305,7 +305,8 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
         // Compute final coinbase transaction.
         CAmount totalvalue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
-        txNew.vout[1].nValue = 0.3* totalvalue;
+        txNew.vout[1].nValue = 0.2* totalvalue;
+        totalvalue -= (0.2* totalvalue);
        
 		if (bidtracker.size()>0){
 			int i=2;
