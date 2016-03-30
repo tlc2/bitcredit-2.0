@@ -10,6 +10,7 @@
 #include "net.h"
 
 #include "addrman.h"
+#include "bidtracker.h"
 #include "chainparams.h"
 #include "clientversion.h"
 #include "consensus/consensus.h"
@@ -40,7 +41,7 @@
 
 // Dump addresses to peers.dat and banlist.dat every 15 minutes (900s)
 #define DUMP_ADDRESSES_INTERVAL 900
-
+#define UPDATE_BID_INTERVAL 600
 #if !defined(HAVE_MSG_NOSIGNAL) && !defined(MSG_NOSIGNAL)
 #define MSG_NOSIGNAL 0
 #endif
@@ -1996,6 +1997,10 @@ void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // Dump network addresses
     scheduler.scheduleEvery(&DumpData, DUMP_ADDRESSES_INTERVAL);
+
+    // Update Bids 
+    //threadGroup.create_thread(boost::bind(&LoopForever<void (*)()>, "updatebids", &getbids, UPDATE_BID_INTERVAL * 1000));
+	scheduler.scheduleEvery(&getbids, UPDATE_BID_INTERVAL *1000);
 }
 
 bool StopNode()

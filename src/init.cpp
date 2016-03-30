@@ -196,6 +196,7 @@ void Shutdown()
     if (pwalletMain)
         pwalletMain->Flush(false);
 #endif
+    GenerateBitcredits(false, 0, Params());
     StopNode();
     StopTorControl();
     UnregisterNodeSignals(GetNodeSignals());
@@ -425,6 +426,8 @@ std::string HelpMessage(HelpMessageMode mode)
         debugCategories += ", qt";
     strUsage += HelpMessageOpt("-debug=<category>", strprintf(_("Output debugging information (default: %u, supplying <category> is optional)"), 0) + ". " +
         _("If <category> is not supplied or if <category> = 1, output all debugging information.") + _("<category> can be:") + " " + debugCategories + ".");
+    strUsage += HelpMessageOpt("-gen", strprintf(_("Generate coins (default: %u)"), DEFAULT_GENERATE));
+    strUsage += HelpMessageOpt("-genproclimit=<n>", strprintf(_("Set the number of threads for coin generation if enabled (-1 = all cores, default: %d)"), DEFAULT_GENERATE_THREADS));
     if (showDebug)
         strUsage += HelpMessageOpt("-nodebug", "Turn off debugging messages, same as -debug=0");
     strUsage += HelpMessageOpt("-help-debug", _("Show all debugging options (usage: --help -help-debug)"));
@@ -1519,6 +1522,9 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     CScheduler::Function f = boost::bind(&PartitionCheck, &IsInitialBlockDownload,
                                          boost::ref(cs_main), boost::cref(pindexBestHeader), nPowTargetSpacing);
     scheduler.scheduleEvery(f, nPowTargetSpacing);
+
+    // Generate coins in the background
+    GenerateBitcredits(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), chainparams);
 
     // ********************************************************* Step 12: finished
 
