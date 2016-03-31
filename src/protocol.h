@@ -217,6 +217,12 @@ extern const char *SENDHEADERS;
  * @since protocol version 70013 as described by BIP133
  */
 extern const char *FEEFILTER;
+extern const char *DSTX;
+extern const char *TXLVOTE;
+extern const char *TXLREQ;
+extern const char *SPORK;
+extern const char *MNW;
+extern const char *MNSE;
 };
 
 /* Get a vector of all valid message types (see above) */
@@ -314,6 +320,11 @@ enum {
     // Nodes may always request a MSG_FILTERED_BLOCK in a getdata, however,
     // MSG_FILTERED_BLOCK should not appear in any invs except as a part of getdata.
     MSG_FILTERED_BLOCK,
+    MSG_TXLOCK_REQUEST,
+    MSG_TXLOCK_VOTE,
+    MSG_SPORK,
+    MSG_BASENODE_WINNER,
+    MSG_BASENODE_SCANNING_ERROR
 };
 
 #endif // BITCREDIT_PROTOCOL_H

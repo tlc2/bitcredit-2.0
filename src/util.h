@@ -40,6 +40,24 @@ public:
     boost::signals2::signal<std::string (const char* psz)> Translate;
 };
 
+extern bool fBaseNode;
+extern bool fLiteMode;
+extern int nInstantXDepth;
+extern int nDarksendRounds;
+extern int nAnonymizeBitcreditAmount;
+extern int nLiquidityProvider;
+extern bool fEnableDarksend;
+extern int64_t enforceBasenodePaymentsTime;
+extern std::string strBaseNodeAddr;
+extern int nBasenodeMinProtocol;
+extern int keysLoaded;
+extern int64_t nAdvertisedBalance;
+extern bool fSucessfullyLoaded;
+extern std::vector<int64_t> darkSendDenominations;
+extern std::string dbuser;
+extern std::string dbname;
+extern std::string dbport;
+extern std::string dbpass;
 extern std::map<std::string, std::string> mapArgs;
 extern std::map<std::string, std::vector<std::string> > mapMultiArgs;
 extern bool fDebug;
@@ -125,6 +143,7 @@ boost::filesystem::path GetDefaultDataDir();
 const boost::filesystem::path &GetDataDir(bool fNetSpecific = true);
 void ClearDatadirCache();
 boost::filesystem::path GetConfigFile();
+boost::filesystem::path GetBasenodeConfigFile();
 #ifndef WIN32
 boost::filesystem::path GetPidFile();
 void CreatePidFile(const boost::filesystem::path &path, pid_t pid);

@@ -86,8 +86,13 @@ endif
 .PHONY: FORCE check-symbols check-security
 # bitcredit core #
 BITCREDIT_CORE_H = \
+  activebasenode.h \
   addrman.h \
   base58.h \
+  basenode.h \
+  basenode-pos.h \
+  basenodeman.h \
+  basenodeconfig.h \
   bidtracker.h \
   bloom.h \
   chain.h \
@@ -107,13 +112,17 @@ BITCREDIT_CORE_H = \
   consensus/consensus.h \
   core_io.h \
   core_memusage.h \
+  darksend.h \
+  darksend-relay.h \
   httprpc.h \
   httpserver.h \
   init.h \
+  instantx.h \
   key.h \
   keystore.h \
   dbwrapper.h \
   limitedmap.h \
+  lz4/lz4.h \
   main.h \
   memusage.h \
   merkleblock.h \
@@ -135,6 +144,7 @@ BITCREDIT_CORE_H = \
   script/sigcache.h \
   script/sign.h \
   script/standard.h \
+  spork.h \
   streams.h \
   support/allocators/secure.h \
   support/allocators/zeroafterfree.h \
@@ -160,6 +170,7 @@ BITCREDIT_CORE_H = \
   wallet/wallet.h \
   wallet/wallet_ismine.h \
   wallet/walletdb.h \
+  xxhash/xxhash.h \
   zmq/zmqabstractnotifier.h \
   zmq/zmqconfig.h\
   zmq/zmqnotificationinterface.h \
@@ -181,6 +192,7 @@ libbitcredit_server_a_SOURCES = \
   bloom.cpp \
   chain.cpp \
   checkpoints.cpp \
+  darksend.cpp \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
@@ -194,6 +206,7 @@ libbitcredit_server_a_SOURCES = \
   policy/policy.cpp \
   pow.cpp \
   rest.cpp \
+  rpcdarksend.cpp \
   rpc/blockchain.cpp \
   rpc/mining.cpp \
   rpc/misc.cpp \
@@ -208,6 +221,7 @@ libbitcredit_server_a_SOURCES = \
   txmempool.cpp \
   validationinterface.cpp \
   versionbits.cpp \
+  xxhash/xxhash.c \
   $(BITCREDIT_CORE_H)
 
 if ENABLE_ZMQ
@@ -227,6 +241,14 @@ endif
 libbitcredit_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCREDIT_INCLUDES)
 libbitcredit_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcredit_wallet_a_SOURCES = \
+  activebasenode.cpp \
+  lz4/lz4.c \
+  basenode.cpp \
+  basenode-pos.cpp \
+  basenodeman.cpp \
+  basenodeconfig.cpp \
+  darksend.cpp \
+  instantx.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/rpcdump.cpp \
@@ -322,8 +344,10 @@ libbitcredit_util_a_SOURCES = \
   compat/glibc_sanity.cpp \
   compat/glibcxx_sanity.cpp \
   compat/strnlen.cpp \
+  darksend.cpp \
   random.cpp \
   rpc/protocol.cpp \
+  spork.cpp \
   support/cleanse.cpp \
   sync.cpp \
   util.cpp \

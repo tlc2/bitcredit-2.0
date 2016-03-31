@@ -358,6 +358,7 @@ public:
     // b) the peer may tell us in its version message that we should not relay tx invs
     //    unless it loads a bloom filter.
     bool fRelayTxes;
+    bool fDarkSendMaster;
     CSemaphoreGrant grantOutbound;
     CCriticalSection cs_filter;
     CBloomFilter* pfilter;
@@ -381,6 +382,8 @@ protected:
 
     // Basic fuzz-testing
     void Fuzz(int nChance); // modifies ssSend
+
+    std::vector<std::string> vecRequestsFulfilled; //keep track of what client has asked for
 
 public:
     uint256 hashContinue;
@@ -701,6 +704,20 @@ public:
             throw;
         }
     }
+
+    bool HasFulfilledRequest(std::string strRequest)
+        {
+            BOOST_FOREACH(std::string& type, vecRequestsFulfilled)
+            {
+                if(type == strRequest) return true;
+            }
+            return false;
+        }
+    void FulfilledRequest(std::string strRequest)
+        {
+            if(HasFulfilledRequest(strRequest)) return;
+            vecRequestsFulfilled.push_back(strRequest);
+        }
 
     void CloseSocketDisconnect();
 

@@ -8,7 +8,9 @@
 #endif
 
 #include "init.h"
-
+#include "activebasenode.h"
+#include "basenodeman.h"
+#include "basenodeconfig.h"
 #include "addrman.h"
 #include "amount.h"
 #include "chain.h"
@@ -16,6 +18,7 @@
 #include "checkpoints.h"
 #include "compat/sanity.h"
 #include "consensus/validation.h"
+#include "darksend.h"
 #include "httpserver.h"
 #include "httprpc.h"
 #include "key.h"
@@ -27,6 +30,7 @@
 #include "script/standard.h"
 #include "script/sigcache.h"
 #include "scheduler.h"
+#include "spork.h"
 #include "torcontrol.h"
 #include "trust.h"
 #include "txdb.h"
@@ -34,6 +38,7 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "utilmoneystr.h"
+#include "version.h"
 #include "validationinterface.h"
 #ifdef ENABLE_WALLET
 #include "wallet/db.h"
@@ -198,6 +203,7 @@ void Shutdown()
 #endif
     GenerateBitcredits(false, 0, Params());
     StopNode();
+    DumpBasenodes();
     StopTorControl();
     UnregisterNodeSignals(GetNodeSignals());
 
@@ -1092,6 +1098,17 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
             return InitError(_("Unable to start HTTP server. See debug log for details."));
     }
 
+    if (mapArgs.count("-basenodepaymentskey")) // basenode payments priv key
+    {
+        if (!basenodePayments.SetPrivKey(GetArg("-basenodepaymentskey", "")))
+            return InitError(_("Unable to sign basenode payment winner, wrong key?"));
+        if (!sporkManager.SetPrivKey(GetArg("-basenodepaymentskey", "")))
+            return InitError(_("Unable to sign spork message, wrong key?"));
+    }
+
+    //ignore basenodes below protocol version
+    nBasenodeMinProtocol = GetArg("-basenodeminprotocol", MIN_PEER_PROTO_VERSION);
+
     int64_t nStart;
 
     // ********************************************************* Step 5: verify wallet database integrity
@@ -1492,6 +1509,80 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         while (!fRequestShutdown && chainActive.Tip() == NULL)
             MilliSleep(10);
     }
+
+    // ********************************************************* Step 10: start node
+
+    uiInterface.InitMessage(_("Loading basenode cache..."));
+
+    CBasenodeDB mndb;
+    CBasenodeDB::ReadResult readResult = mndb.Read(mnodeman);
+    if (readResult == CBasenodeDB::FileError)
+        LogPrintf("Missing basenode cache file - nodecache.dat, will try to recreate\n");
+    else if (readResult != CBasenodeDB::Ok)
+    {
+        LogPrintf("Error reading nodecache.dat: ");
+        if(readResult == CBasenodeDB::IncorrectFormat)
+            LogPrintf("magic is ok but data has invalid format, will try to recreate\n");
+        else
+            LogPrintf("file format is unknown or invalid, please fix it manually\n");
+    }
+
+    
+    fBaseNode = GetBoolArg("-basenode", false);
+    if(fBaseNode) {
+        LogPrintf("IS BITCREDIT BASE NODE\n");
+        strBaseNodeAddr = GetArg("-basenodeaddr", "");
+
+        LogPrintf(" addr %s\n", strBaseNodeAddr.c_str());
+
+        if(!strBaseNodeAddr.empty()){
+            CService addrTest = CService(strBaseNodeAddr);
+            if (!addrTest.IsValid()) {
+                return InitError("Invalid -basenodeaddr address: " + strBaseNodeAddr);
+            }
+        }
+
+        strBaseNodePrivKey = GetArg("-basenodeprivkey", "");
+        if(!strBaseNodePrivKey.empty()){
+            std::string errorMessage;
+
+            CKey key;
+            CPubKey pubkey;
+
+            if(!darkSendSigner.SetKey(strBaseNodePrivKey, errorMessage, key, pubkey))
+            {
+                return InitError(_("Invalid basenodeprivkey. Please see documenation."));
+            }
+
+            activeBasenode.pubKeyBasenode = pubkey;
+
+        } else {
+            return InitError(_("You must specify a basenodeprivkey in the configuration. Please see documentation for help."));
+        }
+    }
+
+    if(GetBoolArg("-bnconflock", true) && pwalletMain) {
+        LOCK(pwalletMain->cs_wallet);
+        LogPrintf("Locking Basenodes:\n");
+        uint256 mnTxHash;
+        BOOST_FOREACH(CBasenodeConfig::CBasenodeEntry mne, basenodeConfig.getEntries()) {
+            LogPrintf("  %s %s\n", mne.getTxHash(), mne.getOutputIndex());
+            mnTxHash.SetHex(mne.getTxHash());
+            COutPoint outpoint = COutPoint(mnTxHash, boost::lexical_cast<unsigned int>(mne.getOutputIndex()));
+            pwalletMain->LockCoin(outpoint);
+        }
+    }
+
+
+    //lite mode disables all Basenode related functionality
+    fLiteMode = GetBoolArg("-litemode", false);
+    if(fBaseNode && fLiteMode){
+        return InitError("You can not start a basenode in litemode");
+    }
+
+    LogPrintf("fLiteMode %d\n", fLiteMode);
+
+
 
     // ********************************************************* Step 11: start node
 
