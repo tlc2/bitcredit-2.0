@@ -76,6 +76,14 @@ enum WalletFeature
     FEATURE_LATEST = 60000
 };
 
+enum AvailableCoinsType
+{
+    ALL_COINS = 1,
+    ONLY_DENOMINATED = 2,
+    ONLY_NONDENOMINATED = 3,
+    ONLY_NONDENOMINATED_NOTMN = 4 // ONLY_NONDENOMINATED and not 50000 BCR at the same time
+};
+
 
 /** A key pool entry */
 class CKeyPool
@@ -574,6 +582,21 @@ private:
     void SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator>);
 
 public:
+
+    bool SelectCoins2(CAmount nTargetValue, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, int64_t& nValueRet, const CCoinControl *coinControl = NULL, AvailableCoinsType coin_type=ALL_COINS, bool useIX = true) const;
+    bool SelectCoinsDark(int64_t nValueMin, int64_t nValueMax, std::vector<CTxIn>& setCoinsRet, int64_t& nValueRet, int nDarksendRoundsMin, int nDarksendRoundsMax) const;
+    bool SelectCoinsByDenominations(int nDenom, int64_t nValueMin, int64_t nValueMax, std::vector<CTxIn>& setCoinsRet, std::vector<COutput>& vCoins, int64_t& nValueRet, int nDarksendRoundsMin, int nDarksendRoundsMax);
+    bool SelectCoinsDarkDenominated(int64_t nTargetValue, std::vector<CTxIn>& setCoinsRet, int64_t& nValueRet) const;
+    bool SelectCoinsBasenode(CTxIn& vin, int64_t& nValueRet, CScript& pubScript) const;
+    bool HasCollateralInputs() const;
+    bool IsCollateralAmount(int64_t nInputAmount) const;
+    int  CountInputsWithAmount(int64_t nInputAmount);
+
+    bool SelectCoinsCollateral(std::vector<CTxIn>& setCoinsRet, int64_t& nValueRet) const ;
+    bool SelectCoinsWithoutDenomination(int64_t nTargetValue, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, int64_t& nValueRet) const;
+    bool GetTransaction(const uint256 &hashTx, CWalletTx& wtx);
+
+
     /*
      * Main wallet lock.
      * This lock protects all the fields added by CWallet

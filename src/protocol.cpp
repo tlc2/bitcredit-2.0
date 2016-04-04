@@ -41,6 +41,7 @@ const char *TXLREQ="txlreq";
 const char *SPORK="spork";
 const char *MNW="mnw";
 const char *MNSE="mnse";
+const char *DSEE="dsee";
 };
 
 static const char* ppszTypeName[] =
@@ -82,7 +83,8 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::TXLREQ,
     NetMsgType::SPORK,
     NetMsgType::MNW,
-    NetMsgType::MNSE
+    NetMsgType::MNSE,
+    NetMsgType::DSEE
 };
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
 

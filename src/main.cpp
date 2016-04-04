@@ -18,7 +18,6 @@
 #include "darksend.h"
 #include "hash.h"
 #include "init.h"
-#include "instantx.h"
 #include "merkleblock.h"
 #include "net.h"
 #include "policy/fees.h"
@@ -1769,7 +1768,7 @@ bool AcceptableInputs(CTxMemPool& pool, CValidationState &state, const CTransact
 			CAmount nValueIn = view.GetValueIn(tx);
 			CAmount nValueOut = tx.GetValueOut();
 			CAmount nFees = nValueIn - nValueOut;
-			double dPriority = view.GetPriority(tx, chainActive.Height(),nValueIn);
+			//double dPriority = view.GetPriority(tx, chainActive.Height(),nValueIn);
 
 			//CTxMemPoolEntry entry(tx, nFees, GetTime(), dPriority, chainActive.Height());
 			unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
@@ -4711,11 +4710,6 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
         }
     case MSG_BLOCK:
         return mapBlockIndex.count(inv.hash);
-	case MSG_TXLOCK_REQUEST:
-		return mapTxLockReq.count(inv.hash)
-				|| mapTxLockReqRejected.count(inv.hash);
-	case MSG_TXLOCK_VOTE:
-		return mapTxLockVote.count(inv.hash);
 	case MSG_SPORK:
 		return mapSporks.count(inv.hash);
 	case MSG_BASENODE_WINNER:
@@ -4857,24 +4851,6 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
 					}
 				}
 
-					if (!pushed && inv.type == MSG_TXLOCK_VOTE) {
-						if (mapTxLockVote.count(inv.hash)) {
-							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-							ss.reserve(1000);
-							ss << mapTxLockVote[inv.hash];
-							pfrom->PushMessage(NetMsgType::TXLVOTE, ss);
-							pushed = true;
-						}
-					}
-					if (!pushed && inv.type == MSG_TXLOCK_REQUEST) {
-						if (mapTxLockReq.count(inv.hash)) {
-							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-							ss.reserve(1000);
-							ss << mapTxLockReq[inv.hash];
-							pfrom->PushMessage(NetMsgType::TXLREQ, ss);
-							pushed = true;
-						}
-					}
 					if (!pushed && inv.type == MSG_SPORK) {
 						if (mapSporks.count(inv.hash)) {
 							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
@@ -5906,7 +5882,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
 		darkSendPool.ProcessMessageDarksend(pfrom, strCommand, vRecv);
 		mnodeman.ProcessMessage(pfrom, strCommand, vRecv);
 		ProcessMessageBasenodePayments(pfrom, strCommand, vRecv);
-		ProcessMessageInstantX(pfrom, strCommand, vRecv);
 		ProcessSpork(pfrom, strCommand, vRecv);
 		ProcessMessageBasenodePOS(pfrom, strCommand, vRecv);
         // Ignore unknown commands for extensibility

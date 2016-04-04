@@ -465,7 +465,7 @@ UniValue basenode(const std::string params[], bool fHelp)
 			std::string errorMessage;
 
 			CTxIn vin = CTxIn(uint256S(mne.getTxHash()), uint32_t(atoi(mne.getOutputIndex().c_str())));
-            CBasenode *pmn = mnodeman.Find(vin);
+            //CBasenode *pmn = mnodeman.Find(vin);
 
 			bool result = activeBasenode.Register(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), errorMessage);
 

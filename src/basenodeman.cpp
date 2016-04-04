@@ -673,14 +673,14 @@ void CBasenodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
             }
 
             // verify that sig time is legit in past
-            // should be at least not earlier than block when 250K BCR tx got BASENODE_MIN_CONFIRMATIONS
+            // should be at least not earlier than block when 50K BCR tx got BASENODE_MIN_CONFIRMATIONS
             uint256 hashBlock = uint256S(itostr(0));
             CTransaction txVin;
-            GetTransaction(vin.prevout.hash, txVin, hashBlock, true);
+            GetTransaction(vin.prevout.hash, txVin, Params().GetConsensus(), hashBlock, true);
             BlockMap::const_iterator t = mapBlockIndex.find(hashBlock);
             if (t != mapBlockIndex.end() && (*t).second)
             {
-                CBlockIndex* pMNIndex = (*t).second; // block for 250K BCR tx -> 1 confirmation
+                CBlockIndex* pMNIndex = (*t).second; // block for 50K BCR tx -> 1 confirmation
                 CBlockIndex* pConfIndex = chainActive[pMNIndex->nHeight + BASENODE_MIN_CONFIRMATIONS - 1]; // block where tx got BASENODE_MIN_CONFIRMATIONS
                 if(pConfIndex->GetBlockTime() > sigTime)
                 {
@@ -864,6 +864,7 @@ void CBasenodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
                 if(fDebug) LogPrintf("dseg - Sending Basenode entry - %s \n", mn.addr.ToString().c_str());
                 if(vin == CTxIn()){
                     pfrom->PushMessage("dsee", mn.vin, mn.addr, mn.sig, mn.sigTime, mn.pubkey, mn.pubkey2, count, i, mn.lastTimeSeen, mn.protocolVersion);
+                    //pfrom->PushMessage(NetMsgType::DSEE, mn.protocolVersion, mn.vin, mn.addr, mn.sig, mn.sigTime, mn.pubkey, mn.pubkey2, count, i, mn.lastTimeSeen);
                 } else if (vin == mn.vin) {
                     pfrom->PushMessage("dsee", mn.vin, mn.addr, mn.sig, mn.sigTime, mn.pubkey, mn.pubkey2, count, i, mn.lastTimeSeen, mn.protocolVersion);
                     LogPrintf("dseg - Sent 1 Basenode entries to %s\n", pfrom->addr.ToString().c_str());

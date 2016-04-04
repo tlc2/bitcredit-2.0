@@ -113,11 +113,9 @@ BITCREDIT_CORE_H = \
   core_io.h \
   core_memusage.h \
   darksend.h \
-  darksend-relay.h \
   httprpc.h \
   httpserver.h \
   init.h \
-  instantx.h \
   key.h \
   keystore.h \
   dbwrapper.h \
@@ -192,10 +190,10 @@ libbitcredit_server_a_SOURCES = \
   bloom.cpp \
   chain.cpp \
   checkpoints.cpp \
-  darksend.cpp \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
+  darksend.cpp \
   dbwrapper.cpp \
   main.cpp \
   merkleblock.cpp \
@@ -248,7 +246,6 @@ libbitcredit_wallet_a_SOURCES = \
   basenodeman.cpp \
   basenodeconfig.cpp \
   darksend.cpp \
-  instantx.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/rpcdump.cpp \
@@ -344,7 +341,6 @@ libbitcredit_util_a_SOURCES = \
   compat/glibc_sanity.cpp \
   compat/glibcxx_sanity.cpp \
   compat/strnlen.cpp \
-  darksend.cpp \
   random.cpp \
   rpc/protocol.cpp \
   spork.cpp \

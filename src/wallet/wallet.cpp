@@ -6,11 +6,13 @@
 #include "wallet/wallet.h"
 
 #include "base58.h"
+#include "basenode.h"
 #include "checkpoints.h"
 #include "chain.h"
 #include "coincontrol.h"
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
+#include "darksend.h"
 #include "key.h"
 #include "keystore.h"
 #include "main.h"
@@ -20,6 +22,7 @@
 #include "primitives/transaction.h"
 #include "script/script.h"
 #include "script/sign.h"
+#include "spork.h"
 #include "timedata.h"
 #include "txmempool.h"
 #include "util.h"
@@ -1906,6 +1909,18 @@ bool CWallet::SelectCoins(const vector<COutput>& vAvailableCoins, const CAmount&
     nValueRet += nValueFromPresetInputs;
 
     return res;
+}
+
+bool CWallet::HasCollateralInputs() const
+{
+    vector<COutput> vCoins;
+    AvailableCoins(vCoins);
+
+    int nFound = 0;
+    BOOST_FOREACH(const COutput& out, vCoins)
+        if(IsCollateralAmount(out.tx->vout[out.i].nValue)) nFound++;
+
+    return nFound > 1; // should have more than one just in case
 }
 
 bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, int& nChangePosRet, std::string& strFailReason, bool includeWatching)

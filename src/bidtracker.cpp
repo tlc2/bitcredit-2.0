@@ -333,7 +333,7 @@ void Bidtracker::btcgetunspent()
 
 double Bidtracker::btcgetprice()
 {
-	CAmount price;
+	CAmount price = 0;
     std::string url;
     url = "https://blockchain.info/q/24hrprice";
 

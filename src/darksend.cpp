@@ -12,7 +12,6 @@
 #include "script/sign.h"
 #include "util.h"
 #include "basenodeman.h"
-#include "instantx.h"
 #include "ui_interface.h"
 #include "random.h"
 
@@ -946,7 +945,7 @@ void CDarksendPool::CheckForCompleteQueue(){
 }
 
 // check to see if the signature is valid
-/*
+
 bool CDarksendPool::SignatureValid(const CScript& newSig, const CTxIn& newVin){
 	CMutableTransaction txNew;
     txNew.vin.clear();
@@ -975,8 +974,9 @@ bool CDarksendPool::SignatureValid(const CScript& newSig, const CTxIn& newVin){
     if(found >= 0){ //might have to do this one input at a time?
         int n = found;
         txNew.vin[n].scriptSig = newSig;
+        const CMutableTransaction txNew1 = txNew;
         if(fDebug) LogPrintf("CDarksendPool::SignatureValid() - Sign with sig %s\n", newSig.ToString().substr(0,24).c_str());
-        if (!VerifyScript(txNew.vin[n].scriptSig, sigPubKey, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, TransactionSignatureChecker(txNew, n))){
+        if (!VerifyScript(txNew.vin[n].scriptSig, sigPubKey, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, MutableTransactionSignatureChecker(txNew1,n))){
             if(fDebug) LogPrintf("CDarksendPool::SignatureValid() - Signing - Error signing input %u\n", n);
             return false;
         }
@@ -985,7 +985,7 @@ bool CDarksendPool::SignatureValid(const CScript& newSig, const CTxIn& newVin){
     if(fDebug) LogPrintf("CDarksendPool::SignatureValid() - Signing - Successfully validated input\n");
     return true;
 }
-*/
+
 // check to make sure the collateral provided by the client is valid
 /*
 bool CDarksendPool::IsCollateralValid(const CTransaction& txCollateral){
