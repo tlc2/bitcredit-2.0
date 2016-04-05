@@ -1923,6 +1923,16 @@ bool CWallet::HasCollateralInputs() const
     return nFound > 1; // should have more than one just in case
 }
 
+bool CWallet::IsCollateralAmount(int64_t nInputAmount) const
+{
+    return  nInputAmount == (DARKSEND_COLLATERAL * 5)+DARKSEND_FEE ||
+            nInputAmount == (DARKSEND_COLLATERAL * 4)+DARKSEND_FEE ||
+            nInputAmount == (DARKSEND_COLLATERAL * 3)+DARKSEND_FEE ||
+            nInputAmount == (DARKSEND_COLLATERAL * 2)+DARKSEND_FEE ||
+            nInputAmount == (DARKSEND_COLLATERAL * 1)+DARKSEND_FEE;
+}
+
+
 bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, int& nChangePosRet, std::string& strFailReason, bool includeWatching)
 {
     vector<CRecipient> vecSend;

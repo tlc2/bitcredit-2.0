@@ -89,10 +89,6 @@ BITCREDIT_CORE_H = \
   activebasenode.h \
   addrman.h \
   base58.h \
-  basenode.h \
-  basenode-pos.h \
-  basenodeman.h \
-  basenodeconfig.h \
   bidtracker.h \
   bloom.h \
   chain.h \
@@ -122,6 +118,10 @@ BITCREDIT_CORE_H = \
   limitedmap.h \
   lz4/lz4.h \
   main.h \
+  basenode.h \
+  basenode-pos.h \
+  basenodeman.h \
+  basenodeconfig.h \
   memusage.h \
   merkleblock.h \
   miner.h \
@@ -131,6 +131,7 @@ BITCREDIT_CORE_H = \
   policy/fees.h \
   policy/policy.h \
   policy/rbf.h \
+  primitives/transaction.h \
   pow.h \
   protocol.h \
   random.h \
@@ -138,6 +139,7 @@ BITCREDIT_CORE_H = \
   rpc/client.h \
   rpc/protocol.h \
   rpc/server.h \
+  rpc/rpcbasenode.h \
   scheduler.h \
   script/sigcache.h \
   script/sign.h \
@@ -193,7 +195,6 @@ libbitcredit_server_a_SOURCES = \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
-  darksend.cpp \
   dbwrapper.cpp \
   main.cpp \
   merkleblock.cpp \
@@ -204,6 +205,7 @@ libbitcredit_server_a_SOURCES = \
   policy/policy.cpp \
   pow.cpp \
   rest.cpp \
+  basenode.cpp \
   rpcdarksend.cpp \
   rpc/blockchain.cpp \
   rpc/mining.cpp \
@@ -239,13 +241,6 @@ endif
 libbitcredit_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCREDIT_INCLUDES)
 libbitcredit_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcredit_wallet_a_SOURCES = \
-  activebasenode.cpp \
-  lz4/lz4.c \
-  basenode.cpp \
-  basenode-pos.cpp \
-  basenodeman.cpp \
-  basenodeconfig.cpp \
-  darksend.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/rpcdump.cpp \
@@ -254,7 +249,15 @@ libbitcredit_wallet_a_SOURCES = \
   wallet/wallet_ismine.cpp \
   wallet/walletdb.cpp \
   policy/rbf.cpp \
+  activebasenode.cpp \
+  lz4/lz4.c \
+  darksend.cpp \
+  basenode.cpp \
+  basenode-pos.cpp \
+  basenodeman.cpp \
+  basenodeconfig.cpp \
   $(BITCREDIT_CORE_H)
+
 
 # crypto primitives library
 crypto_libbitcredit_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCREDIT_CONFIG_INCLUDES)
@@ -327,6 +330,8 @@ libbitcredit_common_a_SOURCES = \
   scheduler.cpp \
   script/sign.cpp \
   script/standard.cpp \
+  primitives/transaction.cpp \
+  primitives/transaction.h \
   $(BITCREDIT_CORE_H)
 
 # util: shared between all executables.
@@ -343,8 +348,12 @@ libbitcredit_util_a_SOURCES = \
   compat/strnlen.cpp \
   random.cpp \
   rpc/protocol.cpp \
+  basenodeman.cpp \
+  darksend.cpp \
+  rpcdarksend.cpp \
   spork.cpp \
   support/cleanse.cpp \
+  primitives/transaction.cpp \
   sync.cpp \
   util.cpp \
   utilmoneystr.cpp \

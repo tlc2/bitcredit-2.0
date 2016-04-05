@@ -24,13 +24,13 @@
 using namespace std;
 
 
-UniValue basenodelist(const std::string params[], bool fHelp)
+UniValue basenodelist(const UniValue& params, bool fHelp)
 {
     std::string strMode = "status";
     std::string strFilter = "";
 
-    if (params->size() >= 1) strMode = params[0].c_str();
-    if (params->size() == 2) strFilter = params[1].c_str();
+    if (params.size() >= 1) strMode = params[0].getValStr().c_str();
+    if (params.size() == 2) strFilter = params[1].getValStr().c_str();
 
     if (fHelp ||
             (strMode != "status" && strMode != "vin" && strMode != "pubkey" && strMode != "lastseen" && strMode != "activeseconds" && strMode != "rank"
@@ -144,11 +144,11 @@ UniValue basenodelist(const std::string params[], bool fHelp)
 }
 
 
-UniValue basenode(const std::string params[], bool fHelp)
+UniValue basenode(const UniValue& params, bool fHelp)
 {
     string strCommand;
-    if (params->size() >= 1)
-        strCommand = params[0].c_str();
+    if (params.size() >= 1)
+        strCommand = params[0].getValStr().c_str();
 
     if (fHelp  ||
         (strCommand != "start" && strCommand != "start-alias" && strCommand != "start-many" && strCommand != "stop" && strCommand != "stop-alias" && strCommand != "stop-many" && strCommand != "list" && strCommand != "list-conf" && strCommand != "count"  && strCommand != "enforce"
@@ -188,8 +188,8 @@ UniValue basenode(const std::string params[], bool fHelp)
             SecureString strWalletPass;
             strWalletPass.reserve(100);
 
-            if (params->size() == 2){
-                strWalletPass = params[1].c_str();
+            if (params.size() == 2){
+                strWalletPass = params[1].getValStr().c_str();
             } else {
                 throw runtime_error(
                     "Your wallet is locked, passphrase is required\n");
@@ -214,19 +214,19 @@ UniValue basenode(const std::string params[], bool fHelp)
 
     if (strCommand == "stop-alias")
     {
-	    if (params->size() < 2){
+	    if (params.size() < 2){
 			throw runtime_error(
 			"command needs at least 2 parameters\n");
 	    }
 
-	    std::string alias = params[1].c_str();
+	    std::string alias = params[1].getValStr().c_str();
 
     	if(pwalletMain->IsLocked()) {
     		SecureString strWalletPass;
     	    strWalletPass.reserve(100);
 
-			if (params->size() == 3){
-				strWalletPass = params[2].c_str();
+			if (params.size() == 3){
+				strWalletPass = params[2].getValStr().c_str();
 			} else {
 				throw runtime_error(
 				"Your wallet is locked, passphrase is required\n");
@@ -271,8 +271,8 @@ UniValue basenode(const std::string params[], bool fHelp)
 			SecureString strWalletPass;
 			strWalletPass.reserve(100);
 
-			if (params->size() == 2){
-				strWalletPass = params[1].c_str();
+			if (params.size() == 2){
+				strWalletPass = params[1].getValStr().c_str();
 			} else {
 				throw runtime_error(
 				"Your wallet is locked, passphrase is required\n");
@@ -320,23 +320,25 @@ UniValue basenode(const std::string params[], bool fHelp)
 
     }
 
+    /*
     if (strCommand == "list")
     {
-    	std::string newParams[params->size() - 1];
-        std::copy(params->begin() + 1, params->end(), newParams->begin());
+    	std::string newParams[params.size() - 1];
+        std::copy(params. + 1, params.end(), newParams->begin());
         return basenodelist(newParams, fHelp);
     }
+    */
 
     if (strCommand == "count")
     {
-        if (params->size() > 2){
+        if (params.size() > 2){
             throw runtime_error(
             "too many parameters\n");
         }
-        if (params->size() == 2)
+        if (params.size() == 2)
         {
-            if(params[1].compare("enabled")) return mnodeman.CountEnabled();
-            if(params[1].compare("both")) return boost::lexical_cast<std::string>(mnodeman.CountEnabled()) + " / " + boost::lexical_cast<std::string>(mnodeman.size());
+            if(params[1].getValStr().c_str() == "enabled") return mnodeman.CountEnabled();
+            if(params[1].getValStr().c_str() == "both") return boost::lexical_cast<std::string>(mnodeman.CountEnabled()) + " / " + boost::lexical_cast<std::string>(mnodeman.size());
         }
         return mnodeman.size();
     }
@@ -349,8 +351,8 @@ UniValue basenode(const std::string params[], bool fHelp)
             SecureString strWalletPass;
             strWalletPass.reserve(100);
 
-            if (params->size() == 2){
-                strWalletPass = params[1].c_str();
+            if (params.size() == 2){
+                strWalletPass = params[1].getValStr().c_str();
             } else {
                 throw runtime_error(
                     "Your wallet is locked, passphrase is required\n");
@@ -380,19 +382,19 @@ UniValue basenode(const std::string params[], bool fHelp)
 
     if (strCommand == "start-alias")
     {
-	    if (params->size() < 2){
+	    if (params.size() < 2){
 			throw runtime_error(
 			"command needs at least 2 parameters\n");
 	    }
 
-	    std::string alias = params[1].c_str();
+	    std::string alias = params[1].getValStr().c_str();
 
     	if(pwalletMain->IsLocked()) {
     		SecureString strWalletPass;
     	    strWalletPass.reserve(100);
 
-			if (params->size() == 3){
-				strWalletPass = params[2].c_str();
+			if (params.size() == 3){
+				strWalletPass = params[2].getValStr().c_str();
 			} else {
 				throw runtime_error(
 				"Your wallet is locked, passphrase is required\n");
@@ -438,8 +440,8 @@ UniValue basenode(const std::string params[], bool fHelp)
 			SecureString strWalletPass;
 			strWalletPass.reserve(100);
 
-			if (params->size() == 2){
-				strWalletPass = params[1].c_str();
+			if (params.size() == 2){
+				strWalletPass = params[1].getValStr().c_str();
 			} else {
 				throw runtime_error(
 				"Your wallet is locked, passphrase is required\n");
@@ -577,8 +579,8 @@ UniValue basenode(const std::string params[], bool fHelp)
     if(strCommand == "connect")
     {
         std::string strAddress = "";
-        if (params->size() == 2){
-            strAddress = params[1];
+        if (params.size() == 2){
+            strAddress = params[1].getValStr().c_str();
         } else {
             throw runtime_error(
                 "Basenode address required\n");
@@ -631,10 +633,10 @@ UniValue basenode(const std::string params[], bool fHelp)
         std::vector<CBasenodeConfig::CBasenodeEntry> mnEntries;
         mnEntries = basenodeConfig.getEntries();
 
-        if (params->size() != 2)
+        if (params.size() != 2)
             throw runtime_error("You can only vote 'yea' or 'nay'");
 
-        std::string vote = params[1].c_str();
+        std::string vote = params[1].getValStr().c_str();
         if(vote != "yea" && vote != "nay") return "You can only vote 'yea' or 'nay'";
         int nVote = 0;
         if(vote == "yea") nVote = 1;
@@ -700,10 +702,10 @@ UniValue basenode(const std::string params[], bool fHelp)
         std::vector<CBasenodeConfig::CBasenodeEntry> mnEntries;
         mnEntries = basenodeConfig.getEntries();
 
-        if (params->size() != 2)
+        if (params.size() != 2)
             throw runtime_error("You can only vote 'yea' or 'nay'");
 
-        std::string vote = params[1].c_str();
+        std::string vote = params[1].getValStr().c_str();
         if(vote != "yea" && vote != "nay") return "You can only vote 'yea' or 'nay'";
         int nVote = 0;
         if(vote == "yea") nVote = 1;

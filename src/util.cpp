@@ -552,6 +552,14 @@ boost::filesystem::path GetConfigFile()
     return pathConfigFile;
 }
 
+boost::filesystem::path GetBasenodeConfigFile()
+{
+    boost::filesystem::path pathConfigFile(GetArg("-bnconf", "basenode.conf"));
+    if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir(false) / pathConfigFile;
+    return pathConfigFile;
+}
+
+
 void ReadConfigFile(map<string, string>& mapSettingsRet,
                     map<string, vector<string> >& mapMultiSettingsRet)
 {

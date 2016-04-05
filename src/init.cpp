@@ -9,6 +9,7 @@
 
 #include "init.h"
 #include "activebasenode.h"
+#include "basenode.h"
 #include "basenodeman.h"
 #include "basenodeconfig.h"
 #include "addrman.h"
@@ -356,6 +357,15 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-sysperms", _("Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)"));
 #endif
     strUsage += HelpMessageOpt("-txindex", strprintf(_("Maintain a full transaction index, used by the getrawtransaction rpc call (default: %u)"), DEFAULT_TXINDEX));
+
+    strUsage += HelpMessageGroup(_("Basenode options:"));
+    strUsage += HelpMessageOpt("-basenode=<n>", _("Enable the client to act as a basenode (0-1, default: 0)"));
+    strUsage += HelpMessageOpt("-bnconf=<file>", _("Specify basenode configuration file (default: basenode.conf)"));
+    strUsage += HelpMessageOpt("-bnconflock=<n>", _("Lock basenodes from basenode configuration file (default: 1)"));
+    strUsage += HelpMessageOpt("-basenodeprivkey=<n>", _("Set the basenode private key"));
+    strUsage += HelpMessageOpt("-basenodeaddr=<n>", _("Set external address:port to get to this basenode (example: address:port)"));
+    strUsage += HelpMessageOpt("-basenodeminprotocol=<n>", _("Ignore basenodes less than version (example: 70007; default : 0)"));
+
 
     strUsage += HelpMessageGroup(_("Connection options:"));
     strUsage += HelpMessageOpt("-addnode=<ip>", _("Add a node to connect to and attempt to keep the connection open"));

@@ -14,6 +14,8 @@
 #include "basenodeman.h"
 #include "ui_interface.h"
 #include "random.h"
+#include "consensus/validation.h"
+#include "primitives/transaction.h"
 
 #include <openssl/rand.h>
 
@@ -389,8 +391,9 @@ void CDarksendPool::ProcessMessageDarksend(CNode* pfrom, std::string& strCommand
 
 int randomizeList (int i) { return std::rand()%i;}
 
-/*
+
 // Recursively determine the rounds of a given input (How deep is the Darksend chain for a given input)
+/*
 int GetInputDarksendRounds(CTxIn in, int rounds)
 {
     static std::map<uint256, CMutableTransaction> mDenomWtxes;
@@ -480,7 +483,7 @@ int GetInputDarksendRounds(CTxIn in, int rounds)
 
     return rounds-1;
 }
-
+*/
 void CDarksendPool::Reset(){
     cachedLastSuccess = 0;
     vecBasenodesUsed.clear();
@@ -519,7 +522,7 @@ void CDarksendPool::SetNull(bool clearEverything){
     GetRandBytes((unsigned char*)&seed, sizeof(seed));
     std::srand(seed);
 }
-*/
+
 bool CDarksendPool::SetCollateralAddress(std::string strAddress){
     CBitcreditAddress address;
     if (!address.SetString(strAddress))
@@ -578,7 +581,7 @@ void CDarksendPool::Check()
             std::random_shuffle ( txNew.vout.begin(), txNew.vout.end(), randomizeList);
 
 
-            if(fDebug) LogPrintf("Transaction 1: %s\n", txNew.ToString().c_str());
+            //if(fDebug) LogPrintf("Transaction 1: %s\n", txNew.ToString().c_str());
             finalTransaction = txNew;
 
             // request signatures from clients
@@ -591,7 +594,7 @@ void CDarksendPool::Check()
         if(fDebug) LogPrintf("CDarksendPool::Check() -- SIGNING\n");
         UpdateState(POOL_STATUS_TRANSMISSION);
 
-        CheckFinalTransaction();
+        //CheckFinalTransaction();
     }
 
     // reset if we're here for 10 seconds
@@ -910,7 +913,7 @@ void CDarksendPool::CheckTimeout(){
 
     if(state == POOL_STATUS_SIGNING && GetTimeMillis()-lastTimeChanged >= (DARKSEND_SIGNING_TIMEOUT*1000)+addLagTime ) {
             if(fDebug) LogPrintf("CDarksendPool::CheckTimeout() -- Session timed out -- restting\n");
-            ChargeFees();
+            //ChargeFees();
             SetNull();
             UnlockCoins();
             //add my transactions to the new session
@@ -987,7 +990,7 @@ bool CDarksendPool::SignatureValid(const CScript& newSig, const CTxIn& newVin){
 }
 
 // check to make sure the collateral provided by the client is valid
-/*
+
 bool CDarksendPool::IsCollateralValid(const CTransaction& txCollateral){
     if(txCollateral.vout.size() < 1) return false;
     if(txCollateral.nLockTime != 0) return false;
@@ -1008,7 +1011,7 @@ bool CDarksendPool::IsCollateralValid(const CTransaction& txCollateral){
     BOOST_FOREACH(const CTxIn i, txCollateral.vin){
         CTransaction tx2;
         uint256 hash;
-        if(GetTransaction(i.prevout.hash, tx2, hash, true)){
+        if(GetTransaction(i.prevout.hash, tx2, Params().GetConsensus(), hash, true)){
             if(tx2.vout.size() > i.prevout.n) {
                 nValueIn += tx2.vout[i.prevout.n].nValue;
             }
@@ -1039,7 +1042,6 @@ bool CDarksendPool::IsCollateralValid(const CTransaction& txCollateral){
     return true;
 }
 
-*/
 //
 // Add a clients transaction to the pool
 //
@@ -1259,7 +1261,7 @@ bool CDarksendPool::StatusUpdate(int newState, int newEntriesCount, int newAccep
             LogPrintf("CDarksendPool::StatusUpdate - entry not accepted by Basenode \n");
             UnlockCoins();
             UpdateState(POOL_STATUS_ACCEPTING_ENTRIES);
-            DoAutomaticDenominating(); //try another Basenode
+            //DoAutomaticDenominating(); //try another Basenode
         }
         if(sessionFoundBasenode) return true;
     }
@@ -1276,7 +1278,7 @@ bool CDarksendPool::SignFinalTransaction(CMutableTransaction& finalTransactionNe
     if(fBaseNode) return false;
 
     finalTransaction = finalTransactionNew;
-    LogPrintf("CDarksendPool::SignFinalTransaction %s\n", finalTransaction.ToString().c_str());
+    //LogPrintf("CDarksendPool::SignFinalTransaction %s\n", finalTransaction.ToString().c_str());
 
     vector<CTxIn> sigs;
 
@@ -1335,7 +1337,7 @@ bool CDarksendPool::SignFinalTransaction(CMutableTransaction& finalTransactionNe
 
         }
 
-        if(fDebug) LogPrintf("CDarksendPool::Sign - txNew:\n%s", finalTransaction.ToString().c_str());
+        //if(fDebug) LogPrintf("CDarksendPool::Sign - txNew:\n%s", finalTransaction.ToString().c_str());
     }
 
 	// push all of our signatures to the Basenode
@@ -2048,31 +2050,23 @@ int CDarksendPool::GetDenominationsByAmount(int64_t nAmount, int nDenomTarget){
 
     return GetDenominations(vout1);
 }
-/*
+
 bool CDarkSendSigner::IsVinAssociatedWithPubkey(CTxIn& vin, CPubKey& pubkey){
     CScript payee2;
     payee2= GetScriptForDestination(pubkey.GetID());
 
     CTransaction txVin;
     uint256 hash;
-    if(GetTransaction(vin.prevout.hash, txVin, hash, true)){
-		    if (chainActive.Tip()->nHeight<145000) {
-        BOOST_FOREACH(CTxOut out, txVin.vout){
-            if(out.nValue == 250000*COIN){
-                if(out.scriptPubKey == payee2) return true;
-            }
-        }
-	 }else {
-        BOOST_FOREACH(CTxOut out, txVin.vout){
-            if(out.nValue == 50000*COIN){
-                if(out.scriptPubKey == payee2) return true;
-            }
-        }
+    if(GetTransaction(vin.prevout.hash, txVin, Params().GetConsensus(), hash, true)){
+    	BOOST_FOREACH(CTxOut out, txVin.vout){
+    		if(out.nValue == 50000*COIN){
+    			if(out.scriptPubKey == payee2) return true;
+    		}
+		}
     }
-	}
-    return false;
+	return false;
 }
-*/
+
 bool CDarkSendSigner::SetKey(std::string strSecret, std::string& errorMessage, CKey& key, CPubKey& pubkey){
     CBitcreditSecret vchSecret;
     bool fGood = vchSecret.SetString(strSecret);
