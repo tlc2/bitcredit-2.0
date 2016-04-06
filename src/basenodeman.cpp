@@ -616,6 +616,11 @@ void CBasenodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
             return;
         }
 
+		if(Params().NetworkIDString() == CBaseChainParams::MAIN){
+            if(addr.GetPort() != 2017) return;
+        } else if(addr.GetPort() == 2017) return;
+
+
         //search existing Basenode list, this is where we update existing Basenodes with new dsee broadcasts
         CBasenode* pmn = this->Find(vin);
         // if we are basenode but with undefined vin and this dsee is ours (matches our Basenode privkey) then just skip this part

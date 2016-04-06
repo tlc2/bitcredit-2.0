@@ -24,7 +24,7 @@
 #include "paymentserver.h"
 #include "walletmodel.h"
 #endif
-
+#include "basenodeconfig.h"
 #include "init.h"
 #include "rpc/server.h"
 #include "scheduler.h"
@@ -618,6 +618,13 @@ int main(int argc, char *argv[])
     initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
 #ifdef ENABLE_WALLET
+/// 7a. parse basenode.conf
+    std::string strErr;
+    if(!basenodeConfig.read(strErr)) {
+        QMessageBox::critical(0, QObject::tr("Bitcredit Core"),
+                              QObject::tr("Error reading basenode configuration file: %1").arg(strErr.c_str()));
+        return false;
+    }
     /// 8. URI IPC sending
     // - Do this early as we don't want to bother initializing if we are just calling IPC
     // - Do this *after* setting up the data directory, as the data directory hash is used in the name

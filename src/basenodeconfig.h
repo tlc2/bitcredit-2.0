@@ -12,6 +12,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/foreach.hpp>
 
 class CBasenodeConfig;
 extern CBasenodeConfig basenodeConfig;
@@ -94,8 +95,8 @@ public:
 
     int getCount() {
         int c = -1;
-        BOOST_FOREACH(CBasenodeEntry e, entries) {
-            if(e.getAlias() != "") c++;
+        BOOST_FOREACH(CBasenodeEntry ent, entries) {
+            if(ent.getAlias() != "") c++;
         }
         return c;
     }

@@ -363,7 +363,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-bnconf=<file>", _("Specify basenode configuration file (default: basenode.conf)"));
     strUsage += HelpMessageOpt("-bnconflock=<n>", _("Lock basenodes from basenode configuration file (default: 1)"));
     strUsage += HelpMessageOpt("-basenodeprivkey=<n>", _("Set the basenode private key"));
-    strUsage += HelpMessageOpt("-basenodeaddr=<n>", _("Set external address:port to get to this basenode (example: address:port)"));
+    strUsage += HelpMessageOpt("-basenodeaddr=<n>", _("Set external address:port to get to this basenode (example: 123.456.789.012:2017)"));
     strUsage += HelpMessageOpt("-basenodeminprotocol=<n>", _("Ignore basenodes less than version (example: 70007; default : 0)"));
 
 

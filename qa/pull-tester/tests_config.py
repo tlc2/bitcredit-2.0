@@ -3,7 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-BUILDDIR="/root/2.0/dragos/bitcredit-2.0"
+BUILDDIR="/home/sensei/2.0/bitcredit-2.0"
 EXEEXT=""
 
 # These will turn into comments if they were disabled when configuring.

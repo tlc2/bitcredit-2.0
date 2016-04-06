@@ -48,6 +48,18 @@ void CActiveBasenode::ManageStatus()
         }
 
         LogPrintf("CActiveBasenode::ManageStatus() - Checking inbound connection to '%s'\n", service.ToString().c_str());
+
+        if(Params().NetworkIDString() == CBaseChainParams::MAIN) {
+            if(service.GetPort() != 2017) {
+                notCapableReason = strprintf("Invalid port: %u - only 2017 is supported on mainnet.", service.GetPort());
+                LogPrintf("CActiveMasternode::ManageStatus() - not capable: %s\n", notCapableReason);
+                return;
+            }
+        } else if(service.GetPort() == 2017) {
+            notCapableReason = strprintf("Invalid port: %u - 2017 is only supported on mainnet.", service.GetPort());
+            LogPrintf("CActiveMasternode::ManageStatus() - not capable: %s\n", notCapableReason);
+            return;
+        }
       
             if(!ConnectNode((CAddress)service, service.ToString().c_str())){
                 notCapableReason = "Could not connect to " + service.ToString();
@@ -262,6 +274,23 @@ bool CActiveBasenode::RegisterByPubKey(std::string strService, std::string strKe
     	LogPrintf("Register::Register() - Error: %s\n", errorMessage.c_str());
 		return false;
 	}
+
+    CService service = CService(strService);
+    if(Params().NetworkIDString() == CBaseChainParams::MAIN) {
+        if(service.GetPort() != 2017) {
+            errorMessage = strprintf("Invalid port %u for masternode %s - only 2017 is supported on mainnet.", service.GetPort(), strService);
+            LogPrintf("CActiveMasternode::Register() - %s\n", errorMessage);
+            return false;
+        }
+    } else if(service.GetPort() == 2017) {
+        errorMessage = strprintf("Invalid port %u for masternode %s - 2017 is only supported on mainnet.", service.GetPort(), strService);
+        LogPrintf("CActiveMasternode::Register() - %s\n", errorMessage);
+        return false;
+    }
+
+    //addrman.Add(CAddress(service), CNetAddr("127.0.0.1"), 2*60*60);
+
+
 	return Register(vin, CService(strService), keyCollateralAddress, pubKeyCollateralAddress, keyBasenode, pubKeyBasenode, errorMessage);
 }
 

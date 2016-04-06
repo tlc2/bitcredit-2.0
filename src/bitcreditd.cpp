@@ -17,6 +17,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
+#include "basenodeconfig.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
@@ -115,6 +116,13 @@ bool AppInit(int argc, char* argv[])
             SelectParams(ChainNameFromCommandLine());
         } catch (const std::exception& e) {
             fprintf(stderr, "Error: %s\n", e.what());
+            return false;
+        }
+
+       // parse basenode.conf
+        std::string strErr;
+        if(!basenodeConfig.read(strErr)) {
+            fprintf(stderr,"Error reading basenode configuration file: %s\n", strErr.c_str());
             return false;
         }
 
