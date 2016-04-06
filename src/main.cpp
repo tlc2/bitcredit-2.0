@@ -8,12 +8,14 @@
 #include "addrman.h"
 #include "arith_uint256.h"
 #include "base58.h"
+#include "basenodeman.h"
 #include "chainparams.h"
 #include "checkpoints.h"
 #include "checkqueue.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
+#include "darksend.h"
 #include "hash.h"
 #include "init.h"
 #include "merkleblock.h"
@@ -27,6 +29,7 @@
 #include "script/script.h"
 #include "script/sigcache.h"
 #include "script/standard.h"
+#include "spork.h"
 #include "tinyformat.h"
 #include "trust.h"
 #include "txdb.h"
@@ -917,11 +920,29 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
     return nSigOps;
 }
 
+int GetInputAge(CTxIn& vin)
+{
+	// Fetch previous transactions (inputs):
+	CCoinsView viewDummy;
+	CCoinsViewCache view(&viewDummy);
+	{
+		LOCK(mempool.cs);
+		CCoinsViewCache &viewChain = *pcoinsTip;
+		CCoinsViewMemPool viewMempool(&viewChain, mempool);
+		view.SetBackend(viewMempool); // temporarily switch cache backend to db+mempool view
 
+		const uint256& prevHash = vin.prevout.hash;
+		CCoins coins;
+		view.GetCoins(prevHash, coins); // this is certainly allowed to fail
+		view.SetBackend(viewDummy); // switch back to avoid locking mempool for too long
+	}
 
+	if (!view.HaveCoins(vin.prevout.hash)) return -1;
+	CCoins coins;
+	view.GetCoins(vin.prevout.hash, coins);
 
-
-
+	return (chainActive.Tip()->nHeight + 1) - coins.nHeight;
+}
 
 
 bool CheckTransaction(const CTransaction& tx, CValidationState &state)
@@ -1551,6 +1572,12 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     return nSubsidy;
 }
 
+CAmount GetBasenodePayment(int nHeight, int64_t blockValue) {
+	int64_t ret = blockValue / 100 * 36;
+
+	return ret;
+}
+
 bool IsInitialBlockDownload()
 {
     const CChainParams& chainParams = Params();
@@ -1666,6 +1693,154 @@ void CheckForkWarningConditionsOnNewFork(CBlockIndex* pindexNewForkTip)
 
     CheckForkWarningConditions();
 }
+
+CAmount GetMinRelayFee(const CTransaction& tx, unsigned int nBytes, bool fAllowFree)
+{
+	{
+		LOCK(mempool.cs);
+		uint256 hash = tx.GetHash();
+		double dPriorityDelta = 0;
+		CAmount nFeeDelta = 0;
+		mempool.ApplyDeltas(hash, dPriorityDelta, nFeeDelta);
+		if (dPriorityDelta > 0 || nFeeDelta > 0)
+			return 0;
+	}
+
+	CAmount nMinFee = ::minRelayTxFee.GetFee(nBytes);
+
+	if (fAllowFree)
+	{
+		// There is a free transaction area in blocks created by most miners,
+		// * If we are relaying we allow transactions up to DEFAULT_BLOCK_PRIORITY_SIZE - 1000
+		//   to be considered to fall into this category. We don't want to encourage sending
+		//   multiple transactions instead of one big transaction to avoid fees.
+		if (nBytes < (DEFAULT_BLOCK_PRIORITY_SIZE - 1000))
+			nMinFee = 0;
+	}
+
+	if (!MoneyRange(nMinFee))
+		nMinFee = MAX_MONEY;
+	return nMinFee;
+}
+
+bool AcceptableInputs(CTxMemPool& pool, CValidationState &state, const CTransaction &tx, bool ignoreFees)
+{
+	AssertLockHeld(cs_main);
+
+	if (!CheckTransaction(tx, state))
+		return error("AcceptToMemoryPool: : CheckTransaction failed");
+
+	// Coinbase is only valid in a block, not as a loose transaction
+	if (tx.IsCoinBase())
+		return state.DoS(100, error("AcceptToMemoryPool: : coinbase as individual tx"),
+		REJECT_INVALID, "coinbase");
+
+	// is it already in the memory pool?
+	uint256 hash = tx.GetHash();
+	if (pool.exists(hash))
+		return false;
+
+	// Check for conflicts with in-memory transactions
+	{
+		LOCK(pool.cs); // protect pool.mapNextTx
+		for (unsigned int i = 0; i < tx.vin.size(); i++)
+		{
+			COutPoint outpoint = tx.vin[i].prevout;
+			if (pool.mapNextTx.count(outpoint))
+			{
+				// Disable replacement feature for now
+				return false;
+			}
+		}
+	}
+
+	{
+		CCoinsView dummy;
+		CCoinsViewCache view(&dummy);
+
+		{
+			LOCK(pool.cs);
+			CCoinsViewMemPool viewMemPool(pcoinsTip, pool);
+			view.SetBackend(viewMemPool);
+
+			// do we already have it?
+			if (view.HaveCoins(hash))
+				return false;
+
+			// do all inputs exist?
+			// Note that this does not check for the presence of actual outputs (see the next check for that),
+			// only helps filling in pfMissingInputs (to determine missing vs spent).
+			BOOST_FOREACH(const CTxIn txin, tx.vin) {
+				if (!view.HaveCoins(txin.prevout.hash)) {
+					return false;
+				}
+			}
+
+			// are the actual inputs available?
+			if (!view.HaveInputs(tx))
+				return state.Invalid(error("AcceptToMemoryPool : inputs already spent"),
+				REJECT_DUPLICATE, "bad-txns-inputs-spent");
+
+			// Bring the best block into scope
+			view.GetBestBlock();
+
+			// we have all inputs cached now, so switch back to dummy, so we don't need to keep lock on mempool
+			view.SetBackend(dummy);
+		}
+
+		// Don't accept it if it can't get into a block
+		if (!ignoreFees){
+			CAmount nValueIn = view.GetValueIn(tx);
+			CAmount nValueOut = tx.GetValueOut();
+			CAmount nFees = nValueIn - nValueOut;
+			//double dPriority = view.GetPriority(tx, chainActive.Height(),nValueIn);
+
+			//CTxMemPoolEntry entry(tx, nFees, GetTime(), dPriority, chainActive.Height());
+			unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
+			//unsigned int nSize = entry.GetTxSize();
+
+			CAmount txMinFee = GetMinRelayFee(tx, nSize, true);
+			if (nFees < txMinFee)
+				return state.DoS(0, error("AcceptToMemoryPool : not enough fees %s, %d < %d",
+				hash.ToString(), nFees, txMinFee),
+				REJECT_INSUFFICIENTFEE, "insufficient fee");
+
+			// Continuously rate-limit free transactions
+			// This mitigates 'penny-flooding' -- sending thousands of free transactions just to
+			// be annoying or make others' transactions take longer to confirm.
+			if (nFees < ::minRelayTxFee.GetFee(nSize))
+			{
+				static CCriticalSection csFreeLimiter;
+				static double dFreeCount;
+				static int64_t nLastTime;
+				int64_t nNow = GetTime();
+
+				LOCK(csFreeLimiter);
+
+				// Use an exponentially decaying ~10-minute window:
+				dFreeCount *= pow(1.0 - 1.0 / 600.0, (double)(nNow - nLastTime));
+				nLastTime = nNow;
+				// -limitfreerelay unit is thousand-bytes-per-minute
+				// At default rate it would take over a month to fill 1GB
+				if (dFreeCount >= GetArg("-limitfreerelay", 15) * 10 * 1000)
+					return state.DoS(0, error("AcceptToMemoryPool : free transaction rejected by rate limiter"),
+					REJECT_INSUFFICIENTFEE, "insufficient priority");
+				LogPrint("mempool", "Rate limit dFreeCount: %g => %g\n", dFreeCount, dFreeCount + nSize);
+				dFreeCount += nSize;
+			}
+		}
+
+		// Check against previous transactions
+		// This is done last to help prevent CPU exhaustion denial-of-service attacks.
+		if (!CheckInputs(tx, state, view, false, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, true))
+		{
+			return error("AcceptToMemoryPool: : ConnectInputs failed %s", hash.ToString());
+		}
+	}
+
+	return true;
+}
+
 
 // Requires cs_main.
 void Misbehaving(NodeId pnode, int howmuch)
@@ -3390,6 +3565,96 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         if (block.vtx[i].IsCoinBase())
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-multiple", false, "more than one coinbase");
 
+	// ----------- basenode payments -----------
+
+	bool BasenodePayments = false;
+
+	if (block.nTime > 1443657600)
+		BasenodePayments = true;
+
+	if (BasenodePayments) {
+		LOCK2(cs_main, mempool.cs);
+
+		CBlockIndex *pindex = chainActive.Tip();
+		if (pindex != NULL) {
+			if (pindex->GetBlockHash() == block.hashPrevBlock) {
+				CAmount basenodePaymentAmount = GetBasenodePayment(
+						pindex->nHeight + 1, block.vtx[0].GetValueOut());
+				bool fIsInitialDownload = IsInitialBlockDownload();
+
+				// If we don't already have its previous block, skip basenode payment step
+				if (!fIsInitialDownload && pindex != NULL) {
+					bool foundPaymentAmount = false;
+					bool foundPayee = false;
+					bool foundPaymentAndPayee = false;
+
+					CScript payee;
+					if (!basenodePayments.GetBlockPayee(
+							chainActive.Tip()->nHeight + 1, payee)
+							|| payee == CScript()) {
+						foundPayee = true; //doesn't require a specific payee
+						foundPaymentAmount = true;
+						foundPaymentAndPayee = true;
+						if (fDebug)
+							LogPrintf(
+									"CheckBlock() : Using non-specific basenode payments %d\n",
+									chainActive.Tip()->nHeight + 1);
+					}
+
+					for (unsigned int i = 0; i < block.vtx[0].vout.size();
+							i++) {
+						if (block.vtx[0].vout[i].nValue
+								== basenodePaymentAmount)
+							foundPaymentAmount = true;
+						if (block.vtx[0].vout[i].scriptPubKey == payee)
+							foundPayee = true;
+						if (block.vtx[0].vout[i].nValue == basenodePaymentAmount
+								&& block.vtx[0].vout[i].scriptPubKey == payee)
+							foundPaymentAndPayee = true;
+					}
+
+					if (!foundPaymentAndPayee) {
+						CTxDestination address1;
+						ExtractDestination(payee, address1);
+						CBitcreditAddress address2(address1);
+
+						LogPrintf(
+								"CheckBlock() : Couldn't find basenode payment(%d|%d) or payee(%d|%s) nHeight %d. \n",
+								foundPaymentAmount, basenodePaymentAmount,
+								foundPayee, address2.ToString().c_str(),
+								chainActive.Tip()->nHeight + 1);
+						return state.DoS(100,
+								error(
+										"CheckBlock() : Couldn't find basenode payment or payee"));
+					} else {
+						if (fDebug)
+							LogPrintf(
+									"CheckBlock() : Found basenode payment %d\n",
+									chainActive.Tip()->nHeight + 1);
+					}
+				} else {
+					if (fDebug)
+						LogPrintf(
+								"CheckBlock() : Is initial download, skipping basenode payment check %d\n",
+								chainActive.Tip()->nHeight + 1);
+				}
+			} else {
+				if (fDebug)
+					LogPrintf(
+							"CheckBlock() : Skipping basenode payment check - nHeight %d Hash %s\n",
+							chainActive.Tip()->nHeight + 1,
+							block.GetHash().ToString().c_str());
+			}
+		} else {
+			if (fDebug)
+				LogPrintf(
+						"CheckBlock() : pindex is null, skipping basenode payment check\n");
+		}
+	} else {
+		if (fDebug)
+			LogPrintf("CheckBlock() : skipping basenode payment checks\n");
+	}
+
     // Check transactions
     BOOST_FOREACH(const CTransaction& tx, block.vtx)
         if (!CheckTransaction(tx, state))
@@ -4470,9 +4735,15 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
         }
     case MSG_BLOCK:
         return mapBlockIndex.count(inv.hash);
-    }
-    // Don't know what it is, just say we already got one
-    return true;
+	case MSG_SPORK:
+		return mapSporks.count(inv.hash);
+	case MSG_BASENODE_WINNER:
+		return mapSeenBasenodeVotes.count(inv.hash);
+	case MSG_BASENODE_SCANNING_ERROR:
+		return mapBasenodeScanningErrors.count(inv.hash);
+	}
+	// Don't know what it is, just say we already got one
+	return true;
 }
 
 void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParams)
@@ -4556,67 +4827,109 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                             // no response
                     }
 
-                    // Trigger the peer node to send a getblocks request for the next batch of inventory
-                    if (inv.hash == pfrom->hashContinue)
-                    {
-                        // Bypass PushInventory, this must send even if redundant,
-                        // and we want it right after the last block so they don't
-                        // wait for other stuff first.
-                        vector<CInv> vInv;
-                        vInv.push_back(CInv(MSG_BLOCK, chainActive.Tip()->GetBlockHash()));
-                        pfrom->PushMessage(NetMsgType::INV, vInv);
-                        pfrom->hashContinue.SetNull();
-                    }
-                }
-            }
-            else if (inv.IsKnownType())
-            {
-                // Send stream from relay memory
-                bool pushed = false;
-                {
-                    LOCK(cs_mapRelay);
-                    map<CInv, CDataStream>::iterator mi = mapRelay.find(inv);
-                    if (mi != mapRelay.end()) {
-                        pfrom->PushMessage(inv.GetCommand(), (*mi).second);
-                        pushed = true;
-                    }
-                }
-                if (!pushed && inv.type == MSG_TX) {
-                    CTransaction tx;
-                    if (mempool.lookup(inv.hash, tx)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << tx;
-                        pfrom->PushMessage(NetMsgType::TX, ss);
-                        pushed = true;
-                    }
-                }
-                if (!pushed) {
-                    vNotFound.push_back(inv);
-                }
-            }
+					// Trigger the peer node to send a getblocks request for the next batch of inventory
+					if (inv.hash == pfrom->hashContinue) {
+						// Bypass PushInventory, this must send even if redundant,
+						// and we want it right after the last block so they don't
+						// wait for other stuff first.
+						vector<CInv> vInv;
+						vInv.push_back(
+								CInv(MSG_BLOCK,
+										chainActive.Tip()->GetBlockHash()));
+						pfrom->PushMessage(NetMsgType::INV, vInv);
+						pfrom->hashContinue.SetNull();
+					}
+				}
+			} else if (inv.IsKnownType()) {
+				// Send stream from relay memory
+				bool pushed = false;
+				{
+					LOCK(cs_mapRelay);
+					map<CInv, CDataStream>::iterator mi = mapRelay.find(inv);
+					if (mi != mapRelay.end()) {
+						pfrom->PushMessage(inv.GetCommand(), (*mi).second);
+						pushed = true;
+					}
+				}
+				if (!pushed && inv.type == MSG_TX) {
 
-            // Track requests for our stuff.
-            GetMainSignals().Inventory(inv.hash);
+					if (mapDarksendBroadcastTxes.count(inv.hash)) {
+						CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+						ss.reserve(1000);
+						ss << mapDarksendBroadcastTxes[inv.hash].tx
+								<< mapDarksendBroadcastTxes[inv.hash].vin
+								<< mapDarksendBroadcastTxes[inv.hash].vchSig
+								<< mapDarksendBroadcastTxes[inv.hash].sigTime;
 
-            if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK)
-                break;
-        }
-    }
+						pfrom->PushMessage(NetMsgType::DSTX, ss);
+						pushed = true;
+					} else {
 
-    pfrom->vRecvGetData.erase(pfrom->vRecvGetData.begin(), it);
+						CTransaction tx;
+						if (mempool.lookup(inv.hash, tx)) {
+							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+							ss.reserve(1000);
+							ss << tx;
+							pfrom->PushMessage(NetMsgType::TX, ss);
+							pushed = true;
+						}
+					}
+				}
 
-    if (!vNotFound.empty()) {
-        // Let the peer know that we didn't find what it asked for, so it doesn't
-        // have to wait around forever. Currently only SPV clients actually care
-        // about this message: it's needed when they are recursively walking the
-        // dependencies of relevant unconfirmed transactions. SPV clients want to
-        // do that because they want to know about (and store and rebroadcast and
-        // risk analyze) the dependencies of transactions relevant to them, without
-        // having to download the entire memory pool.
-        pfrom->PushMessage(NetMsgType::NOTFOUND, vNotFound);
-    }
-}
+					if (!pushed && inv.type == MSG_SPORK) {
+						if (mapSporks.count(inv.hash)) {
+							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+							ss.reserve(1000);
+							ss << mapSporks[inv.hash];
+							pfrom->PushMessage(NetMsgType::SPORK, ss);
+							pushed = true;
+						}
+					}
+					if (!pushed && inv.type == MSG_BASENODE_WINNER) {
+						if (mapSeenBasenodeVotes.count(inv.hash)) {
+							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+							ss.reserve(1000);
+							ss << mapSeenBasenodeVotes[inv.hash];
+							pfrom->PushMessage(NetMsgType::MNW, ss);
+							pushed = true;
+						}
+					}
+					if (!pushed && inv.type == MSG_BASENODE_SCANNING_ERROR) {
+						if (mapBasenodeScanningErrors.count(inv.hash)) {
+							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+							ss.reserve(1000);
+							ss << mapBasenodeScanningErrors[inv.hash];
+							pfrom->PushMessage(NetMsgType::MNSE, ss);
+							pushed = true;
+						}
+					}
+
+					if (!pushed) {
+						vNotFound.push_back(inv);
+					}
+				}
+
+				// Track requests for our stuff.
+				GetMainSignals().Inventory(inv.hash);
+
+				if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK)
+					break;
+			}
+		}
+
+		pfrom->vRecvGetData.erase(pfrom->vRecvGetData.begin(), it);
+
+		if (!vNotFound.empty()) {
+			// Let the peer know that we didn't find what it asked for, so it doesn't
+			// have to wait around forever. Currently only SPV clients actually care
+			// about this message: it's needed when they are recursively walking the
+			// dependencies of relevant unconfirmed transactions. SPV clients want to
+			// do that because they want to know about (and store and rebroadcast and
+			// risk analyze) the dependencies of transactions relevant to them, without
+			// having to download the entire memory pool.
+			pfrom->PushMessage(NetMsgType::NOTFOUND, vNotFound);
+		}
+	}
 
 bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, int64_t nTimeReceived)
 {
@@ -5051,7 +5364,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     }
 
 
-    else if (strCommand == NetMsgType::TX)
+    else if (strCommand == NetMsgType::TX && strCommand == NetMsgType::DSTX)
     {
         // Stop processing the transaction early if
         // We are in blocks only mode and peer is either not whitelisted or whitelistrelay is off
@@ -5065,6 +5378,54 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         vector<uint256> vEraseQueue;
         CTransaction tx;
         vRecv >> tx;
+
+			//basenode signed transaction
+			//bool allowFree = false;
+			CTxIn vin;
+			vector<unsigned char> vchSig;
+			int64_t sigTime;
+
+			if (strCommand == NetMsgType::TX) {
+				vRecv >> tx;
+			}
+			else if (strCommand == NetMsgType::DSTX) {
+				//these allow basenodes to publish a limited amount of free transactions
+				vRecv >> tx >> vin >> vchSig >> sigTime;
+
+				CBasenode* pmn = mnodeman.Find(vin);
+				if (pmn != NULL)
+				{
+					if (!pmn->allowFreeTx) {
+						//multiple peers can send us a valid basenode transaction
+						if (fDebug) LogPrintf("dstx: Basenode sending too many transactions %s\n", tx.GetHash().ToString().c_str());
+						return true;
+					}
+
+					std::string strMessage = tx.GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
+
+					std::string errorMessage = "";
+					if (!darkSendSigner.VerifyMessage(pmn->pubkey2, vchSig, strMessage, errorMessage)) {
+						LogPrintf("dstx: Got bad basenode address signature %s \n", vin.ToString().c_str());
+						//pfrom->Misbehaving(20);
+						return false;
+					}
+
+					LogPrintf("dstx: Got Basenode transaction %s\n", tx.GetHash().ToString().c_str());
+
+					//allowFree = true;
+					pmn->allowFreeTx = false;
+
+					if (!mapDarksendBroadcastTxes.count(tx.GetHash())) {
+						CDarksendBroadcastTx dstx;
+						dstx.tx = tx;
+						dstx.vin = vin;
+						dstx.vchSig = vchSig;
+						dstx.sigTime = sigTime;
+
+						mapDarksendBroadcastTxes.insert(make_pair(tx.GetHash(), dstx));
+					}
+				}
+			}
 
         CInv inv(MSG_TX, tx.GetHash());
         pfrom->AddInventoryKnown(inv);
@@ -5542,7 +5903,12 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         }
     }
 
-    else {
+	else {
+		darkSendPool.ProcessMessageDarksend(pfrom, strCommand, vRecv);
+		mnodeman.ProcessMessage(pfrom, strCommand, vRecv);
+		ProcessMessageBasenodePayments(pfrom, strCommand, vRecv);
+		ProcessSpork(pfrom, strCommand, vRecv);
+		ProcessMessageBasenodePOS(pfrom, strCommand, vRecv);
         // Ignore unknown commands for extensibility
         LogPrint("net", "Unknown command \"%s\" from peer=%d\n", SanitizeString(strCommand), pfrom->id);
     }

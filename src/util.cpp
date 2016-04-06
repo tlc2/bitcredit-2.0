@@ -99,6 +99,28 @@ namespace boost {
 
 using namespace std;
 
+//Dark  features
+bool fBaseNode = false;
+string strBaseNodePrivKey = "";
+string strBaseNodeAddr = "";
+bool fLiteMode = false;
+int nInstantXDepth = 1;
+int nDarksendRounds = 2;
+int nAnonymizeBitcreditAmount = 5000;
+int nLiquidityProvider = 0;
+/** Spork enforcement enabled time */
+int64_t enforceBasenodePaymentsTime = 4085657524;
+int nBasenodeMinProtocol = 0;
+bool fSucessfullyLoaded = false;
+bool fEnableDarksend = false;
+/** All denominations used by darksend */
+std::vector<int64_t> darkSendDenominations;
+int64_t nAdvertisedBalance = 0;
+string dbuser = "";
+string dbname = "";
+string dbport = "";
+string dbpass = "";
+
 const char * const BITCREDIT_CONF_FILENAME = "bitcredit.conf";
 const char * const BITCREDIT_PID_FILENAME = "bitcreditd.pid";
 
@@ -529,6 +551,14 @@ boost::filesystem::path GetConfigFile()
 
     return pathConfigFile;
 }
+
+boost::filesystem::path GetBasenodeConfigFile()
+{
+    boost::filesystem::path pathConfigFile(GetArg("-bnconf", "basenode.conf"));
+    if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir(false) / pathConfigFile;
+    return pathConfigFile;
+}
+
 
 void ReadConfigFile(map<string, string>& mapSettingsRet,
                     map<string, vector<string> >& mapMultiSettingsRet)

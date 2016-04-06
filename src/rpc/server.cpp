@@ -260,6 +260,10 @@ static const CRPCCommand vRPCCommands[] =
     { "control",            "help",                   &help,                   true  },
     { "control",            "stop",                   &stop,                   true  },
 
+    /* Basenode */
+    { "basenode",			"basenodelist",			  &basenodelist,		   true  },
+    { "basenode",			"basenode",			      &basenode,			   true  },
+
     /* P2P networking */
     { "network",            "getnetworkinfo",         &getnetworkinfo,         true  },
     { "network",            "addnode",                &addnode,                true  },
@@ -300,8 +304,6 @@ static const CRPCCommand vRPCCommands[] =
     /* Coin generation */
     { "generating",         "generate",               &generate,               true  },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true  },
-    { "generating",         "getgenerate",            &getgenerate,            true  },
-    { "generating",         "setgenerate",            &setgenerate,            true  },
 
     /* Raw transactions */
     { "rawtransactions",    "createrawtransaction",   &createrawtransaction,   true  },

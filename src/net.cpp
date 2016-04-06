@@ -427,6 +427,57 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest)
     return NULL;
 }
 
+CNode* ConnectNode(CAddress addrConnect, const char *pszDest, bool darkSendMaster)
+{
+    if (pszDest == NULL) {
+        if (IsLocal(addrConnect))
+            return NULL;
+
+        // Look for an existing connection
+        CNode* pnode = FindNode((CService)addrConnect);
+        if (pnode)
+        {
+            if(darkSendMaster)
+                pnode->fDarkSendMaster = true;
+
+            pnode->AddRef();
+            return pnode;
+        }
+    }
+
+    /// debug print
+    LogPrint("net", "trying connection %s lastseen=%.1fhrs\n",
+        pszDest ? pszDest : addrConnect.ToString(),
+        pszDest ? 0.0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
+
+    // Connect
+    SOCKET hSocket;
+    bool proxyConnectionFailed = false;
+    if (pszDest ? ConnectSocketByName(addrConnect, hSocket, pszDest, Params().GetDefaultPort(), nConnectTimeout, &proxyConnectionFailed) :
+                  ConnectSocket(addrConnect, hSocket, nConnectTimeout, &proxyConnectionFailed))
+    {
+        addrman.Attempt(addrConnect);
+
+        // Add node
+        CNode* pnode = new CNode(hSocket, addrConnect, pszDest ? pszDest : "", false);
+        pnode->AddRef();
+
+        {
+            LOCK(cs_vNodes);
+            vNodes.push_back(pnode);
+        }
+
+        pnode->nTimeConnected = GetTime();
+
+        return pnode;
+    } else if (!proxyConnectionFailed) {
+        // If connecting to the node failed, and failure is not caused by a problem connecting to
+        // the proxy, mark this as an attempt.
+        addrman.Attempt(addrConnect);
+    }
+
+    return NULL;
+}
 void CNode::CloseSocketDisconnect()
 {
     fDisconnect = true;

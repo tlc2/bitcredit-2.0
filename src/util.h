@@ -32,12 +32,32 @@ static const bool DEFAULT_LOGTIMEMICROS = false;
 static const bool DEFAULT_LOGIPS        = false;
 static const bool DEFAULT_LOGTIMESTAMPS = true;
 
+extern bool fBaseNode;
+extern bool fLiteMode;
+extern int nInstantXDepth;
+extern int nDarksendRounds;
+extern int nAnonymizeBitcreditAmount;
+extern int nLiquidityProvider;
+extern bool fEnableDarksend;
+extern int64_t enforceBasenodePaymentsTime;
+extern std::string strBaseNodeAddr;
+extern int nBasenodeMinProtocol;
+extern int keysLoaded;
+extern int64_t nAdvertisedBalance;
+extern bool fSucessfullyLoaded;
+extern std::vector<int64_t> darkSendDenominations;
+extern std::string dbuser;
+extern std::string dbname;
+extern std::string dbport;
+extern std::string dbpass;
+boost::filesystem::path GetBasenodeConfigFile();
+
 /** Signals for translation. */
 class CTranslationInterface
 {
 public:
-    /** Translate a message to the native language of the user. */
-    boost::signals2::signal<std::string (const char* psz)> Translate;
+	/** Translate a message to the native language of the user. */
+	boost::signals2::signal<std::string (const char* psz)> Translate;
 };
 
 extern std::map<std::string, std::string> mapArgs;
@@ -62,8 +82,8 @@ extern const char * const BITCREDIT_PID_FILENAME;
  */
 inline std::string _(const char* psz)
 {
-    boost::optional<std::string> rv = translationInterface.Translate(psz);
-    return rv ? (*rv) : psz;
+	boost::optional<std::string> rv = translationInterface.Translate(psz);
+	return rv ? (*rv) : psz;
 }
 
 void SetupEnvironment();
@@ -81,20 +101,20 @@ int LogPrintStr(const std::string &str);
  * of this macro-based construction (see tinyformat.h).
  */
 #define MAKE_ERROR_AND_LOG_FUNC(n)                                        \
-    /**   Print to debug.log if -debug=category switch is given OR category is NULL. */ \
-    template<TINYFORMAT_ARGTYPES(n)>                                          \
-    static inline int LogPrint(const char* category, const char* format, TINYFORMAT_VARARGS(n))  \
-    {                                                                         \
-        if(!LogAcceptCategory(category)) return 0;                            \
-        return LogPrintStr(tfm::format(format, TINYFORMAT_PASSARGS(n))); \
-    }                                                                         \
-    /**   Log error and return false */                                        \
-    template<TINYFORMAT_ARGTYPES(n)>                                          \
-    static inline bool error(const char* format, TINYFORMAT_VARARGS(n))                     \
-    {                                                                         \
-        LogPrintStr("ERROR: " + tfm::format(format, TINYFORMAT_PASSARGS(n)) + "\n"); \
-        return false;                                                         \
-    }
+		/**   Print to debug.log if -debug=category switch is given OR category is NULL. */ \
+		template<TINYFORMAT_ARGTYPES(n)>                                          \
+		static inline int LogPrint(const char* category, const char* format, TINYFORMAT_VARARGS(n))  \
+		{                                                                         \
+	if(!LogAcceptCategory(category)) return 0;                            \
+	return LogPrintStr(tfm::format(format, TINYFORMAT_PASSARGS(n))); \
+		}                                                                         \
+		/**   Log error and return false */                                        \
+		template<TINYFORMAT_ARGTYPES(n)>                                          \
+		static inline bool error(const char* format, TINYFORMAT_VARARGS(n))                     \
+		{                                                                         \
+			LogPrintStr("ERROR: " + tfm::format(format, TINYFORMAT_PASSARGS(n)) + "\n"); \
+			return false;                                                         \
+		}
 
 TINYFORMAT_FOREACH_ARGNUM(MAKE_ERROR_AND_LOG_FUNC)
 
@@ -104,13 +124,13 @@ TINYFORMAT_FOREACH_ARGNUM(MAKE_ERROR_AND_LOG_FUNC)
  */
 static inline int LogPrint(const char* category, const char* format)
 {
-    if(!LogAcceptCategory(category)) return 0;
-    return LogPrintStr(format);
+	if(!LogAcceptCategory(category)) return 0;
+	return LogPrintStr(format);
 }
 static inline bool error(const char* format)
 {
-    LogPrintStr(std::string("ERROR: ") + format + "\n");
-    return false;
+	LogPrintStr(std::string("ERROR: ") + format + "\n");
+	return false;
 }
 
 void PrintExceptionContinue(const std::exception *pex, const char* pszThread);
@@ -140,9 +160,9 @@ void runCommand(const std::string& strCommand);
 inline bool IsSwitchChar(char c)
 {
 #ifdef WIN32
-    return c == '-' || c == '/';
+	return c == '-' || c == '/';
 #else
-    return c == '-';
+	return c == '-';
 #endif
 }
 
@@ -223,27 +243,27 @@ void RenameThread(const char* name);
  */
 template <typename Callable> void TraceThread(const char* name,  Callable func)
 {
-    std::string s = strprintf("bitcredit-%s", name);
-    RenameThread(s.c_str());
-    try
-    {
-        LogPrintf("%s thread start\n", name);
-        func();
-        LogPrintf("%s thread exit\n", name);
-    }
-    catch (const boost::thread_interrupted&)
-    {
-        LogPrintf("%s thread interrupt\n", name);
-        throw;
-    }
-    catch (const std::exception& e) {
-        PrintExceptionContinue(&e, name);
-        throw;
-    }
-    catch (...) {
-        PrintExceptionContinue(NULL, name);
-        throw;
-    }
+	std::string s = strprintf("bitcredit-%s", name);
+	RenameThread(s.c_str());
+	try
+	{
+		LogPrintf("%s thread start\n", name);
+		func();
+		LogPrintf("%s thread exit\n", name);
+	}
+	catch (const boost::thread_interrupted&)
+	{
+		LogPrintf("%s thread interrupt\n", name);
+		throw;
+	}
+	catch (const std::exception& e) {
+		PrintExceptionContinue(&e, name);
+		throw;
+	}
+	catch (...) {
+		PrintExceptionContinue(NULL, name);
+		throw;
+	}
 }
 
 std::string CopyrightHolders(const std::string& strPrefix);
