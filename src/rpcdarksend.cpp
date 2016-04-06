@@ -337,8 +337,9 @@ UniValue basenode(const UniValue& params, bool fHelp)
         }
         if (params.size() == 2)
         {
-            if(params[1].getValStr().c_str() == "enabled") return mnodeman.CountEnabled();
-            if(params[1].getValStr().c_str() == "both") return boost::lexical_cast<std::string>(mnodeman.CountEnabled()) + " / " + boost::lexical_cast<std::string>(mnodeman.size());
+        	std::string par = params[1].getValStr().c_str();
+            if(par == "enabled") return mnodeman.CountEnabled();
+            if(par == "both") return boost::lexical_cast<std::string>(mnodeman.CountEnabled()) + " / " + boost::lexical_cast<std::string>(mnodeman.size());
         }
         return mnodeman.size();
     }

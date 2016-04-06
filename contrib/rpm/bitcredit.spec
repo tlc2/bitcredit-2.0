@@ -336,10 +336,10 @@ if [ `%{_sbindir}/sestatus |grep -c "disabled"` -eq 0 ]; then
 for selinuxvariant in %{selinux_variants}; do
 	%{_sbindir}/semodule -s ${selinuxvariant} -i %{_datadir}/selinux/${selinuxvariant}/bitcredit.pp &> /dev/null || :
 done
-%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 8332
-%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 8333
-%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 18332
-%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 18333
+%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 2018
+%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 2017
+%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 12018
+%{_sbindir}/semanage port -a -t bitcredit_port_t -p tcp 12017
 %{_sbindir}/fixfiles -R bitcredit-server restore &> /dev/null || :
 %{_sbindir}/restorecon -R %{_localstatedir}/lib/bitcredit || :
 fi
@@ -355,10 +355,10 @@ fi
 # SELinux
 if [ $1 -eq 0 ]; then
 	if [ `%{_sbindir}/sestatus |grep -c "disabled"` -eq 0 ]; then
-	%{_sbindir}/semanage port -d -p tcp 8332
-	%{_sbindir}/semanage port -d -p tcp 8333
-	%{_sbindir}/semanage port -d -p tcp 18332
-	%{_sbindir}/semanage port -d -p tcp 18333
+	%{_sbindir}/semanage port -d -p tcp 2018
+	%{_sbindir}/semanage port -d -p tcp 2017
+	%{_sbindir}/semanage port -d -p tcp 12018
+	%{_sbindir}/semanage port -d -p tcp 12017
 	for selinuxvariant in %{selinux_variants}; do
 		%{_sbindir}/semodule -s ${selinuxvariant} -r bitcredit &> /dev/null || :
 	done
