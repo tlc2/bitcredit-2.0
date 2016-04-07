@@ -25,6 +25,34 @@ map<uint256, int> mapSeenBasenodeScanningErrors;
 // cache block hashes as we calculate them
 std::map<int64_t, uint256> mapCacheBlockHashes;
 
+int64_t getBasenodeMinimumCollateral() {
+    	int64_t minimumCollateral = BASENODE_MINIMUM_COLLATERAL;
+    	CCoinsStats stats;
+    	FlushStateToDisk();
+    	CAmount totalMoneySupply = stats.nTotalAmount;
+    	if (totalMoneySupply < 1000000 ) minimumCollateral = BASENODE_MINIMUM_COLLATERAL;
+    	else {
+    		minimumCollateral += (int64_t(totalMoneySupply / 1000000) - 1) * BASENODE_MINIMUM_COLLATERAL / 10; //increase by 10% from BASENODE_MINIMUM_COLLATERAL every 1M
+    	}
+    	//LogPrintf("Minimum collateral to start a BN: %u BCR\n", minimumCollateral);
+    	return minimumCollateral;
+    }
+int64_t getBasenodeMaximumCollateralSum() {
+	int64_t maxBasenodesCollateral = 1000000 * BASENODE_COLLATERAL_PERCENT;
+  	CCoinsStats stats;
+  	FlushStateToDisk();
+  	CAmount totalMoneySupply = stats.nTotalAmount;
+  	if (totalMoneySupply < 1 ) maxBasenodesCollateral = 1000000 * BASENODE_COLLATERAL_PERCENT;
+  	else {
+  		if (totalMoneySupply / 1000000 < 1){
+  			maxBasenodesCollateral = 1000000 * BASENODE_COLLATERAL_PERCENT;
+  		} else {
+  			maxBasenodesCollateral = int64_t(totalMoneySupply) * BASENODE_COLLATERAL_PERCENT;
+  		}
+  	}
+  	//LogPrintf("Maximum collateral of all BNs:%u BCR\n", maxBasenodesCollateral);
+  	return maxBasenodesCollateral;
+  }
 void ProcessMessageBasenodePayments(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
 {
     if(IsInitialBlockDownload()) return;
@@ -260,7 +288,7 @@ void CBasenode::Check()
     if(!unitTest){
         CValidationState state;
         CMutableTransaction tx = CTransaction();
-        CTxOut vout = CTxOut(49999.99*COIN, darkSendPool.collateralPubKey);
+        CTxOut vout = CTxOut((getBasenodeMinimumCollateral()-0.01)*COIN, darkSendPool.collateralPubKey);
         tx.vin.push_back(vin);
         tx.vout.push_back(vout);
 

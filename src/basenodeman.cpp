@@ -664,7 +664,7 @@ void CBasenodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
 
         CValidationState state;
         CMutableTransaction tx = CTransaction();
-        CTxOut vout = CTxOut(49999.99*COIN, darkSendPool.collateralPubKey);
+        CTxOut vout = CTxOut((getBasenodeMinimumCollateral()-0.01)*COIN, darkSendPool.collateralPubKey);
         tx.vin.push_back(vin);
         tx.vout.push_back(vout);
 

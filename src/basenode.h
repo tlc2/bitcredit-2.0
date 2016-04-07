@@ -21,6 +21,8 @@
 #include "main.h"
 #include "timedata.h"
 #include "basenode-pos.h"
+#include "coins.h"
+#include "rpc/server.h"
 
 #define BASENODE_NOT_PROCESSED               0 // initial state
 #define BASENODE_IS_CAPABLE                  1
@@ -31,6 +33,8 @@
 #define BASENODE_PORT_OPEN                   7
 #define BASENODE_SYNC_IN_PROCESS             8
 #define BASENODE_REMOTELY_ENABLED            9
+#define BASENODE_MINIMUM_COLLATERAL			 50000 //initial basenode minimum collateral
+#define BASENODE_COLLATERAL_PERCENT			 0.75 //75% from Money Supply
 
 #define BASENODE_MIN_CONFIRMATIONS           15
 #define BASENODE_MIN_DSEEP_SECONDS           (30*60)
@@ -52,6 +56,8 @@ extern CBasenodePayments basenodePayments;
 
 void ProcessMessageBasenodePayments(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
 bool GetBlockHash(uint256& hash, int nBlockHeight);
+int64_t getBasenodeMinimumCollateral();
+int64_t getBasenodeMaximumCollateralSum();
 
 //
 // The Basenode Class. For managing the Darksend process. It contains the input of the 1000DRK, signature to prove
@@ -247,6 +253,7 @@ public:
 
         return strStatus;
     }
+
 
 };
 
