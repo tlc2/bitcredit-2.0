@@ -2059,7 +2059,7 @@ bool CDarkSendSigner::IsVinAssociatedWithPubkey(CTxIn& vin, CPubKey& pubkey){
     uint256 hash;
     if(GetTransaction(vin.prevout.hash, txVin, Params().GetConsensus(), hash, true)){
     	BOOST_FOREACH(CTxOut out, txVin.vout){
-    		if(out.nValue == 50000*COIN){
+    		if(out.nValue == getBasenodeMinimumCollateral() * COIN){
     			if(out.scriptPubKey == payee2) return true;
     		}
 		}

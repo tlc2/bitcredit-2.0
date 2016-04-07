@@ -151,7 +151,7 @@ UniValue basenode(const UniValue& params, bool fHelp)
         strCommand = params[0].getValStr().c_str();
 
     if (fHelp  ||
-        (strCommand != "start" && strCommand != "start-alias" && strCommand != "start-many" && strCommand != "stop" && strCommand != "stop-alias" && strCommand != "stop-many" && strCommand != "list" && strCommand != "list-conf" && strCommand != "count"  && strCommand != "enforce"
+        (strCommand != "start" && strCommand != "mincollateral" && strCommand != "maxbnssupply" && strCommand != "start-alias" && strCommand != "start-many" && strCommand != "stop" && strCommand != "stop-alias" && strCommand != "stop-many" && strCommand != "list" && strCommand != "list-conf" && strCommand != "count"  && strCommand != "enforce"
             && strCommand != "debug" && strCommand != "current" && strCommand != "winners" && strCommand != "genkey" && strCommand != "connect" && strCommand != "outputs" && strCommand != "vote-many" && strCommand != "vote"))
         throw runtime_error(
                 "basenode \"command\"... ( \"passphrase\" )\n"
@@ -164,6 +164,8 @@ UniValue basenode(const UniValue& params, bool fHelp)
                 "  current      - Print info on current basenode winner\n"
                 "  debug        - Print basenode status\n"
                 "  genkey       - Generate new basenodeprivkey\n"
+                "  mincollateral- Minimum basenode collateral to start a BN\n"
+                "  maxbnssupply - Maximum basenodes collateral\n"
                 "  enforce      - Enforce basenode payments\n"
                 "  outputs      - Print basenode compatible outputs\n"
                 "  start        - Start basenode configured in basenode.conf\n"
@@ -179,6 +181,14 @@ UniValue basenode(const UniValue& params, bool fHelp)
                 "  vote         - Vote on a BCR initiative\n"
                 );
 
+    if (strCommand == "mincollateral")
+        {
+    		return (uint64_t)getBasenodeMinimumCollateral();
+        }
+    if (strCommand == "maxbnssupply")
+        {
+    		return (uint64_t)getBasenodeMaximumCollateralSum();
+        }
 
     if (strCommand == "stop")
     {

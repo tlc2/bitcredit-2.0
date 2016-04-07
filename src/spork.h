@@ -17,6 +17,7 @@
 #include "base58.h"
 #include "main.h"
 #include "protocol.h"
+#include "basenode.h"
 #include <boost/lexical_cast.hpp>
 
 using namespace std;
@@ -30,7 +31,7 @@ using namespace boost;
 #define SPORK_5_BASENODE_SCANNING                           10005
 
 #define SPORK_1_BASENODE_PAYMENTS_ENFORCEMENT_DEFAULT       1427803200  //2015-3-5
-#define SPORK_2_MAX_VALUE_DEFAULT                             50000        //50000 BCR
+#define SPORK_2_MAX_VALUE_DEFAULT                             50000        //50000 BCR :NOTE TO BE CHANGED ?!?!
 #define SPORK_3_REPLAY_BLOCKS_DEFAULT                         0
 #define SPORK_4_RECONVERGE_DEFAULT                            1420070400  //2047-1-1
 #define SPORK_5_BASENODE_SCANNING_DEFAULT                   978307200   //2001-1-1

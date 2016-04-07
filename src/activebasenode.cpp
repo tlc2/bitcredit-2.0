@@ -481,22 +481,12 @@ vector<COutput> CActiveBasenode::SelectCoinsBasenode()
 
     // Filter
     
-    if (chainActive.Tip()->nHeight<145000) {
     BOOST_FOREACH(const COutput& out, vCoins)
-    {
-        if(out.tx->vout[out.i].nValue == 250000*COIN) { //exactly
-            filteredCoins.push_back(out);
+        {
+            if(out.tx->vout[out.i].nValue == getBasenodeMinimumCollateral() * COIN) { //exactly
+                filteredCoins.push_back(out);
+            }
         }
-    }
-	}
-	else {
-    BOOST_FOREACH(const COutput& out, vCoins)
-    {
-        if(out.tx->vout[out.i].nValue == 50000*COIN) { //exactly
-            filteredCoins.push_back(out);
-        }
-    }
-	}
     
     return filteredCoins;
 }
@@ -514,22 +504,12 @@ vector<COutput> CActiveBasenode::SelectCoinsBasenodeForPubKey(std::string collat
     pwalletMain->AvailableCoins(vCoins);
 
     // Filter
-    if (chainActive.Tip()->nHeight<145000) {
     BOOST_FOREACH(const COutput& out, vCoins)
-    {
-        if(out.tx->vout[out.i].nValue == 250000*COIN) { //exactly
-            filteredCoins.push_back(out);
+        {
+             if(out.tx->vout[out.i].nValue == getBasenodeMinimumCollateral()*COIN) { //exactly
+                filteredCoins.push_back(out);
+            }
         }
-    }
-	}
-	else {
-    BOOST_FOREACH(const COutput& out, vCoins)
-    {
-         if(out.tx->vout[out.i].nValue == 50000*COIN) { //exactly
-            filteredCoins.push_back(out);
-        }
-    }
-	} 
     return filteredCoins;
 }
 
