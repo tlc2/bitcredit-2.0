@@ -17,6 +17,10 @@ class CFeeRate;
 class CTxMemPoolEntry;
 class CTxMemPool;
 
+class uint256;
+
+extern uint256 feeAssetID;
+
 /** \class CBlockPolicyEstimator
  * The BlockPolicyEstimator is used for estimating the fee or priority needed
  * for a transaction to be included in a block within a certain number of

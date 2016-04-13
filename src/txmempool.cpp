@@ -533,7 +533,7 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
             // So it's critical that we remove the tx and not depend on the LockPoints.
             transactionsToRemove.push_back(tx);
         } else if (it->GetSpendsCoinbase()) {
-            BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+            FOREACH_TXIN(txin, tx) {
                 indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.hash);
                 if (it2 != mapTx.end())
                     continue;
@@ -1041,7 +1041,7 @@ void CTxMemPool::TrimToSize(size_t sizelimit, std::vector<uint256>* pvNoSpendsRe
         RemoveStaged(stage, false);
         if (pvNoSpendsRemaining) {
             BOOST_FOREACH(const CTransaction& tx, txn) {
-                BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+                FOREACH_TXIN(txin, tx) {
                     if (exists(txin.prevout.hash))
                         continue;
                     std::map<COutPoint, CInPoint>::iterator it = mapNextTx.lower_bound(COutPoint(txin.prevout.hash, 0));

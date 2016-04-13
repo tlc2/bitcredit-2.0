@@ -162,6 +162,24 @@ public:
     std::string ToString() const;
 };
 
+/**
+ *  Native Asset Issuance
+ *
+ *  An asset identifier tag, a 256 bits serialized hash (sha256) of the asset
+ *  definition transaction from which the output’s coins are derived. Each output contains
+ *  coins from a single asset/currency. For the host currency, the similarly-calculated
+ *  hash of the chain’s genesis block is used instead. Within an asset
+ *  definition transaction, the asset being defined is identified with 0 as a hash.
+ */
+typedef uint256 CAssetID;
+
+typedef std::map<CAssetID, CAmount> CAmountMap;
+
+bool operator<(const CAmountMap& a, const CAmountMap& b);
+CAmountMap& operator+=(CAmountMap& a, const CAmountMap& b);
+CAmountMap& operator-=(CAmountMap& a, const CAmountMap& b);
+
+
 /** An output of a transaction.  It contains the public key that the next input
  * must be able to sign with to claim it.
  */
@@ -169,27 +187,30 @@ class CTxOut
 {
 public:
     CAmount nValue;
+    CAssetID assetID;
     CScript scriptPubKey;
 	int nRounds;
-	
+
     CTxOut()
     {
         SetNull();
     }
 
-    CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
+    CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn, CAssetID assetID=CAssetID());
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(nValue);
+        READWRITE(assetID);
         READWRITE(*(CScriptBase*)(&scriptPubKey));
     }
 
     void SetNull()
     {
         nValue = -1;
+        assetID.SetNull();
         scriptPubKey.clear();
         nRounds = -10;
     }
@@ -226,6 +247,7 @@ public:
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
         return (a.nValue       == b.nValue &&
+				a.assetID      == b.assetID &&
                 a.scriptPubKey == b.scriptPubKey &&
                 a.nRounds      == b.nRounds);
     }
@@ -307,6 +329,17 @@ public:
     {
         return (vin.size() == 1 && vin[0].prevout.IsNull());
     }
+    
+    //! Asset definition transactions must have more than 1 input
+    bool IsAssetDefinition() const
+    {
+        return (vin.size() > 1 && vin[0].prevout.IsNull());
+    }
+
+    unsigned int GetFirstInputPos() const
+    {
+        return IsAssetDefinition() ? 1 : 0;
+    }
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
@@ -350,5 +383,13 @@ struct CMutableTransaction
     
     std::string ToString() const;
 };
+
+#define FOREACH_TXIN(VAR, TX) \
+    for (unsigned int __txin_i = (TX).GetFirstInputPos(); \
+         __txin_i < (TX).vin.size(); \
+         ++__txin_i) \
+        if (bool __txin_finish = false) {} else \
+        for (const CTxIn& VAR = (TX).vin[__txin_i]; !__txin_finish; __txin_finish = true)
+
 
 #endif // BITCREDIT_PRIMITIVES_TRANSACTION_H

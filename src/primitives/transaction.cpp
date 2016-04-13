@@ -9,6 +9,35 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 
+bool operator<(const CAmountMap& a, const CAmountMap& b)
+{
+    for(std::map<CAssetID, CAmount>::const_iterator it = b.begin(); it != b.end(); ++it) {
+        if (a.count(it->first) == 0 || a.find(it->first)->second < it->second)
+            return true;
+    }
+    return false;
+}
+
+CAmountMap& operator+=(CAmountMap& a, const CAmountMap& b)
+{
+    for(std::map<CAssetID, CAmount>::const_iterator it = b.begin(); it != b.end(); ++it)
+        a[it->first] += it->second;
+    return a;
+}
+
+CAmountMap& operator-=(CAmountMap& a, const CAmountMap& b)
+{
+    for(std::map<CAssetID, CAmount>::const_iterator it = b.begin(); it != b.end(); ++it) {
+        if (a.count(it->first) > 0)
+            a[it->first] -= it->second;
+        else
+            throw std::runtime_error(strprintf("%s : asset %s is not contained in this map", __func__, it->first.ToString()));
+    }
+    return a;
+}
+
+
+
 std::string COutPoint::ToString() const
 {
     return strprintf("COutPoint(%s, %u)", hash.ToString().substr(0,10), n);
@@ -43,9 +72,10 @@ std::string CTxIn::ToString() const
     return str;
 }
 
-CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
+CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn, CAssetID assetIDIn)
 {
     nValue = nValueIn;
+    assetID = assetIDIn;
     scriptPubKey = scriptPubKeyIn;
 }
 
@@ -56,7 +86,7 @@ uint256 CTxOut::GetHash() const
 
 std::string CTxOut::ToString() const
 {
-    return strprintf("CTxOut(nValue=%d.%08d, scriptPubKey=%s)", nValue / COIN, nValue % COIN, HexStr(scriptPubKey).substr(0, 30));
+    return strprintf("CTxOut(nValue=%d.%08d,  assetID=%s, scriptPubKey=%s)", nValue / COIN, nValue % COIN, assetID.ToString(), HexStr(scriptPubKey).substr(0, 30));
 }
 
 CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION), nLockTime(0) {}

@@ -756,7 +756,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransaction& tx, const CBlock* pbl
         AssertLockHeld(cs_wallet);
 
         if (pblock) {
-            BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+            FOREACH_TXIN(txin, tx) {
                 std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range = mapTxSpends.equal_range(txin.prevout);
                 while (range.first != range.second) {
                     if (range.first->second != tx.GetHash()) {
@@ -915,7 +915,7 @@ void CWallet::SyncTransaction(const CTransaction& tx, const CBlockIndex *pindex,
     // If a transaction changes 'conflicted' state, that changes the balance
     // available of the outputs it spends. So force those to be
     // recomputed, also:
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
+    FOREACH_TXIN(txin, tx)
     {
         if (mapWallet.count(txin.prevout.hash))
             mapWallet[txin.prevout.hash].MarkDirty();
@@ -1011,7 +1011,7 @@ bool CWallet::IsFromMe(const CTransaction& tx) const
 CAmount CWallet::GetDebit(const CTransaction& tx, const isminefilter& filter) const
 {
     CAmount nDebit = 0;
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
+    FOREACH_TXIN(txin, tx)
     {
         nDebit += GetDebit(txin, filter);
         if (!MoneyRange(nDebit))
@@ -1479,7 +1479,7 @@ bool CWalletTx::IsTrusted() const
         return false;
 
     // Trusted if all inputs are from us and are in the mempool:
-    BOOST_FOREACH(const CTxIn& txin, vin)
+     FOREACH_TXIN(txin, *this)
     {
         // Transactions not sent by us: not trusted
         const CWalletTx* parent = pwallet->GetWalletTx(txin.prevout.hash);
