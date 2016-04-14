@@ -13,6 +13,10 @@
 #include "txmempool.h"
 #include "util.h"
 
+//#include "uint256.h"
+
+uint256 feeAssetID;
+
 void TxConfirmStats::Initialize(std::vector<double>& defaultBuckets,
                                 unsigned int maxConfirms, double _decay, std::string _dataTypeString)
 {

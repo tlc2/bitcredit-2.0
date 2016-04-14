@@ -616,7 +616,7 @@ bool AddOrphanTx(const CTransaction& tx, NodeId peer) EXCLUSIVE_LOCKS_REQUIRED(c
 
     mapOrphanTransactions[hash].tx = tx;
     mapOrphanTransactions[hash].fromPeer = peer;
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
+    FOREACH_TXIN(txin, tx)
         mapOrphanTransactionsByPrev[txin.prevout.hash].insert(hash);
 
     LogPrint("mempool", "stored orphan tx %s (mapsz %u prevsz %u)\n", hash.ToString(),
@@ -629,7 +629,7 @@ void static EraseOrphanTx(uint256 hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
     map<uint256, COrphanTx>::iterator it = mapOrphanTransactions.find(hash);
     if (it == mapOrphanTransactions.end())
         return;
-    BOOST_FOREACH(const CTxIn& txin, it->second.tx.vin)
+     FOREACH_TXIN(txin, it->second.tx)
     {
         map<uint256, set<uint256> >::iterator itPrev = mapOrphanTransactionsByPrev.find(txin.prevout.hash);
         if (itPrev == mapOrphanTransactionsByPrev.end())
@@ -680,7 +680,7 @@ bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
         return true;
     if ((int64_t)tx.nLockTime < ((int64_t)tx.nLockTime < LOCKTIME_THRESHOLD ? (int64_t)nBlockHeight : nBlockTime))
         return true;
-    BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+    FOREACH_TXIN(txin, tx) {
         if (!(txin.nSequence == CTxIn::SEQUENCE_FINAL))
             return false;
     }
@@ -894,7 +894,7 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp, bool 
 unsigned int GetLegacySigOpCount(const CTransaction& tx)
 {
     unsigned int nSigOps = 0;
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
+    FOREACH_TXIN(txin, tx)
     {
         nSigOps += txin.scriptSig.GetSigOpCount(false);
     }
@@ -911,11 +911,11 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
         return 0;
 
     unsigned int nSigOps = 0;
-    for (unsigned int i = 0; i < tx.vin.size(); i++)
+    FOREACH_TXIN(txin, tx)
     {
-        const CTxOut &prevout = inputs.GetOutputFor(tx.vin[i]);
+        const CTxOut &prevout = inputs.GetOutputFor(txin);
         if (prevout.scriptPubKey.IsPayToScriptHash())
-            nSigOps += prevout.scriptPubKey.GetSigOpCount(tx.vin[i].scriptSig);
+            nSigOps += prevout.scriptPubKey.GetSigOpCount(txin.scriptSig);
     }
     return nSigOps;
 }
@@ -971,7 +971,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 
     // Check for duplicate inputs
     set<COutPoint> vInOutPoints;
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
+    FOREACH_TXIN(txin, tx)
     {
         if (vInOutPoints.count(txin.prevout))
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
@@ -985,7 +985,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
     }
     else
     {
-        BOOST_FOREACH(const CTxIn& txin, tx.vin)
+        FOREACH_TXIN(txin, tx)
             if (txin.prevout.IsNull())
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
     }
@@ -1110,10 +1110,10 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         // do all inputs exist?
         // Note that this does not check for the presence of actual outputs (see the next check for that),
         // and only helps with filling in pfMissingInputs (to determine missing vs spent).
-        BOOST_FOREACH(const CTxIn txin, tx.vin) {
-            if (!pcoinsTip->HaveCoinsInCache(txin.prevout.hash))
-                vHashTxnToUncache.push_back(txin.prevout.hash);
-            if (!view.HaveCoins(txin.prevout.hash)) {
+        for (unsigned int i = tx.GetFirstInputPos(); i < tx.vin.size(); i++) {  // Don't check the null input in asset defintion transactions
+            if (!pcoinsTip->HaveCoinsInCache(tx.vin[i].prevout.hash))
+                vHashTxnToUncache.push_back(tx.vin[i].prevout.hash);
+            if (!view.HaveCoins(tx.vin[i].prevout.hash)) {
                 if (pfMissingInputs)
                     *pfMissingInputs = true;
                 return false; // fMissingInputs and !state.IsInvalid() is used to detect this condition, don't set state.Invalid()
@@ -1904,9 +1904,9 @@ void UpdateCoins(const CTransaction& tx, CValidationState &state, CCoinsViewCach
     // mark inputs spent
     if (!tx.IsCoinBase()) {
         txundo.vprevout.reserve(tx.vin.size());
-        BOOST_FOREACH(const CTxIn &txin, tx.vin) {
-            CCoinsModifier coins = inputs.ModifyCoins(txin.prevout.hash);
-            unsigned nPos = txin.prevout.n;
+        for (unsigned int i = tx.GetFirstInputPos(); i < tx.vin.size(); i++){
+            CCoinsModifier coins = inputs.ModifyCoins(tx.vin[i].prevout.hash);
+            unsigned nPos = tx.vin[i].prevout.n;
 
             if (nPos >= coins->vout.size() || coins->vout[nPos].IsNull())
                 assert(false);
@@ -1956,9 +1956,9 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
         CAmount nValueIn = 0;
         CAmount nFees = 0;
-        for (unsigned int i = 0; i < tx.vin.size(); i++)
+        FOREACH_TXIN(txin, tx)
         {
-            const COutPoint &prevout = tx.vin[i].prevout;
+            const COutPoint &prevout = txin.prevout;
             const CCoins *coins = inputs.AccessCoins(prevout.hash);
             assert(coins);
 
@@ -2013,7 +2013,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
         // the checkpoint is for a chain that's invalid due to false scriptSigs
         // this optimisation would allow an invalid chain to be accepted.
         if (fScriptChecks) {
-            for (unsigned int i = 0; i < tx.vin.size(); i++) {
+            for (unsigned int i = tx.GetFirstInputPos(); i < tx.vin.size(); i++) {
                 const COutPoint &prevout = tx.vin[i].prevout;
                 const CCoins* coins = inputs.AccessCoins(prevout.hash);
                 assert(coins);
@@ -4827,109 +4827,104 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                             // no response
                     }
 
-					// Trigger the peer node to send a getblocks request for the next batch of inventory
-					if (inv.hash == pfrom->hashContinue) {
-						// Bypass PushInventory, this must send even if redundant,
-						// and we want it right after the last block so they don't
-						// wait for other stuff first.
-						vector<CInv> vInv;
-						vInv.push_back(
-								CInv(MSG_BLOCK,
-										chainActive.Tip()->GetBlockHash()));
-						pfrom->PushMessage(NetMsgType::INV, vInv);
-						pfrom->hashContinue.SetNull();
-					}
-				}
-			} else if (inv.IsKnownType()) {
-				// Send stream from relay memory
-				bool pushed = false;
+				// Trigger the peer node to send a getblocks request for the next batch of inventory
+				if (inv.hash == pfrom->hashContinue)
 				{
-					LOCK(cs_mapRelay);
-					map<CInv, CDataStream>::iterator mi = mapRelay.find(inv);
-					if (mi != mapRelay.end()) {
-						pfrom->PushMessage(inv.GetCommand(), (*mi).second);
-						pushed = true;
-					}
+					// Bypass PushInventory, this must send even if redundant,
+					// and we want it right after the last block so they don't
+					// wait for other stuff first.
+					vector<CInv> vInv;
+					vInv.push_back(CInv(MSG_BLOCK, chainActive.Tip()->GetBlockHash()));
+					pfrom->PushMessage(NetMsgType::INV, vInv);
+					pfrom->hashContinue.SetNull();
 				}
-				if (!pushed && inv.type == MSG_TX) {
-
+			}
+		} else if (inv.IsKnownType()) {
+			// Send stream from relay memory
+			bool pushed = false;
+			{
+				LOCK(cs_mapRelay);
+				map<CInv, CDataStream>::iterator mi = mapRelay.find(inv);
+				if (mi != mapRelay.end()) {
+					pfrom->PushMessage(inv.GetCommand(), (*mi).second);
+					pushed = true;
+				}
+			}
+			if (!pushed && inv.type == MSG_TX) {
 					if (mapDarksendBroadcastTxes.count(inv.hash)) {
+					CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+					ss.reserve(1000);
+					ss << mapDarksendBroadcastTxes[inv.hash].tx
+							<< mapDarksendBroadcastTxes[inv.hash].vin
+							<< mapDarksendBroadcastTxes[inv.hash].vchSig
+							<< mapDarksendBroadcastTxes[inv.hash].sigTime;
+						pfrom->PushMessage(NetMsgType::DSTX, ss);
+					pushed = true;
+				} else {
+					CTransaction tx;
+					if (mempool.lookup(inv.hash, tx)) {
 						CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
 						ss.reserve(1000);
-						ss << mapDarksendBroadcastTxes[inv.hash].tx
-								<< mapDarksendBroadcastTxes[inv.hash].vin
-								<< mapDarksendBroadcastTxes[inv.hash].vchSig
-								<< mapDarksendBroadcastTxes[inv.hash].sigTime;
-
-						pfrom->PushMessage(NetMsgType::DSTX, ss);
+						ss << tx;
+						pfrom->PushMessage(NetMsgType::TX, ss);
 						pushed = true;
-					} else {
-
-						CTransaction tx;
-						if (mempool.lookup(inv.hash, tx)) {
-							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-							ss.reserve(1000);
-							ss << tx;
-							pfrom->PushMessage(NetMsgType::TX, ss);
-							pushed = true;
-						}
 					}
 				}
-
-					if (!pushed && inv.type == MSG_SPORK) {
-						if (mapSporks.count(inv.hash)) {
-							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-							ss.reserve(1000);
-							ss << mapSporks[inv.hash];
-							pfrom->PushMessage(NetMsgType::SPORK, ss);
-							pushed = true;
-						}
-					}
-					if (!pushed && inv.type == MSG_BASENODE_WINNER) {
-						if (mapSeenBasenodeVotes.count(inv.hash)) {
-							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-							ss.reserve(1000);
-							ss << mapSeenBasenodeVotes[inv.hash];
-							pfrom->PushMessage(NetMsgType::MNW, ss);
-							pushed = true;
-						}
-					}
-					if (!pushed && inv.type == MSG_BASENODE_SCANNING_ERROR) {
-						if (mapBasenodeScanningErrors.count(inv.hash)) {
-							CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-							ss.reserve(1000);
-							ss << mapBasenodeScanningErrors[inv.hash];
-							pfrom->PushMessage(NetMsgType::MNSE, ss);
-							pushed = true;
-						}
-					}
-
-					if (!pushed) {
-						vNotFound.push_back(inv);
-					}
-				}
-
-				// Track requests for our stuff.
-				GetMainSignals().Inventory(inv.hash);
-
-				if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK)
-					break;
 			}
-		}
 
-		pfrom->vRecvGetData.erase(pfrom->vRecvGetData.begin(), it);
+			if (!pushed && inv.type == MSG_SPORK) {
+					if (mapSporks.count(inv.hash)) {
+						CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+						ss.reserve(1000);
+						ss << mapSporks[inv.hash];
+						pfrom->PushMessage(NetMsgType::SPORK, ss);
+						pushed = true;
+					}
+				}
+				if (!pushed && inv.type == MSG_BASENODE_WINNER) {
+					if (mapSeenBasenodeVotes.count(inv.hash)) {
+						CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+						ss.reserve(1000);
+						ss << mapSeenBasenodeVotes[inv.hash];
+						pfrom->PushMessage(NetMsgType::MNW, ss);
+						pushed = true;
+					}
+				}
+				if (!pushed && inv.type == MSG_BASENODE_SCANNING_ERROR) {
+                    if (mapBasenodeScanningErrors.count(inv.hash)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << mapBasenodeScanningErrors[inv.hash];
+                        pfrom->PushMessage(NetMsgType::MNSE, ss);
+                        pushed = true;
+                    }
+                }
+                if (!pushed) {
+                    vNotFound.push_back(inv);
+                }
+            }
 
-		if (!vNotFound.empty()) {
-			// Let the peer know that we didn't find what it asked for, so it doesn't
-			// have to wait around forever. Currently only SPV clients actually care
-			// about this message: it's needed when they are recursively walking the
-			// dependencies of relevant unconfirmed transactions. SPV clients want to
-			// do that because they want to know about (and store and rebroadcast and
-			// risk analyze) the dependencies of transactions relevant to them, without
-			// having to download the entire memory pool.
-			pfrom->PushMessage(NetMsgType::NOTFOUND, vNotFound);
-		}
-	}
+            // Track requests for our stuff.
+            GetMainSignals().Inventory(inv.hash);
+
+            if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK)
+                break;
+        }
+    }
+
+    pfrom->vRecvGetData.erase(pfrom->vRecvGetData.begin(), it);
+
+    if (!vNotFound.empty()) {
+        // Let the peer know that we didn't find what it asked for, so it doesn't
+        // have to wait around forever. Currently only SPV clients actually care
+        // about this message: it's needed when they are recursively walking the
+        // dependencies of relevant unconfirmed transactions. SPV clients want to
+        // do that because they want to know about (and store and rebroadcast and
+        // risk analyze) the dependencies of transactions relevant to them, without
+        // having to download the entire memory pool.
+        pfrom->PushMessage(NetMsgType::NOTFOUND, vNotFound);
+    }
+}
 
 bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, int64_t nTimeReceived)
 {

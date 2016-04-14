@@ -36,12 +36,24 @@ public:
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
 
+
 public Q_SLOTS:
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                     const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+                    
+    QString balance() const; //or more specific name depending on the context
+
 
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
+    void btxclicked();
+    void bsendclicked();
+    void brecclicked();
+    void bos1clicked();
+    void bos2clicked();
+    void bos3clicked();
+    
+    void balancechanged();
 
 private:
     Ui::OverviewPage *ui;
@@ -62,6 +74,14 @@ private Q_SLOTS:
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);
     void updateWatchOnlyLabels(bool showWatchOnly);
+    
+    void emitbtxclicked();
+    void emitbsendclicked();
+    void emitbrecclicked();
+    void emitbos1clicked();
+    void emitbos2clicked();
+    
+    void emitemitemit();
 };
 
 #endif // BITCREDIT_QT_OVERVIEWPAGE_H

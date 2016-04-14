@@ -9,6 +9,9 @@
 #include "tinyformat.h"
 #include "util.h"
 #include "utilstrencodings.h"
+#include "pow.h"
+#include "arith_uint256.h"
+
 
 #include <assert.h>
 
@@ -55,6 +58,35 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
+void  CChainParams::MineNewGenesisBlock()
+{
+    fPrintToConsole = true;
+    LogPrintStr("Searching for genesis block...\n");
+   
+    arith_uint256 hashTarget = UintToArith256(consensus.powLimit);
+    
+    while(true) {
+        arith_uint256 thash = UintToArith256(genesis.GetHash());
+        if (thash <= hashTarget)
+            break;
+        if ((genesis.nNonce & 0xFFF) == 0) 
+            LogPrintf("nonce %08X: hash = %s (target = %s)\n", genesis.nNonce, thash.ToString().c_str(), hashTarget.ToString().c_str());
+   
+        ++genesis.nNonce;
+        if (genesis.nNonce == 0) {
+            LogPrintf("NONCE WRAPPED, incrementing time\n");
+            ++genesis.nTime;
+        }
+    }
+    LogPrintf("genesis.nTime = %u \n",  genesis.nTime);
+    LogPrintf("genesis.nNonce = %u \n",  genesis.nNonce);
+    LogPrintf("genesis.GetPoWHash = %s\n",  genesis.GetHash().ToString().c_str());
+    LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
+    LogPrintf("genesis.hashMerkleRoot = %s\n",  genesis.hashMerkleRoot.ToString().c_str());
+
+    exit(1);
+}
+
 /**
  * Main network
  */
@@ -70,7 +102,7 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 40320;
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 1000;
@@ -98,12 +130,13 @@ public:
         nDefaultPort = 2017;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1459076565, 202, 0x2000ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1459076565, 335, 0x2000ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00f81b193ce2782a5662fa26a7ed1456bfaf59f49b79471c0264b0b11db5fc99"));
-        assert(genesis.hashMerkleRoot == uint256S("0x296b7b241c0cc0ed25571db08839386e26551d5ef82b9576af1455f0afd1353b"));
+        //MineNewGenesisBlock();
+        assert(consensus.hashGenesisBlock == uint256S("0x00136efdc2a18c9855cfe12f6a350d0b4a095efdde5e6a027df3b39f16d07f5a"));
+        assert(genesis.hashMerkleRoot == uint256S("0xd98d7d83005dc6b9ff4cc48fe09f77293ac1c5a7b46a7ac459a77679edf579a6"));
 
-        vSeeds.push_back(CDNSSeedData("84.200.32.78", "84.200.32.78")); // Pieter Wuille
+        //vSeeds.push_back(CDNSSeedData("84.200.32.78", "84.200.32.78")); // Pieter Wuille
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,25);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,13);
@@ -139,7 +172,7 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 40320;
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 100;
@@ -162,10 +195,10 @@ public:
         nDefaultPort = 12017;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1459076565, 202, 0x2000ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1459076565, 335, 0x2000ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00f81b193ce2782a5662fa26a7ed1456bfaf59f49b79471c0264b0b11db5fc99"));
-        assert(genesis.hashMerkleRoot == uint256S("0x296b7b241c0cc0ed25571db08839386e26551d5ef82b9576af1455f0afd1353b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00136efdc2a18c9855cfe12f6a350d0b4a095efdde5e6a027df3b39f16d07f5a"));
+        assert(genesis.hashMerkleRoot == uint256S("0xd98d7d83005dc6b9ff4cc48fe09f77293ac1c5a7b46a7ac459a77679edf579a6"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -228,10 +261,11 @@ public:
         nDefaultPort = 12018;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1459076565, 202, 0x2000ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1459076565, 335, 0x2000ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00f81b193ce2782a5662fa26a7ed1456bfaf59f49b79471c0264b0b11db5fc99"));
-        assert(genesis.hashMerkleRoot == uint256S("0x296b7b241c0cc0ed25571db08839386e26551d5ef82b9576af1455f0afd1353b"));
+        //throw std::runtime_error(strprintf("genesis hash %s", genesis.GetHash().ToString().c_str()));
+        assert(consensus.hashGenesisBlock == uint256S("0x00136efdc2a18c9855cfe12f6a350d0b4a095efdde5e6a027df3b39f16d07f5a"));
+        assert(genesis.hashMerkleRoot == uint256S("0xd98d7d83005dc6b9ff4cc48fe09f77293ac1c5a7b46a7ac459a77679edf579a6"));
 
         vFixedSeeds.clear(); //! Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();  //! Regtest mode doesn't have any DNS seeds.

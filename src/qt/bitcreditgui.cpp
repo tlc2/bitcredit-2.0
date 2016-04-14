@@ -17,6 +17,7 @@
 #include "openuridialog.h"
 #include "optionsdialog.h"
 #include "optionsmodel.h"
+#include "overviewpage.h"
 #include "platformstyle.h"
 #include "rpcconsole.h"
 #include "utilitydialog.h"
@@ -41,6 +42,7 @@
 #include <QDateTime>
 #include <QDesktopWidget>
 #include <QDragEnterEvent>
+#include <QFile>
 #include <QListWidget>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -117,7 +119,16 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     spinnerFrame(0),
     platformStyle(platformStyle)
 {
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 550), this);
+    setFixedSize(850, 600);
+    //setWindowFlags(Qt::FramelessWindowHint);
+    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 600), this);
+
+    // load stylesheet
+    QFile qss(":css/dyno");
+    qss.open(QFile::ReadOnly);
+    qApp->setStyleSheet(qss.readAll());
+    qss.close();
+
 
     QString windowTitle = tr(PACKAGE_NAME) + " - ";
 #ifdef ENABLE_WALLET
@@ -152,9 +163,12 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
 #ifdef ENABLE_WALLET
     if(enableWallet)
     {
-        /** Create wallet frame and make it the central widget */
+        /** Create wallet frame and make it the centralish widget */
         walletFrame = new WalletFrame(platformStyle, this);
-        setCentralWidget(walletFrame);
+        //setCentralWidget(walletFrame);
+        walletFrame->setFixedWidth(850);
+        walletFrame->setFixedHeight(400);
+        walletFrame->move(0,140);        
     } else
 #endif // ENABLE_WALLET
     {
@@ -167,6 +181,27 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     // Accept D&D of URIs
     setAcceptDrops(true);
 
+    // Header UI elements
+
+    // logo
+    Logo = new QLabel(this);
+    Logo->move(10, 30);
+    Logo->setFixedWidth(300);
+    Logo->setFixedHeight(100);
+    Logo->setObjectName("Logo");
+    // balance label    
+    labelHeaderBalance = new QLabel(this);
+    labelHeaderBalance->move(320, 30);
+    labelHeaderBalance->setFixedWidth(520);
+    labelHeaderBalance->setFixedHeight(100);
+    labelHeaderBalance->setText("Available Balance:\n");
+    labelHeaderBalance->setObjectName("labelHeaderBalance");
+
+    // get balance from a new overviewpage instance, since I can't figure out how to pass it from walletView's overviewPage instance
+    ovp = new OverviewPage(platformStyle);
+    setHeaderBalance();
+    connect(ovp, SIGNAL(balancechanged()), this, SLOT(setHeaderBalance()));
+    
     // Create actions for the toolbar, menu bar and tray/dock icon
     // Needs walletFrame to be initialized
     createActions();
@@ -182,6 +217,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
 
     // Create status bar
     statusBar();
+    statusBar()->setFixedHeight(20);
 
     // Disable size grip because it looks ugly and nobody needs it
     statusBar()->setSizeGripEnabled(false);
@@ -232,7 +268,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
-
+    
     // Initially wallet actions should be disabled
     setWalletActionsEnabled(false);
 
@@ -254,6 +290,12 @@ BitcreditGUI::~BitcreditGUI()
 #endif
 
     delete rpcConsole;
+}
+
+void BitcreditGUI::setHeaderBalance()
+{
+    QString bal = this->ovp->balance();
+    labelHeaderBalance->setText("Available Balance:\n" + bal);
 }
 
 void BitcreditGUI::createActions()
@@ -398,6 +440,7 @@ void BitcreditGUI::createMenuBar()
     QMenu *file = appMenuBar->addMenu(tr("&File"));
     if(walletFrame)
     {
+
         file->addAction(openAction);
         file->addAction(backupWalletAction);
         file->addAction(signMessageAction);
@@ -429,19 +472,18 @@ void BitcreditGUI::createMenuBar()
     help->addAction(aboutQtAction);
 }
 
-void BitcreditGUI::createToolBars()
+void BitcreditGUI::createToolBars()  // 'Back' or 'Return to Menu' button
 {
     if(walletFrame)
     {
-        QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
-        toolbar->setMovable(false);
-        toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-        toolbar->addAction(overviewAction);
-        toolbar->addAction(sendCoinsAction);
-        toolbar->addAction(receiveCoinsAction);
-        toolbar->addAction(historyAction);
-        overviewAction->setChecked(true);
-    }
+        // menu/back button
+        QPushButton *bover = new QPushButton(this);
+        bover->setFixedWidth(850);
+        bover->setFixedHeight(35);
+        bover->setObjectName("bover");
+        bover->move(00,540);
+        connect(bover, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+     }
 }
 
 void BitcreditGUI::setClientModel(ClientModel *clientModel)
