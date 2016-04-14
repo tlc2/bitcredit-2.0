@@ -50,6 +50,12 @@
         <file alias="fontsmaller">res/icons/fontsmaller.png</file>
         <file alias="prompticon">res/icons/chevron.png</file>
     </qresource>
+    <qresource prefix="/css">
+        <file alias="dyno">res/css/dyno.css</file>
+        <file alias="logo">res/css/logo.png</file>
+        <file alias="menu1">res/css/menu1.png</file>
+        <file alias="menu2">res/css/menu2.png</file>
+    </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
         <file alias="spinner-001">res/movies/spinner-001.png</file>

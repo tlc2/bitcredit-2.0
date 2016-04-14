@@ -12,6 +12,7 @@
 #include "amount.h"
 
 #include <QLabel>
+#include <QPushButton>
 #include <QMainWindow>
 #include <QMap>
 #include <QMenu>
@@ -31,6 +32,7 @@ class WalletModel;
 class HelpMessageDialog;
 
 class CWallet;
+class OverviewPage;
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -58,6 +60,8 @@ public:
     */
     void setClientModel(ClientModel *clientModel);
 
+
+
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
         The wallet model represents a bitcredit wallet, and offers access to the list of transactions, address book and sending
@@ -79,6 +83,17 @@ protected:
 private:
     ClientModel *clientModel;
     WalletFrame *walletFrame;
+    OverviewPage *ovp;
+
+    QLabel *Logo;
+    QLabel *labelHeaderBalance;
+    
+   
+    //QWidget *toolbarwidget;
+    QPushButton *bover;
+    //QPushButton *bhistory;
+    //QPushButton *bsend;
+    //QPushButton *brec;
 
     UnitDisplayStatusBarControl *unitDisplayControl;
     QLabel *labelEncryptionIcon;
@@ -123,6 +138,10 @@ private:
 
     const PlatformStyle *platformStyle;
 
+    // change header balance on signal from overviewpage
+    void setHeaderBalance();
+    
+
     /** Create the main UI actions. */
     void createActions();
     /** Create the menu bar and sub-menus. */
@@ -160,6 +179,7 @@ public Q_SLOTS:
        @param[in] ret       pointer to a bool that will be modified to whether Ok was clicked (modal only)
     */
     void message(const QString &title, const QString &message, unsigned int style, bool *ret = NULL);
+   
 
 #ifdef ENABLE_WALLET
     /** Set the encryption status as shown in the UI.
@@ -228,6 +248,7 @@ public:
     explicit UnitDisplayStatusBarControl(const PlatformStyle *platformStyle);
     /** Lets the control know about the Options Model (and its signals) */
     void setOptionsModel(OptionsModel *optionsModel);
+
 
 protected:
     /** So that it responds to left-button clicks */
