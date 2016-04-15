@@ -168,7 +168,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
         //setCentralWidget(walletFrame);
         walletFrame->setFixedWidth(850);
         walletFrame->setFixedHeight(400);
-        walletFrame->move(0,140);        
+        walletFrame->move(0,120);        
     } else
 #endif // ENABLE_WALLET
     {
@@ -187,13 +187,13 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     Logo = new QLabel(this);
     Logo->move(10, 30);
     Logo->setFixedWidth(300);
-    Logo->setFixedHeight(100);
+    Logo->setFixedHeight(80);
     Logo->setObjectName("Logo");
     // balance label    
     labelHeaderBalance = new QLabel(this);
     labelHeaderBalance->move(320, 30);
     labelHeaderBalance->setFixedWidth(520);
-    labelHeaderBalance->setFixedHeight(100);
+    labelHeaderBalance->setFixedHeight(80);
     labelHeaderBalance->setText("Available Balance:\n");
     labelHeaderBalance->setObjectName("labelHeaderBalance");
 
@@ -227,7 +227,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     frameBlocks->setContentsMargins(0,0,0,0);
     frameBlocks->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
-    frameBlocksLayout->setContentsMargins(3,0,3,0);
+    frameBlocksLayout->setContentsMargins(0,0,0,0);
     frameBlocksLayout->setSpacing(3);
     //unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
     labelEncryptionIcon = new QLabel();
@@ -245,6 +245,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
     frameBlocksLayout->addStretch();
+
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
@@ -477,12 +478,14 @@ void BitcreditGUI::createToolBars()  // 'Back' or 'Return to Menu' button
     if(walletFrame)
     {
         // menu/back button
-        QPushButton *bover = new QPushButton(this);
-        bover->setFixedWidth(850);
-        bover->setFixedHeight(35);
+        bover = new QPushButton(this);
+        bover->setFixedWidth(830);
+        bover->setFixedHeight(50);
         bover->setObjectName("bover");
-        bover->move(00,540);
+        bover->move(10,525);
+        bover->setText(" <<< Menu <<<");
         connect(bover, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+        bover->hide();
      }
 }
 
@@ -682,24 +685,28 @@ void BitcreditGUI::gotoOverviewPage()
 {
     overviewAction->setChecked(true);
     if (walletFrame) walletFrame->gotoOverviewPage();
+    bover->hide();
 }
 
 void BitcreditGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
+    bover->show();
 }
 
 void BitcreditGUI::gotoReceiveCoinsPage()
 {
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
+    bover->show();
 }
 
 void BitcreditGUI::gotoSendCoinsPage(QString addr)
 {
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
+    bover->show();
 }
 
 void BitcreditGUI::gotoSignMessageTab(QString addr)
@@ -724,7 +731,9 @@ void BitcreditGUI::setNumConnections(int count)
     case 7: case 8: case 9: icon = ":/icons/connect_3"; break;
     default: icon = ":/icons/connect_4"; break;
     }
-    labelConnectionsIcon->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+    //labelConnectionsIcon->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+    labelConnectionsIcon->setPixmap(icon);
+    //labelConnectionsIcon->setPixmap(icon.scaled(20, 20, Qt::IgnoreAspectRatio, Qt::FastTransformation));
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Bitcredit network", "", count));
 }
 

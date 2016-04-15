@@ -64,13 +64,15 @@ font: 12pt;
 background-color: #323232;
 color: #ffffff;
 border: none;
-background-image: url(':css/menu1');
-background-position: center;
+text-align: center;
+/*background-image: url(':css/menu1');*/
+/*background-position: center;*/
 }
 #bover:hover
 {
-background-image: url(':css/menu2');
-background-position: center;
+background-color: #444444;
+/*background-image: url(':css/menu2');*/
+/*background-position: center;*/
 }
 
 #btx
