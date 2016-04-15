@@ -81,7 +81,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     QMainWindow(parent),
     clientModel(0),
     walletFrame(0),
-    unitDisplayControl(0),
+    //unitDisplayControl(0),
     labelEncryptionIcon(0),
     labelConnectionsIcon(0),
     labelBlocksIcon(0),
@@ -229,14 +229,14 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
-    unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
+    //unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
     labelEncryptionIcon = new QLabel();
     labelConnectionsIcon = new QLabel();
     labelBlocksIcon = new QLabel();
     if(enableWallet)
     {
         frameBlocksLayout->addStretch();
-        frameBlocksLayout->addWidget(unitDisplayControl);
+        //frameBlocksLayout->addWidget(unitDisplayControl);
         frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(labelEncryptionIcon);
     }
@@ -515,7 +515,7 @@ void BitcreditGUI::setClientModel(ClientModel *clientModel)
             walletFrame->setClientModel(clientModel);
         }
 #endif // ENABLE_WALLET
-        unitDisplayControl->setOptionsModel(clientModel->getOptionsModel());
+        //unitDisplayControl->setOptionsModel(clientModel->getOptionsModel());
     } else {
         // Disable possibility to show main window via action
         toggleHideAction->setEnabled(false);

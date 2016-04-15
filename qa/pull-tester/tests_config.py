@@ -3,7 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-BUILDDIR="/home/stu/Desktop/tlc2/bitcredit-2.0"
+BUILDDIR="/home/stu/Desktop/BCRv2.0-master/bitcredit-2.0"
 EXEEXT=""
 
 # These will turn into comments if they were disabled when configuring.
