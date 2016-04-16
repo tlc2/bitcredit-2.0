@@ -87,7 +87,7 @@ private:
     WalletFrame *walletFrame;
     //OverviewPage *ovp;
 
-    QLabel *Logo;
+    QPushButton *Logo;
     QLabel *labelHeaderBalance;
     
     QPushButton *bover;

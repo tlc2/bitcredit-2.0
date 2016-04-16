@@ -168,7 +168,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
         //setCentralWidget(walletFrame);
         walletFrame->setFixedWidth(850);
         walletFrame->setFixedHeight(400);
-        walletFrame->move(0,155);        
+        walletFrame->move(0,165);        
     } else
 #endif // ENABLE_WALLET
     {
@@ -183,13 +183,15 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
 
     // Header UI elements
 
-    // logo
-    Logo = new QLabel(this);
+    // logo - we'll make it a button that leads back to the overviewpage menu
+    Logo = new QPushButton(this);
     Logo->move(10, 30);
     Logo->setFixedWidth(300);
     Logo->setFixedHeight(80);
     Logo->setObjectName("Logo");
-    // balance label    
+    connect(Logo, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+    
+    // balance label  
     labelHeaderBalance = new QLabel(this);
     labelHeaderBalance->move(320, 30);
     labelHeaderBalance->setFixedWidth(520);
@@ -491,7 +493,7 @@ void BitcreditGUI::createToolBars()
         sendrec = new QWidget(this);
         sendrec->setFixedHeight(25);
         sendrec->setFixedWidth(830);
-        sendrec->move(10, 125);
+        sendrec->move(10, 135);
         sendrec->hide();
         
         bsendtab = new QPushButton(sendrec);
@@ -500,6 +502,7 @@ void BitcreditGUI::createToolBars()
         bsendtab->move(0,0);
         bsendtab->setText("Send");
         bsendtab->setObjectName("bsendtab");
+        bsendtab->setCheckable(true);
         connect(bsendtab, SIGNAL(clicked()), this, SLOT(gotoSendCoinsPage()));
         
         brectab = new QPushButton(sendrec);
@@ -508,6 +511,7 @@ void BitcreditGUI::createToolBars()
         brectab->move(415,0);
         brectab->setText("Receive");
         brectab->setObjectName("brectab");
+        brectab->setCheckable(true);
         connect(brectab, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
         
         
@@ -727,6 +731,8 @@ void BitcreditGUI::gotoReceiveCoinsPage()
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
     bover->show();
+    brectab->setChecked(true);
+    bsendtab->setChecked(false);
 }
 
 void BitcreditGUI::gotoSendCoinsPage(QString addr)
@@ -735,6 +741,8 @@ void BitcreditGUI::gotoSendCoinsPage(QString addr)
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
     bover->show();
     sendrec->show();
+    brectab->setChecked(false);
+    bsendtab->setChecked(true);
 }
 
 void BitcreditGUI::gotoSignMessageTab(QString addr)

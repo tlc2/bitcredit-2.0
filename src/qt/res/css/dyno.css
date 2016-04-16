@@ -30,9 +30,16 @@ border: none;
 #Logo
 {
 background-image: url(':css/logo');
+background-color: #232323;
 background-repeat: none; 
 background-position: center;
+border: none;
 }
+#Logo:hover
+{
+background-color: #232323;
+}
+
 #labelHeaderBalance
 {
 font: 16pt;
