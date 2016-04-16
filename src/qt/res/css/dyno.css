@@ -52,7 +52,41 @@ qproperty-alignment: AlignCenter;
 background-color: #232323;
 }
 
-
+/* bitcreditgui sendrec 'toolbar' */
+#sendrec
+{
+border: none;
+}
+#bsendtab
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#bsendtab:hover
+{
+background-color: #444444;
+}
+#bsendtab:checked
+{
+background-color: #444444;
+}
+#brectab
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#brectab:hover
+{
+background-color: #444444;
+}
+#brectab:checked
+{
+background-color: #444444;
+}
 
 
 
@@ -111,50 +145,50 @@ border: none;
 background-color: #444444;
 }
 
-#brec
+#bgetbcr
 {
 font: 12pt;
 background-color: #323232;
 color: #ffffff;
 border: none;
 }
-#brec:hover
+#bgetbcr:hover
 {
 background-color: #444444;
 }
 
-#bos1
+#bp2p
 {
 font: 12pt;
 background-color: #323232;
 color: #ffffff;
 border: none;
 }
-#bos1:hover
+#bp2p:hover
 {
 background-color: #444444;
 }
 
-#bos2
+#bassets
 {
 font: 12pt;
 background-color: #323232;
 color: #ffffff;
 border: none;
 }
-#bos2:hover
+#bassets:hover
 {
 background-color: #444444;
 }
 
-#bos3
+#butilities
 {
 font: 12pt;
 background-color: #323232;
 color: #ffffff;
 border: none;
 }
-#bos3:hover
+#butilities:hover
 {
 background-color: #444444;
 }

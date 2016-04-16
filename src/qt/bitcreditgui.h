@@ -60,6 +60,8 @@ public:
     */
     void setClientModel(ClientModel *clientModel);
 
+    // change header balance on signal from overviewpage (via walletModel)
+    void setHeaderBalance();
 
 
 #ifdef ENABLE_WALLET
@@ -83,17 +85,16 @@ protected:
 private:
     ClientModel *clientModel;
     WalletFrame *walletFrame;
-    OverviewPage *ovp;
+    //OverviewPage *ovp;
 
     QLabel *Logo;
     QLabel *labelHeaderBalance;
     
-   
-    //QWidget *toolbarwidget;
     QPushButton *bover;
-    //QPushButton *bhistory;
-    //QPushButton *bsend;
-    //QPushButton *brec;
+
+    QWidget *sendrec;
+    QPushButton *bsendtab;
+    QPushButton *brectab;
 
     UnitDisplayStatusBarControl *unitDisplayControl;
     QLabel *labelEncryptionIcon;
@@ -137,10 +138,7 @@ private:
     int spinnerFrame;
 
     const PlatformStyle *platformStyle;
-
-    // change header balance on signal from overviewpage
-    void setHeaderBalance();
-    
+ 
 
     /** Create the main UI actions. */
     void createActions();

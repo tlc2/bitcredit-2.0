@@ -119,9 +119,9 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     spinnerFrame(0),
     platformStyle(platformStyle)
 {
-    setFixedSize(850, 600);
+    setFixedSize(850, 640);
     //setWindowFlags(Qt::FramelessWindowHint);
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 600), this);
+    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 640), this);
 
     // load stylesheet
     QFile qss(":css/dyno");
@@ -168,7 +168,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
         //setCentralWidget(walletFrame);
         walletFrame->setFixedWidth(850);
         walletFrame->setFixedHeight(400);
-        walletFrame->move(0,120);        
+        walletFrame->move(0,155);        
     } else
 #endif // ENABLE_WALLET
     {
@@ -198,9 +198,9 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     labelHeaderBalance->setObjectName("labelHeaderBalance");
 
     // get balance from a new overviewpage instance, since I can't figure out how to pass it from walletView's overviewPage instance
-    ovp = new OverviewPage(platformStyle);
-    setHeaderBalance();
-    connect(ovp, SIGNAL(balancechanged()), this, SLOT(setHeaderBalance()));
+    //ovp = new OverviewPage(platformStyle);
+    //setHeaderBalance();
+    //connect(ovp, SIGNAL(balancechanged()), this, SLOT(setHeaderBalance()));
     
     // Create actions for the toolbar, menu bar and tray/dock icon
     // Needs walletFrame to be initialized
@@ -295,7 +295,7 @@ BitcreditGUI::~BitcreditGUI()
 
 void BitcreditGUI::setHeaderBalance()
 {
-    QString bal = this->ovp->balance();
+    QString bal = "we have contact";
     labelHeaderBalance->setText("Available Balance:\n" + bal);
 }
 
@@ -473,7 +473,7 @@ void BitcreditGUI::createMenuBar()
     help->addAction(aboutQtAction);
 }
 
-void BitcreditGUI::createToolBars()  // 'Back' or 'Return to Menu' button
+void BitcreditGUI::createToolBars()  
 {
     if(walletFrame)
     {
@@ -482,10 +482,36 @@ void BitcreditGUI::createToolBars()  // 'Back' or 'Return to Menu' button
         bover->setFixedWidth(830);
         bover->setFixedHeight(50);
         bover->setObjectName("bover");
-        bover->move(10,525);
+        bover->move(10,565);
         bover->setText(" <<< Menu <<<");
         connect(bover, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
         bover->hide();
+        
+        // sendrec 'toolbar' with send and receive 'tabs'
+        sendrec = new QWidget(this);
+        sendrec->setFixedHeight(25);
+        sendrec->setFixedWidth(830);
+        sendrec->move(10, 125);
+        sendrec->hide();
+        
+        bsendtab = new QPushButton(sendrec);
+        bsendtab->setFixedHeight(25);
+        bsendtab->setFixedWidth(415);
+        bsendtab->move(0,0);
+        bsendtab->setText("Send");
+        bsendtab->setObjectName("bsendtab");
+        connect(bsendtab, SIGNAL(clicked()), this, SLOT(gotoSendCoinsPage()));
+        
+        brectab = new QPushButton(sendrec);
+        brectab->setFixedHeight(25);
+        brectab->setFixedWidth(415);
+        brectab->move(415,0);
+        brectab->setText("Receive");
+        brectab->setObjectName("brectab");
+        connect(brectab, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
+        
+        
+       
      }
 }
 
@@ -686,6 +712,7 @@ void BitcreditGUI::gotoOverviewPage()
     overviewAction->setChecked(true);
     if (walletFrame) walletFrame->gotoOverviewPage();
     bover->hide();
+    sendrec->hide();
 }
 
 void BitcreditGUI::gotoHistoryPage()
@@ -707,6 +734,7 @@ void BitcreditGUI::gotoSendCoinsPage(QString addr)
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
     bover->show();
+    sendrec->show();
 }
 
 void BitcreditGUI::gotoSignMessageTab(QString addr)

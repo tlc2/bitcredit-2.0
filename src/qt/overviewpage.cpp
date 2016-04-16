@@ -127,10 +127,10 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     // help stylesheet find things
     ui->btx->setObjectName("btx");
     ui->bsend->setObjectName("bsend");
-    ui->brec->setObjectName("brec");
-    ui->bos1->setObjectName("bos1");
-    ui->bos2->setObjectName("bos2");
-    ui->bos3->setObjectName("bos3");
+    ui->bgetbcr->setObjectName("bgetbcr");
+    ui->bp2p->setObjectName("bp2p");
+    ui->bassets->setObjectName("bassets");
+    ui->butilities->setObjectName("butilities");
 
     // use a SingleColorIcon for the "out of sync warning" icon
     QIcon icon = platformStyle->SingleColorIcon(":/icons/warning");
@@ -152,12 +152,12 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     // emit signals when menu buttons clicked that walletview can pick up to switch pages
     connect(ui->btx, SIGNAL(clicked()), this, SLOT(emitbtxclicked()));
     connect(ui->bsend, SIGNAL(clicked()), this, SLOT(emitbsendclicked()));
-    connect(ui->brec, SIGNAL(clicked()), this, SLOT(emitbrecclicked()));
-    connect(ui->bos1, SIGNAL(clicked()), this, SLOT(emitbos1clicked()));
-    connect(ui->bos2, SIGNAL(clicked()), this, SLOT(emitbos2clicked()));
+    connect(ui->bgetbcr, SIGNAL(clicked()), this, SLOT(emitbgetbcrclicked()));
+    connect(ui->bp2p, SIGNAL(clicked()), this, SLOT(emitbp2pclicked()));
+    connect(ui->bassets, SIGNAL(clicked()), this, SLOT(emitbassetsclicked()));
+    connect(ui->butilities, SIGNAL(clicked()), this, SLOT(emitbutilitiesclicked()));
     
 }
-
 
 void OverviewPage::emitbtxclicked()
 {
@@ -174,14 +174,24 @@ void OverviewPage::emitbrecclicked()
     Q_EMIT brecclicked();
 }
 
-void OverviewPage::emitbos1clicked()
+void OverviewPage::emitbgetbcrclicked()
 {
-    Q_EMIT bos1clicked();
+    Q_EMIT bgetbcrclicked();
 }
 
-void OverviewPage::emitbos2clicked()
+void OverviewPage::emitbp2pclicked()
 {
-    Q_EMIT bos2clicked();
+    Q_EMIT bp2pclicked();
+}
+
+void OverviewPage::emitbassetsclicked()
+{
+    Q_EMIT bassetsclicked();
+}
+
+void OverviewPage::emitbutilitiesclicked()
+{
+    Q_EMIT butilitiesclicked();
 }
 
 
@@ -197,10 +207,6 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-QString OverviewPage::balance() const 
-{
-    return ui->labelBalance->text();
-}
 
 void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
@@ -212,6 +218,8 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     currentWatchUnconfBalance = watchUnconfBalance;
     currentWatchImmatureBalance = watchImmatureBalance;
     ui->labelBalance->setText(BitcreditUnits::formatWithUnit(unit, balance, false, BitcreditUnits::separatorAlways));
+    emitbalancechanged();
+    Q_EMIT balancechanged();
  
     //ui->labelUnconfirmed->setText(BitcreditUnits::formatWithUnit(unit, unconfirmedBalance, false, BitcreditUnits::separatorAlways));
     //ui->labelImmature->setText(BitcreditUnits::formatWithUnit(unit, immatureBalance, false, BitcreditUnits::separatorAlways));
@@ -257,7 +265,7 @@ void OverviewPage::setClientModel(ClientModel *model)
     }
 }
 
-void OverviewPage::emitemitemit()
+void OverviewPage::emitbalancechanged()
 {
     Q_EMIT balancechanged();
 }
@@ -284,7 +292,7 @@ void OverviewPage::setWalletModel(WalletModel *model)
                    model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
         connect(model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
         
-        connect(model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(emitemitemit()));
+        connect(model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(emitbalancechanged()));
 
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
 

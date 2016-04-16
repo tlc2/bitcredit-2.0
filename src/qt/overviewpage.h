@@ -40,8 +40,7 @@ public:
 public Q_SLOTS:
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                     const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
-                    
-    QString balance() const; //or more specific name depending on the context
+
 
 
 Q_SIGNALS:
@@ -49,9 +48,10 @@ Q_SIGNALS:
     void btxclicked();
     void bsendclicked();
     void brecclicked();
-    void bos1clicked();
-    void bos2clicked();
-    void bos3clicked();
+    void bgetbcrclicked();
+    void bp2pclicked();
+    void bassetsclicked();
+    void butilitiesclicked();
     
     void balancechanged();
 
@@ -78,10 +78,12 @@ private Q_SLOTS:
     void emitbtxclicked();
     void emitbsendclicked();
     void emitbrecclicked();
-    void emitbos1clicked();
-    void emitbos2clicked();
+    void emitbgetbcrclicked();
+    void emitbp2pclicked();
+    void emitbassetsclicked();
+    void emitbutilitiesclicked();
     
-    void emitemitemit();
+    void emitbalancechanged();
 };
 
 #endif // BITCREDIT_QT_OVERVIEWPAGE_H
