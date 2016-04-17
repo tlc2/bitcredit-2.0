@@ -8,6 +8,7 @@
 #include "net.h"
 #include "basenodeman.h"
 #include "bidtracker.h"
+#include "platformstyle.h"
 
 #include <fstream>
 #include <QMessageBox>
@@ -19,7 +20,7 @@
 #include <QFile>
 #include <QTextStream>
 
-BidPage::BidPage(QWidget *parent)
+BidPage::BidPage(const PlatformStyle *platformStyle, QWidget *parent)
     : QWidget(parent), ui(new Ui::BidPage)
 {
     ui->setupUi(this);

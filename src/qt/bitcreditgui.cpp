@@ -736,6 +736,15 @@ void BitcreditGUI::gotoSendCoinsPage(QString addr)
     bsendtab->setChecked(true);
 }
 
+void BitcreditGUI::gotoBidPage()
+{
+    //bidAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoBidPage();
+    bover->show();
+}
+
+
+
 void BitcreditGUI::gotoSignMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoSignMessageTab(addr);

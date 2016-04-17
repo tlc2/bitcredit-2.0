@@ -194,19 +194,16 @@ void OverviewPage::emitbutilitiesclicked()
     Q_EMIT butilitiesclicked();
 }
 
-
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)
 {
     if(filter)
         Q_EMIT transactionClicked(filter->mapToSource(index));
 }
 
-
 OverviewPage::~OverviewPage()
 {
     delete ui;
 }
-
 
 void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
@@ -221,10 +218,8 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
     QString bal = ui->labelBalance->text();
     someFunctionThatChangesText("Available Balance:\n" + bal);
-    //someFunctionThatChangesText("Hello From overviewPage!");
-    
  
-    //ui->labelUnconfirmed->setText(BitcreditUnits::formatWithUnit(unit, unconfirmedBalance, false, BitcreditUnits::separatorAlways));
+     //ui->labelUnconfirmed->setText(BitcreditUnits::formatWithUnit(unit, unconfirmedBalance, false, BitcreditUnits::separatorAlways));
     //ui->labelImmature->setText(BitcreditUnits::formatWithUnit(unit, immatureBalance, false, BitcreditUnits::separatorAlways));
     //ui->labelTotal->setText(BitcreditUnits::formatWithUnit(unit, balance + unconfirmedBalance + immatureBalance, false, BitcreditUnits::separatorAlways));
     //ui->labelWatchAvailable->setText(BitcreditUnits::formatWithUnit(unit, watchOnlyBalance, false, BitcreditUnits::separatorAlways));

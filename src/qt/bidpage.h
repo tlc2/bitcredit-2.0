@@ -5,6 +5,8 @@
 
 #include <QWidget>
 
+class PlatformStyle;
+
 namespace Ui
 {
     class BidPage;
@@ -15,8 +17,12 @@ class BidPage: public QWidget
     Q_OBJECT
 
 public:
-    BidPage(QWidget *parent = 0);
+    BidPage(const PlatformStyle *platformStyle, QWidget *parent = 0);
     ~BidPage();
+
+
+
+
 
     QString str;
     QString btctotal;
@@ -25,7 +31,7 @@ public:
 
     void setClientModel(ClientModel *model);
 
-private slots:
+private:
     void SummonBTCWallet();   
     void SummonBTCExplorer(); 
     void GetBids();

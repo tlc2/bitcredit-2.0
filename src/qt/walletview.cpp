@@ -19,6 +19,8 @@
 #include "transactionview.h"
 #include "walletmodel.h"
 
+#include "bidpage.h"
+
 #include "ui_interface.h"
 
 #include <QAction>
@@ -59,10 +61,15 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     usedReceivingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::ReceivingTab, this);
 
+    // add other BCR pages
+    bidPage = new BidPage(platformStyle);
+
+
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
+    addWidget(bidPage);
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -93,9 +100,10 @@ void WalletView::setBitcreditGUI(BitcreditGUI *gui)
         connect(overviewPage, SIGNAL(btxclicked()), gui, SLOT(gotoHistoryPage()));
         connect(overviewPage, SIGNAL(bsendclicked()), gui, SLOT(gotoSendCoinsPage()));
         connect(overviewPage, SIGNAL(brecclicked()), gui, SLOT(gotoReceiveCoinsPage()));
-        //connect(overviewPage, SIGNAL(bos1clicked()), gui, SLOT(gotoHistoryPage()));
-        //connect(overviewPage, SIGNAL(bos2clicked()), gui, SLOT(gotoHistoryPage()));
-        //connect(overviewPage, SIGNAL(bos3clicked()), gui, SLOT(gotoHistoryPage()));
+        connect(overviewPage, SIGNAL(bgetbcrclicked()), gui, SLOT(gotoBidPage()));
+        //connect(overviewPage, SIGNAL(bp2pclicked()), gui, SLOT(gotoP2PPage()));
+        //connect(overviewPage, SIGNAL(bassetsclicked()), gui, SLOT(gotoAssetsPage()));
+        //connect(overviewPage, SIGNAL(butilitiesclicked()), gui, SLOT(gotoUtilitiesPage()));
         
         // Clicking on a transaction on the overview page simply sends you to transaction history page
         connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), gui, SLOT(gotoHistoryPage()));
@@ -194,6 +202,28 @@ void WalletView::gotoSendCoinsPage(QString addr)
     if (!addr.isEmpty())
         sendCoinsPage->setAddress(addr);
 }
+
+void WalletView::gotoBidPage()
+{
+    setCurrentWidget(bidPage);
+}
+
+/*
+void WalletView::gotoP2PPage()
+{
+    setCurrentWidget(p2pPage);
+}
+
+void WalletView::gotoAssetsPage()
+{
+    setCurrentWidget(assetsPage);
+}
+
+void WalletView::gotoUtilitiesPage()
+{
+    setCurrentWidget(utilitiesPage);
+}
+*/
 
 void WalletView::gotoSignMessageTab(QString addr)
 {
