@@ -219,7 +219,9 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     currentWatchImmatureBalance = watchImmatureBalance;
     ui->labelBalance->setText(BitcreditUnits::formatWithUnit(unit, balance, false, BitcreditUnits::separatorAlways));
 
-    someFunctionThatChangesText("Hello From overviewPage!");
+    QString bal = ui->labelBalance->text();
+    someFunctionThatChangesText("Available Balance:\n" + bal);
+    //someFunctionThatChangesText("Hello From overviewPage!");
     
  
     //ui->labelUnconfirmed->setText(BitcreditUnits::formatWithUnit(unit, unconfirmedBalance, false, BitcreditUnits::separatorAlways));
