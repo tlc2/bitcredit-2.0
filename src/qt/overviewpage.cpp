@@ -218,8 +218,9 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     currentWatchUnconfBalance = watchUnconfBalance;
     currentWatchImmatureBalance = watchImmatureBalance;
     ui->labelBalance->setText(BitcreditUnits::formatWithUnit(unit, balance, false, BitcreditUnits::separatorAlways));
-    emitbalancechanged();
-    Q_EMIT balancechanged();
+
+    someFunctionThatChangesText("Hello From overviewPage!");
+    
  
     //ui->labelUnconfirmed->setText(BitcreditUnits::formatWithUnit(unit, unconfirmedBalance, false, BitcreditUnits::separatorAlways));
     //ui->labelImmature->setText(BitcreditUnits::formatWithUnit(unit, immatureBalance, false, BitcreditUnits::separatorAlways));
@@ -265,9 +266,9 @@ void OverviewPage::setClientModel(ClientModel *model)
     }
 }
 
-void OverviewPage::emitbalancechanged()
+void OverviewPage::someFunctionThatChangesText(const QString& newtext)
 {
-    Q_EMIT balancechanged();
+    Q_EMIT textChanged(newtext);
 }
 
 void OverviewPage::setWalletModel(WalletModel *model)

@@ -60,8 +60,7 @@ public:
     */
     void setClientModel(ClientModel *clientModel);
 
-    // change header balance on signal from overviewpage (via walletModel)
-    void setHeaderBalance();
+    QLabel *labelHeaderBalance;
 
 
 #ifdef ENABLE_WALLET
@@ -88,7 +87,7 @@ private:
     //OverviewPage *ovp;
 
     QPushButton *Logo;
-    QLabel *labelHeaderBalance;
+    //QLabel *labelHeaderBalance;
     
     QPushButton *bover;
 

@@ -52,8 +52,7 @@ Q_SIGNALS:
     void bp2pclicked();
     void bassetsclicked();
     void butilitiesclicked();
-    
-    void balancechanged();
+    void textChanged(QString);
 
 private:
     Ui::OverviewPage *ui;
@@ -83,7 +82,7 @@ private Q_SLOTS:
     void emitbassetsclicked();
     void emitbutilitiesclicked();
     
-    void emitbalancechanged();
+    void someFunctionThatChangesText(const QString& newtext);
 };
 
 #endif // BITCREDIT_QT_OVERVIEWPAGE_H

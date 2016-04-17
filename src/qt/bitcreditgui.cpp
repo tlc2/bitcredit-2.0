@@ -295,11 +295,6 @@ BitcreditGUI::~BitcreditGUI()
     delete rpcConsole;
 }
 
-void BitcreditGUI::setHeaderBalance()
-{
-    QString bal = "we have contact";
-    labelHeaderBalance->setText("Available Balance:\n" + bal);
-}
 
 void BitcreditGUI::createActions()
 {

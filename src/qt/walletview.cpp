@@ -87,17 +87,15 @@ void WalletView::setBitcreditGUI(BitcreditGUI *gui)
 {
     if (gui)
     {
+        connect(overviewPage, SIGNAL(textChanged(QString)), gui->labelHeaderBalance, SLOT(setText(QString)));
+        
         // connect signals from menu pages to bitcreditgui slots to switch pages
         connect(overviewPage, SIGNAL(btxclicked()), gui, SLOT(gotoHistoryPage()));
         connect(overviewPage, SIGNAL(bsendclicked()), gui, SLOT(gotoSendCoinsPage()));
         connect(overviewPage, SIGNAL(brecclicked()), gui, SLOT(gotoReceiveCoinsPage()));
-        connect(overviewPage, SIGNAL(balancechanged()), gui, SLOT(setHeaderBalance()));
         //connect(overviewPage, SIGNAL(bos1clicked()), gui, SLOT(gotoHistoryPage()));
         //connect(overviewPage, SIGNAL(bos2clicked()), gui, SLOT(gotoHistoryPage()));
         //connect(overviewPage, SIGNAL(bos3clicked()), gui, SLOT(gotoHistoryPage()));
-        
-        // connect overviewPage headerbalance signal to bitcreditgui slot to update balance
-        connect(overviewPage, SIGNAL(balancechanged()), gui, SLOT(setHeaderBalance()));
         
         // Clicking on a transaction on the overview page simply sends you to transaction history page
         connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), gui, SLOT(gotoHistoryPage()));
