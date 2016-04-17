@@ -165,6 +165,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     {
         /** Create wallet frame and make it the centralish widget */
         walletFrame = new WalletFrame(platformStyle, this);
+        //walletFrame = new WalletFrame(this);
         //setCentralWidget(walletFrame);
         walletFrame->setFixedWidth(850);
         walletFrame->setFixedHeight(400);
@@ -198,11 +199,6 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     labelHeaderBalance->setFixedHeight(80);
     labelHeaderBalance->setText("Available Balance:\n");
     labelHeaderBalance->setObjectName("labelHeaderBalance");
-
-    // get balance from a new overviewpage instance, since I can't figure out how to pass it from walletView's overviewPage instance
-    //ovp = new OverviewPage(platformStyle);
-    //setHeaderBalance();
-    //connect(ovp, SIGNAL(balancechanged()), this, SLOT(setHeaderBalance()));
     
     // Create actions for the toolbar, menu bar and tray/dock icon
     // Needs walletFrame to be initialized
