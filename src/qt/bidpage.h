@@ -25,7 +25,6 @@ public:
     QString str;
     QString btctotal;
     double btctot;
-    std::string theme;
 
     void setClientModel(ClientModel *model);
 

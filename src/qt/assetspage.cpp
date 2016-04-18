@@ -16,6 +16,8 @@ AssetsPage::AssetsPage(QWidget *parent)
     title = new QLabel(this);
     title->setText("Asset Creation and Management");
     title->move(10, 2);
+    title->setFixedWidth(310);
+    title->setAlignment(Qt::AlignCenter);
     title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");
     spacer = new QLabel(this);
     spacer->move(10, 17);

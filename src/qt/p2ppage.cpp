@@ -16,6 +16,8 @@ P2PPage::P2PPage(QWidget *parent)
     title = new QLabel(this);
     title->setText("P2P Finance - Lend / Borrow BCR");
     title->move(10, 2);
+    title->setFixedWidth(310);
+    title->setAlignment(Qt::AlignCenter);
     title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");
     spacer = new QLabel(this);
     spacer->move(10, 17);

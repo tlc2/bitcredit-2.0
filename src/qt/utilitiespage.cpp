@@ -14,6 +14,8 @@ UtilitiesPage::UtilitiesPage(QWidget *parent)
     decoration->move(10,0);
     decoration->setStyleSheet("border: 1px solid #ff1a00;");
     title = new QLabel(this);
+    title->setFixedWidth(310);
+    title->setAlignment(Qt::AlignCenter);
     title->setText("Utilities and Settings");
     title->move(10, 2);
     title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");

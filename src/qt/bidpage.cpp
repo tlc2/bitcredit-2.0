@@ -34,70 +34,21 @@ BidPage::BidPage(const PlatformStyle *platformStyle, QWidget *parent)
     title = new QLabel(this);
     title->setText("Bitcredit Daily Auction");
     title->move(10, 2);
+    title->setFixedWidth(310);
+    title->setAlignment(Qt::AlignCenter);
     title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");
     spacer = new QLabel(this);
     spacer->move(10, 17);
     spacer->setFixedHeight(15);
 
     ui->lineEditBid->setEnabled(false);  //  cannot calc until update clicked and data fetched
-    ui->label_BTCassets->setStyleSheet("border: none");
 
     connect(ui->pushButtonBTCExplorer, SIGNAL(clicked()), this, SLOT(SummonBTCExplorer()));
     connect(ui->pushButtonBTC, SIGNAL(clicked()), this, SLOT(SummonBTCWallet()));
     connect(ui->pushButtonRefresh, SIGNAL(clicked()), this, SLOT(GetBids()));
     connect(ui->lineEditBid, SIGNAL(returnPressed()), this, SLOT(Estimate()));
 
-    theme = GetArg("-theme", "");
-    QString themestring = QString::fromUtf8(theme.c_str());
-    if (themestring.contains("orange"))
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #ffa405");
-        ui->frame->setStyleSheet("border: 2px solid #ffa405");
-        ui->label_heading->setStyleSheet("border: none");
-    }
-    else if (themestring.contains("dark"))
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #ffa405");
-        ui->frame->setStyleSheet("border: 2px solid #ffa405");
-        ui->label_heading->setStyleSheet("border: none");
-    }
-    else if (themestring.contains("green"))
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #45f806");
-        ui->frame->setStyleSheet("border: 2px solid #45f806");
-        ui->label_heading->setStyleSheet("border: none");
-    }
-    else if (themestring.contains("blue"))
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #031cd7");
-        ui->frame->setStyleSheet("border: 2px solid #031cd7");
-        ui->label_heading->setStyleSheet("border: none");
-    }
-    else if (themestring.contains("pink"))
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #ff03a3");
-        ui->frame->setStyleSheet("border: 2px solid #ff03a3");
-        ui->label_heading->setStyleSheet("border: none");
-    }
-    else if (themestring.contains("purple"))
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #a106a7");
-        ui->frame->setStyleSheet("border: 2px solid #a106a7");
-        ui->label_heading->setStyleSheet("border: none");
-    }
-    else if (themestring.contains("turq"))
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #0ab4dc");
-        ui->frame->setStyleSheet("border: 2px solid #0ab4dc");
-        ui->label_heading->setStyleSheet("border: none");
-    }
-    //fallback on default
-    else
-    {
-        ui->pushButtonRefresh->setStyleSheet("border: 2px solid #ffa405");
-        ui->frame->setStyleSheet("border: 1px solid #ffa405");
-        ui->label_heading->setStyleSheet("border: none");
-    }
+ 
 }
 
 void BidPage::setClientModel(ClientModel *model)
