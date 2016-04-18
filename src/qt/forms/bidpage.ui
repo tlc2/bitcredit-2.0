@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>854</width>
-    <height>541</height>
+    <width>845</width>
+    <height>536</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>-8</y>
-     <width>781</width>
+     <width>771</width>
      <height>504</height>
     </rect>
    </property>
@@ -34,13 +34,13 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>120</height>
+        <height>70</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>120</height>
+        <height>70</height>
        </size>
       </property>
       <property name="frameShape">
@@ -53,7 +53,7 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>42</y>
+         <y>20</y>
          <width>701</width>
          <height>30</height>
         </rect>
@@ -82,7 +82,7 @@
        <property name="geometry">
         <rect>
          <x>250</x>
-         <y>74</y>
+         <y>45</y>
          <width>241</width>
          <height>17</height>
         </rect>
@@ -97,7 +97,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QGridLayout" name="gridLayout" rowminimumheight="40,20,20,20">
+     <layout class="QGridLayout" name="gridLayout">
       <property name="bottomMargin">
        <number>0</number>
       </property>
@@ -106,7 +106,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>30</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -151,6 +151,12 @@
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="labelNumber">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="palette">
          <palette>
           <active/>
@@ -175,6 +181,12 @@
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="labelNext">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -192,7 +204,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>30</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -235,36 +247,12 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>250</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Bid with Bitcoin, send your bid to: </string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="1" alignment="Qt::AlignLeft">
        <widget class="QPushButton" name="pushButtonBTCExplorer">
         <property name="maximumSize">
          <size>
           <width>330</width>
-          <height>16777215</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -310,16 +298,40 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>250</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Bid with Bitcoin, send your bid to: </string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="25,0,0,0,0">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
       <item>
        <widget class="QLabel" name="labelCalc">
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>30</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -376,7 +388,7 @@
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>25</height>
+            <height>20</height>
            </size>
           </property>
           <property name="text">
@@ -409,7 +421,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>30</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -431,7 +443,7 @@
           <property name="maximumSize">
            <size>
             <width>200</width>
-            <height>25</height>
+            <height>20</height>
            </size>
           </property>
           <property name="text">
@@ -457,7 +469,7 @@
           <property name="maximumSize">
            <size>
             <width>130</width>
-            <height>16777215</height>
+            <height>25</height>
            </size>
           </property>
           <property name="text">

@@ -98,6 +98,9 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/bidpage.ui \
+  qt/forms/p2ppage.ui \
+  qt/forms/assetspage.ui \
+  qt/forms/utilitiespage.ui \
   qt/forms/transactiondescdialog.ui
 
 QT_MOC_CPP = \
@@ -145,6 +148,9 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_bidpage.cpp \
+  qt/moc_p2ppage.cpp \
+  qt/moc_assetspage.cpp \
+  qt/moc_utilitiespage.cpp \
   qt/moc_walletview.cpp
 
 BITCREDIT_MM = \
@@ -219,6 +225,9 @@ BITCREDIT_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/bidpage.h \
+  qt/p2ppage.h \
+  qt/assetspage.h \
+  qt/utilitiespage.h \
   qt/winshutdownmonitor.h
 
 RES_ICONS = \
@@ -328,6 +337,9 @@ BITCREDIT_QT_CPP += \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/bidpage.cpp \
+  qt/p2ppage.cpp \
+  qt/assetspage.cpp \
+  qt/utilitiespage.cpp \
   qt/walletview.cpp
 endif
 

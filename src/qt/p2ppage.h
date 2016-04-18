@@ -1,5 +1,5 @@
-#ifndef ASSETSPAGE_H
-#define ASSETSPAGE_H
+#ifndef P2PPAGE_H
+#define P2PPAGE_H
 
 #include "clientmodel.h"
 
@@ -9,21 +9,21 @@
 
 namespace Ui
 {
-    class AssetsPage;
+    class P2PPage;
 }
 
-class AssetsPage: public QWidget
+class P2PPage: public QWidget
 {
     Q_OBJECT
 
 public:
-    AssetsPage(QWidget *parent = 0);
-    ~AssetsPage();
+    P2PPage(QWidget *parent = 0);
+    ~P2PPage();
 
     void setClientModel(ClientModel *model);
 
 private:
-    Ui::AssetsPage *ui;
+    Ui::P2PPage *ui;
     ClientModel *clientModel;
     
     QFrame *decoration;
@@ -32,4 +32,4 @@ private:
 
 };
 
-#endif // ASSETSPAGE_H
+#endif // P2PPAGE_H

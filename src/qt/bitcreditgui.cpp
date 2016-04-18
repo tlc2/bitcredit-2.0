@@ -704,7 +704,6 @@ void BitcreditGUI::openClicked()
 
 void BitcreditGUI::gotoOverviewPage()
 {
-    overviewAction->setChecked(true);
     if (walletFrame) walletFrame->gotoOverviewPage();
     bover->hide();
     sendrec->hide();
@@ -712,14 +711,12 @@ void BitcreditGUI::gotoOverviewPage()
 
 void BitcreditGUI::gotoHistoryPage()
 {
-    historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
     bover->show();
 }
 
 void BitcreditGUI::gotoReceiveCoinsPage()
 {
-    receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
     bover->show();
     brectab->setChecked(true);
@@ -728,7 +725,6 @@ void BitcreditGUI::gotoReceiveCoinsPage()
 
 void BitcreditGUI::gotoSendCoinsPage(QString addr)
 {
-    sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
     bover->show();
     sendrec->show();
@@ -738,12 +734,27 @@ void BitcreditGUI::gotoSendCoinsPage(QString addr)
 
 void BitcreditGUI::gotoBidPage()
 {
-    //bidAction->setChecked(true);
     if (walletFrame) walletFrame->gotoBidPage();
     bover->show();
 }
 
+void BitcreditGUI::gotoP2PPage()
+{
+    if (walletFrame) walletFrame->gotoP2PPage();
+    bover->show();
+}
 
+void BitcreditGUI::gotoAssetsPage()
+{
+    if (walletFrame) walletFrame->gotoAssetsPage();
+    bover->show();
+}
+
+void BitcreditGUI::gotoUtilitiesPage()
+{
+    if (walletFrame) walletFrame->gotoUtilitiesPage();
+    bover->show();
+}
 
 void BitcreditGUI::gotoSignMessageTab(QString addr)
 {

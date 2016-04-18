@@ -84,11 +84,8 @@ protected:
 private:
     ClientModel *clientModel;
     WalletFrame *walletFrame;
-    //OverviewPage *ovp;
 
     QPushButton *Logo;
-    //QLabel *labelHeaderBalance;
-    
     QPushButton *bover;
 
     QWidget *sendrec;
@@ -203,6 +200,9 @@ private Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "");
     
     void gotoBidPage();
+    void gotoP2PPage();
+    void gotoAssetsPage();
+    void gotoUtilitiesPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

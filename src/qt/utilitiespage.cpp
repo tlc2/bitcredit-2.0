@@ -1,9 +1,9 @@
-#include "assetspage.h"
-#include "ui_assetspage.h"
+#include "utilitiespage.h"
+#include "ui_utilitiespage.h"
 
 
-AssetsPage::AssetsPage(QWidget *parent)
-    : QWidget(parent), ui(new Ui::AssetsPage)
+UtilitiesPage::UtilitiesPage(QWidget *parent)
+    : QWidget(parent), ui(new Ui::UtilitiesPage)
 {
     ui->setupUi(this);
     
@@ -14,7 +14,7 @@ AssetsPage::AssetsPage(QWidget *parent)
     decoration->move(10,0);
     decoration->setStyleSheet("border: 1px solid #ff1a00;");
     title = new QLabel(this);
-    title->setText("Asset Creation and Management");
+    title->setText("Utilities and Settings");
     title->move(10, 2);
     title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");
     spacer = new QLabel(this);
@@ -23,7 +23,7 @@ AssetsPage::AssetsPage(QWidget *parent)
 }
 
 
-AssetsPage::~AssetsPage()
+UtilitiesPage::~UtilitiesPage()
 {
     delete ui;
 }

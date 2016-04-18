@@ -11,6 +11,9 @@
 
 class BitcreditGUI;
 class BidPage;
+class P2PPage;
+class AssetsPage;
+class UtilitiesPage;
 class ClientModel;
 class OverviewPage;
 class PlatformStyle;
@@ -69,6 +72,9 @@ private:
     TransactionView *transactionView;
     
     BidPage *bidPage;
+    P2PPage *p2pPage;
+    AssetsPage *assetsPage;
+    UtilitiesPage *utilitiesPage;
 
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
@@ -85,9 +91,9 @@ public Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "");
     
     void gotoBidPage();
-    //void gotoP2PPage();
-    //void gotoAssetsPage();
-    //void gotoUtilitiesPage();
+    void gotoP2PPage();
+    void gotoAssetsPage();
+    void gotoUtilitiesPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

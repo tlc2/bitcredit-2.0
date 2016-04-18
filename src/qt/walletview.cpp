@@ -20,6 +20,9 @@
 #include "walletmodel.h"
 
 #include "bidpage.h"
+#include "p2ppage.h"
+#include "assetspage.h"
+#include "utilitiespage.h"
 
 #include "ui_interface.h"
 
@@ -63,13 +66,18 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
 
     // add other BCR pages
     bidPage = new BidPage(platformStyle);
-
+    p2pPage = new P2PPage(this);
+    assetsPage = new AssetsPage(this);
+    utilitiesPage = new UtilitiesPage(this);
 
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(bidPage);
+    addWidget(p2pPage);
+    addWidget(assetsPage);
+    addWidget(utilitiesPage);
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -101,9 +109,9 @@ void WalletView::setBitcreditGUI(BitcreditGUI *gui)
         connect(overviewPage, SIGNAL(bsendclicked()), gui, SLOT(gotoSendCoinsPage()));
         connect(overviewPage, SIGNAL(brecclicked()), gui, SLOT(gotoReceiveCoinsPage()));
         connect(overviewPage, SIGNAL(bgetbcrclicked()), gui, SLOT(gotoBidPage()));
-        //connect(overviewPage, SIGNAL(bp2pclicked()), gui, SLOT(gotoP2PPage()));
-        //connect(overviewPage, SIGNAL(bassetsclicked()), gui, SLOT(gotoAssetsPage()));
-        //connect(overviewPage, SIGNAL(butilitiesclicked()), gui, SLOT(gotoUtilitiesPage()));
+        connect(overviewPage, SIGNAL(bp2pclicked()), gui, SLOT(gotoP2PPage()));
+        connect(overviewPage, SIGNAL(bassetsclicked()), gui, SLOT(gotoAssetsPage()));
+        connect(overviewPage, SIGNAL(butilitiesclicked()), gui, SLOT(gotoUtilitiesPage()));
         
         // Clicking on a transaction on the overview page simply sends you to transaction history page
         connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), gui, SLOT(gotoHistoryPage()));
@@ -208,7 +216,6 @@ void WalletView::gotoBidPage()
     setCurrentWidget(bidPage);
 }
 
-/*
 void WalletView::gotoP2PPage()
 {
     setCurrentWidget(p2pPage);
@@ -223,7 +230,7 @@ void WalletView::gotoUtilitiesPage()
 {
     setCurrentWidget(utilitiesPage);
 }
-*/
+
 
 void WalletView::gotoSignMessageTab(QString addr)
 {

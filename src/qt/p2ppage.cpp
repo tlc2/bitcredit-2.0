@@ -1,9 +1,9 @@
-#include "assetspage.h"
-#include "ui_assetspage.h"
+#include "p2ppage.h"
+#include "ui_p2ppage.h"
 
 
-AssetsPage::AssetsPage(QWidget *parent)
-    : QWidget(parent), ui(new Ui::AssetsPage)
+P2PPage::P2PPage(QWidget *parent)
+    : QWidget(parent), ui(new Ui::P2PPage)
 {
     ui->setupUi(this);
     
@@ -14,7 +14,7 @@ AssetsPage::AssetsPage(QWidget *parent)
     decoration->move(10,0);
     decoration->setStyleSheet("border: 1px solid #ff1a00;");
     title = new QLabel(this);
-    title->setText("Asset Creation and Management");
+    title->setText("P2P Finance - Lend / Borrow BCR");
     title->move(10, 2);
     title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");
     spacer = new QLabel(this);
@@ -23,7 +23,7 @@ AssetsPage::AssetsPage(QWidget *parent)
 }
 
 
-AssetsPage::~AssetsPage()
+P2PPage::~P2PPage()
 {
     delete ui;
 }

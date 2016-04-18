@@ -141,6 +141,26 @@ void WalletFrame::gotoBidPage()
         i.value()->gotoBidPage();
 }
 
+void WalletFrame::gotoP2PPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoP2PPage();
+}
+
+void WalletFrame::gotoAssetsPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoAssetsPage();
+}
+
+void WalletFrame::gotoUtilitiesPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoUtilitiesPage();
+}
 
 void WalletFrame::gotoSignMessageTab(QString addr)
 {

@@ -73,11 +73,11 @@ border: none;
 }
 #bsendtab:hover
 {
-background-color: #444444;
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
 }
 #bsendtab:checked
 {
-background-color: #444444;
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
 }
 #brectab
 {
@@ -88,11 +88,11 @@ border: none;
 }
 #brectab:hover
 {
-background-color: #444444;
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
 }
 #brectab:checked
 {
-background-color: #444444;
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
 }
 
 

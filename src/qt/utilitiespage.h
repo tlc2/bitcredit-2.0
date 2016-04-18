@@ -1,5 +1,5 @@
-#ifndef ASSETSPAGE_H
-#define ASSETSPAGE_H
+#ifndef UTILITIESPAGE_H
+#define UTILITIESPAGE_H
 
 #include "clientmodel.h"
 
@@ -9,21 +9,21 @@
 
 namespace Ui
 {
-    class AssetsPage;
+    class UtilitiesPage;
 }
 
-class AssetsPage: public QWidget
+class UtilitiesPage: public QWidget
 {
     Q_OBJECT
 
 public:
-    AssetsPage(QWidget *parent = 0);
-    ~AssetsPage();
+    UtilitiesPage(QWidget *parent = 0);
+    ~UtilitiesPage();
 
     void setClientModel(ClientModel *model);
 
 private:
-    Ui::AssetsPage *ui;
+    Ui::UtilitiesPage *ui;
     ClientModel *clientModel;
     
     QFrame *decoration;
@@ -32,4 +32,4 @@ private:
 
 };
 
-#endif // ASSETSPAGE_H
+#endif // UTILITIESPAGE_H

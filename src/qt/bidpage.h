@@ -4,6 +4,8 @@
 #include "clientmodel.h"
 
 #include <QWidget>
+#include <QFrame>
+#include <QLabel>
 
 class PlatformStyle;
 
@@ -20,10 +22,6 @@ public:
     BidPage(const PlatformStyle *platformStyle, QWidget *parent = 0);
     ~BidPage();
 
-
-
-
-
     QString str;
     QString btctotal;
     double btctot;
@@ -38,6 +36,10 @@ private:
     void setNumBlocks(int count);
     int getNumBlocks();
     void Estimate();
+    
+    QFrame *decoration;
+    QLabel *title;
+    QLabel *spacer;
 
     QString getDefaultDataDirectory();
     QString pathAppend(const QString& path1, const QString& path2);
