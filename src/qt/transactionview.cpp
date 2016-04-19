@@ -40,22 +40,6 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     QWidget(parent), model(0), transactionProxyModel(0),
     transactionView(0)
 {
-    // title
-    decoration = new QFrame(this);
-    decoration->setFixedWidth(310);
-    decoration->setFixedHeight(1);
-    decoration->move(10,0);
-    decoration->setStyleSheet("border: 1px solid #ff1a00;");
-    title = new QLabel(this);
-    title->setText("Transaction History");
-    title->move(10, 2);
-    title->setFixedWidth(310);
-    title->setAlignment(Qt::AlignCenter);
-    title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");
-    spacer = new QLabel(this);
-    spacer->move(10, 17);
-    spacer->setFixedHeight(15);
-
     // Build filter row
     setContentsMargins(0,0,0,0);
 
@@ -133,9 +117,6 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     vlayout->setSpacing(0);
 
     QTableView *view = new QTableView(this);
-    vlayout->addWidget(decoration);
-    vlayout->addWidget(title);
-    vlayout->addWidget(spacer);
     vlayout->addLayout(hlayout);
     vlayout->addWidget(createDateRangeWidget());
     vlayout->addWidget(view);

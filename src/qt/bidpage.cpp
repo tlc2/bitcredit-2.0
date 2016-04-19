@@ -24,22 +24,6 @@ BidPage::BidPage(const PlatformStyle *platformStyle, QWidget *parent)
     : QWidget(parent), ui(new Ui::BidPage)
 {
     ui->setupUi(this);
-    
-    // title
-    decoration = new QFrame(this);
-    decoration->setFixedWidth(310);
-    decoration->setFixedHeight(1);
-    decoration->move(10,0);
-    decoration->setStyleSheet("border: 1px solid #ff1a00;");
-    title = new QLabel(this);
-    title->setText("Bitcredit Daily Auction");
-    title->move(10, 2);
-    title->setFixedWidth(310);
-    title->setAlignment(Qt::AlignCenter);
-    title->setStyleSheet("color: white; background-color: #232323; font: 12pt;");
-    spacer = new QLabel(this);
-    spacer->move(10, 17);
-    spacer->setFixedHeight(15);
 
     ui->lineEditBid->setEnabled(false);  //  cannot calc until update clicked and data fetched
 
@@ -48,7 +32,6 @@ BidPage::BidPage(const PlatformStyle *platformStyle, QWidget *parent)
     connect(ui->pushButtonRefresh, SIGNAL(clicked()), this, SLOT(GetBids()));
     connect(ui->lineEditBid, SIGNAL(returnPressed()), this, SLOT(Estimate()));
 
- 
 }
 
 void BidPage::setClientModel(ClientModel *model)

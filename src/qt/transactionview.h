@@ -62,10 +62,6 @@ private:
     WalletModel *model;
     TransactionFilterProxy *transactionProxyModel;
     QTableView *transactionView;
-    
-    QFrame *decoration;
-    QLabel *title;
-    QLabel *spacer;
 
     QComboBox *dateWidget;
     QComboBox *typeWidget;

@@ -167,9 +167,9 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
         walletFrame = new WalletFrame(platformStyle, this);
         //walletFrame = new WalletFrame(this);
         //setCentralWidget(walletFrame);
-        walletFrame->setFixedWidth(850);
-        walletFrame->setFixedHeight(400);
-        walletFrame->move(0,165);        
+        walletFrame->setFixedWidth(830);
+        walletFrame->setFixedHeight(390);
+        walletFrame->move(10,165);        
     } else
 #endif // ENABLE_WALLET
     {
@@ -704,6 +704,7 @@ void BitcreditGUI::openClicked()
 
 void BitcreditGUI::gotoOverviewPage()
 {
+    Logo->setStyleSheet("background-image: url(':css/logo');");
     if (walletFrame) walletFrame->gotoOverviewPage();
     bover->hide();
     sendrec->hide();
@@ -711,12 +712,14 @@ void BitcreditGUI::gotoOverviewPage()
 
 void BitcreditGUI::gotoHistoryPage()
 {
+    Logo->setStyleSheet("background-image: url(':css/logo-history');");
     if (walletFrame) walletFrame->gotoHistoryPage();
     bover->show();
 }
 
 void BitcreditGUI::gotoReceiveCoinsPage()
 {
+    Logo->setStyleSheet("background-image: url(':css/logo-receive');");
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
     bover->show();
     brectab->setChecked(true);
@@ -725,6 +728,7 @@ void BitcreditGUI::gotoReceiveCoinsPage()
 
 void BitcreditGUI::gotoSendCoinsPage(QString addr)
 {
+    Logo->setStyleSheet("background-image: url(':css/logo-send');");
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
     bover->show();
     sendrec->show();
@@ -734,24 +738,28 @@ void BitcreditGUI::gotoSendCoinsPage(QString addr)
 
 void BitcreditGUI::gotoBidPage()
 {
+    Logo->setStyleSheet("background-image: url(':css/logo-bid');");
     if (walletFrame) walletFrame->gotoBidPage();
     bover->show();
 }
 
 void BitcreditGUI::gotoP2PPage()
 {
+    Logo->setStyleSheet("background-image: url(':css/logo-p2p');");
     if (walletFrame) walletFrame->gotoP2PPage();
     bover->show();
 }
 
 void BitcreditGUI::gotoAssetsPage()
 {
+    Logo->setStyleSheet("background-image: url(':css/logo-assets');");
     if (walletFrame) walletFrame->gotoAssetsPage();
     bover->show();
 }
 
 void BitcreditGUI::gotoUtilitiesPage()
 {
+    Logo->setStyleSheet("background-image: url(':css/logo-utilities');");
     if (walletFrame) walletFrame->gotoUtilitiesPage();
     bover->show();
 }

@@ -25,10 +25,6 @@ public:
 private:
     Ui::P2PPage *ui;
     ClientModel *clientModel;
-    
-    QFrame *decoration;
-    QLabel *title;
-    QLabel *spacer;
 
 };
 

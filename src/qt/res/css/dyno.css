@@ -32,7 +32,7 @@ border: none;
 background-image: url(':css/logo');
 background-color: #232323;
 background-repeat: none; 
-background-position: center;
+background-position: left;
 border: none;
 }
 #Logo:hover

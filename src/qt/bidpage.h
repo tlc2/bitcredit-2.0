@@ -35,10 +35,6 @@ private:
     void setNumBlocks(int count);
     int getNumBlocks();
     void Estimate();
-    
-    QFrame *decoration;
-    QLabel *title;
-    QLabel *spacer;
 
     QString getDefaultDataDirectory();
     QString pathAppend(const QString& path1, const QString& path2);

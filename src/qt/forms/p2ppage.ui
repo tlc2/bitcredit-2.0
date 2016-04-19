@@ -6,25 +6,62 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>845</width>
-    <height>536</height>
+    <width>830</width>
+    <height>390</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>390</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
+  <property name="styleSheet">
+   <string notr="true">background-color: #444444;</string>
+  </property>
+  <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>247</y>
-     <width>151</width>
-     <height>44</height>
+     <x>0</x>
+     <y>-1</y>
+     <width>830</width>
+     <height>390</height>
     </rect>
    </property>
-   <property name="text">
-    <string>P2P Page - placeholder</string>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>390</height>
+    </size>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: white; background: #444444; border: none;</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>26</y>
+      <width>191</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Placeholder</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

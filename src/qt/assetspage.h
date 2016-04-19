@@ -25,10 +25,7 @@ public:
 private:
     Ui::AssetsPage *ui;
     ClientModel *clientModel;
-    
-    QFrame *decoration;
-    QLabel *title;
-    QLabel *spacer;
+
 
 };
 

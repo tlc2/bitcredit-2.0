@@ -52,7 +52,14 @@
     </qresource>
     <qresource prefix="/css">
         <file alias="dyno">res/css/dyno.css</file>
-        <file alias="logo">res/css/logo.png</file>
+        <file alias="logo">res/css/logo2.png</file>
+        <file alias="logo-history">res/css/logo-history.png</file>
+        <file alias="logo-send">res/css/logo-send.png</file>
+        <file alias="logo-receive">res/css/logo-receive.png</file>
+        <file alias="logo-bid">res/css/logo-bid.png</file>
+        <file alias="logo-p2p">res/css/logo-p2p.png</file>
+        <file alias="logo-assets">res/css/logo-assets.png</file>
+        <file alias="logo-utilities">res/css/logo-utilities.png</file>
         <file alias="menu1">res/css/menu1.png</file>
         <file alias="menu2">res/css/menu2.png</file>
     </qresource>
