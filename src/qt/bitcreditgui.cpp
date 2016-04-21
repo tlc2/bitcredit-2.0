@@ -167,9 +167,9 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
         walletFrame = new WalletFrame(platformStyle, this);
         //walletFrame = new WalletFrame(this);
         //setCentralWidget(walletFrame);
-        walletFrame->setFixedWidth(830);
+        walletFrame->setFixedWidth(850);
         walletFrame->setFixedHeight(390);
-        walletFrame->move(10,165);        
+        walletFrame->move(0,165);        
     } else
 #endif // ENABLE_WALLET
     {
@@ -186,16 +186,16 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
 
     // logo - we'll make it a button that leads back to the overviewpage menu
     Logo = new QPushButton(this);
-    Logo->move(10, 30);
-    Logo->setFixedWidth(300);
+    Logo->move(20, 30);
+    Logo->setFixedWidth(250);
     Logo->setFixedHeight(80);
     Logo->setObjectName("Logo");
     connect(Logo, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
     
     // balance label  
     labelHeaderBalance = new QLabel(this);
-    labelHeaderBalance->move(320, 30);
-    labelHeaderBalance->setFixedWidth(520);
+    labelHeaderBalance->move(290, 30);
+    labelHeaderBalance->setFixedWidth(540);
     labelHeaderBalance->setFixedHeight(80);
     labelHeaderBalance->setText("Available Balance:\n");
     labelHeaderBalance->setObjectName("labelHeaderBalance");
