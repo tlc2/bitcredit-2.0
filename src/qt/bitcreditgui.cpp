@@ -52,7 +52,7 @@
 #include <QSettings>
 #include <QShortcut>
 #include <QStackedWidget>
-#include <QStatusBar>
+//#include <QStatusBar>
 #include <QStyle>
 #include <QTimer>
 #include <QToolBar>
@@ -214,32 +214,39 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     createTrayIcon(networkStyle);
 
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // create bottom toolbar...
-    QToolBar *toolbar2 = addToolBar(tr("Toolbar"));
-    addToolBar(Qt::BottomToolBarArea, toolbar2);
-    toolbar2->setOrientation(Qt::Horizontal);
-    toolbar2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    toolbar2->setMovable(false);
-    toolbar2->setObjectName("toolbar2");
+    // create bottom 'toolbar'...
+    QWidget *toolbar2 = new QWidget(this);
     toolbar2->setFixedHeight(30);
-    toolbar2->setFixedWidth(1000);
-    toolbar2->setIconSize(QSize(18, 18));    
+    toolbar2->setFixedWidth(830);
+    toolbar2->move(10, 620);
+    toolbar2->setObjectName("toolbar2");
+    
     // ...add encryption, connections and blocks icons
-    labelEncryptionIcon = new QLabel();
+    labelEncryptionIcon = new QLabel(toolbar2);
     labelEncryptionIcon->setObjectName("labelEncryptionIcon");
-    labelConnectionsIcon = new QLabel();
-    labelConnectionsIcon->setPixmap(QIcon(":/icons/connect_0").pixmap(18, 44));
+    labelEncryptionIcon->setFixedHeight(20);
+    labelEncryptionIcon->setFixedWidth(20);
+    labelEncryptionIcon->move(80, 0);
+    labelConnectionsIcon = new QLabel(toolbar2);
+    labelConnectionsIcon->setPixmap(QIcon(":/icons/connect_0").pixmap(18, 18));
     labelConnectionsIcon->setObjectName("labelConnectionsIcon");
-    labelBlocksIcon = new QLabel();
-    labelBlocksIcon->setPixmap(QIcon(":/icons/connect0s").pixmap(18, 44)); //Initialize with 'searching' icon so people with slow connections see something
+    labelConnectionsIcon->setFixedHeight(20);
+    labelConnectionsIcon->setFixedWidth(20);
+    labelConnectionsIcon->move(0, 0);
+    labelBlocksIcon = new QLabel(toolbar2);
+    labelBlocksIcon->setPixmap(QIcon(":/icons/connect0s").pixmap(18, 18)); //Initialize with 'searching' icon so people with slow connections see something
     labelBlocksIcon->setToolTip("Looking for more network connections");
     labelBlocksIcon->setObjectName("labelBlocksIcon");
-
-    toolbar2->addWidget(labelConnectionsIcon);
-    toolbar2->addWidget(labelBlocksIcon);
-    toolbar2->addWidget(labelEncryptionIcon);
-
-    // Progress bar and label for blocks download
+    labelBlocksIcon->setFixedHeight(20);
+    labelBlocksIcon->setFixedWidth(20);
+    labelBlocksIcon->move(40, 0);
+    //QLabel *spacer2 = new QLabel(toolbar2);
+    //spacer2->setFixedHeight(30);
+    //spacer2->setFixedWidth(200);
+    //spacer2->move(200,0);
+    //spacer2->setText("spacer2");
+    
+    // Progress bar and label for blocks download (these will float if called since we haven't added them to anything else)
     progressBarLabel = new QLabel();
     progressBarLabel->setVisible(false);
     progressBar = new GUIUtil::ProgressBar();
@@ -252,7 +259,7 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     QString curStyle = QApplication::style()->metaObject()->className();
     if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
     {
-        //progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
+        progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
 
@@ -498,9 +505,6 @@ void BitcreditGUI::createToolBars()
         brectab->setObjectName("brectab");
         brectab->setCheckable(true);
         connect(brectab, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
-        
-        
-       
      }
 }
 
@@ -792,7 +796,7 @@ void BitcreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nV
         return;
 
     // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbelled text)
-    statusBar()->clearMessage();
+    //statusBar()->clearMessage();
 
     // Acquire current block source
     enum BlockSource blockSource = clientModel->getBlockSource();
@@ -823,7 +827,7 @@ void BitcreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nV
     if(secs < 90*60)
     {
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
-        labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/synced").pixmap(18, 18));
 
 #ifdef ENABLE_WALLET
         if(walletFrame)
@@ -871,7 +875,7 @@ void BitcreditGUI::setNumBlocks(int count, const QDateTime& blockDate, double nV
         {
             labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(QString(
                 ":/movies/spinner-%1").arg(spinnerFrame, 3, 10, QChar('0')))
-                .pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+                .pixmap(18, 18));
             spinnerFrame = (spinnerFrame + 1) % SPINNER_FRAMES;
         }
         prevBlocks = count;
@@ -1063,7 +1067,7 @@ void BitcreditGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Unlocked:
         labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_open").pixmap(18,18));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
@@ -1071,7 +1075,7 @@ void BitcreditGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Locked:
         labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_closed").pixmap(18,18));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
@@ -1173,76 +1177,4 @@ void BitcreditGUI::unsubscribeFromCoreSignals()
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
 }
 
-UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
-    optionsModel(0),
-    menu(0)
-{
-    createContextMenu();
-    setToolTip(tr("Unit to show amounts in. Click to select another unit."));
-    QList<BitcreditUnits::Unit> units = BitcreditUnits::availableUnits();
-    int max_width = 0;
-    const QFontMetrics fm(font());
-    Q_FOREACH (const BitcreditUnits::Unit unit, units)
-    {
-        max_width = qMax(max_width, fm.width(BitcreditUnits::name(unit)));
-    }
-    setMinimumSize(max_width, 0);
-    setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    setStyleSheet(QString("QLabel { color : %1 }").arg(platformStyle->SingleColor().name()));
-}
 
-/** So that it responds to button clicks */
-void UnitDisplayStatusBarControl::mousePressEvent(QMouseEvent *event)
-{
-    onDisplayUnitsClicked(event->pos());
-}
-
-/** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
-void UnitDisplayStatusBarControl::createContextMenu()
-{
-    menu = new QMenu();
-    Q_FOREACH(BitcreditUnits::Unit u, BitcreditUnits::availableUnits())
-    {
-        QAction *menuAction = new QAction(QString(BitcreditUnits::name(u)), this);
-        menuAction->setData(QVariant(u));
-        menu->addAction(menuAction);
-    }
-    connect(menu,SIGNAL(triggered(QAction*)),this,SLOT(onMenuSelection(QAction*)));
-}
-
-/** Lets the control know about the Options Model (and its signals) */
-void UnitDisplayStatusBarControl::setOptionsModel(OptionsModel *optionsModel)
-{
-    if (optionsModel)
-    {
-        this->optionsModel = optionsModel;
-
-        // be aware of a display unit change reported by the OptionsModel object.
-        connect(optionsModel,SIGNAL(displayUnitChanged(int)),this,SLOT(updateDisplayUnit(int)));
-
-        // initialize the display units label with the current value in the model.
-        updateDisplayUnit(optionsModel->getDisplayUnit());
-    }
-}
-
-/** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
-void UnitDisplayStatusBarControl::updateDisplayUnit(int newUnits)
-{
-    setText(BitcreditUnits::name(newUnits));
-}
-
-/** Shows context menu with Display Unit options by the mouse coordinates */
-void UnitDisplayStatusBarControl::onDisplayUnitsClicked(const QPoint& point)
-{
-    QPoint globalPos = mapToGlobal(point);
-    menu->exec(globalPos);
-}
-
-/** Tells underlying optionsModel to update its current display unit. */
-void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
-{
-    if (action)
-    {
-        optionsModel->setDisplayUnit(action->data());
-    }
-}
