@@ -213,37 +213,31 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     // Create system tray icon and notification
     createTrayIcon(networkStyle);
 
-    // Create status bar
-    statusBar();
-    statusBar()->setFixedHeight(20);
-
-    // Disable size grip because it looks ugly and nobody needs it
-    statusBar()->setSizeGripEnabled(false);
-
-    // Status bar notification icons
-    QFrame *frameBlocks = new QFrame();
-    frameBlocks->setContentsMargins(0,0,0,0);
-    frameBlocks->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
-    frameBlocksLayout->setContentsMargins(0,0,0,0);
-    frameBlocksLayout->setSpacing(3);
-    //unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // create bottom toolbar...
+    QToolBar *toolbar2 = addToolBar(tr("Toolbar"));
+    addToolBar(Qt::BottomToolBarArea, toolbar2);
+    toolbar2->setOrientation(Qt::Horizontal);
+    toolbar2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    toolbar2->setMovable(false);
+    toolbar2->setObjectName("toolbar2");
+    toolbar2->setFixedHeight(30);
+    toolbar2->setFixedWidth(1000);
+    toolbar2->setIconSize(QSize(18, 18));    
+    // ...add encryption, connections and blocks icons
     labelEncryptionIcon = new QLabel();
+    labelEncryptionIcon->setObjectName("labelEncryptionIcon");
     labelConnectionsIcon = new QLabel();
+    labelConnectionsIcon->setPixmap(QIcon(":/icons/connect_0").pixmap(18, 44));
+    labelConnectionsIcon->setObjectName("labelConnectionsIcon");
     labelBlocksIcon = new QLabel();
-    if(enableWallet)
-    {
-        frameBlocksLayout->addStretch();
-        //frameBlocksLayout->addWidget(unitDisplayControl);
-        frameBlocksLayout->addStretch();
-        frameBlocksLayout->addWidget(labelEncryptionIcon);
-    }
-    frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelConnectionsIcon);
-    frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelBlocksIcon);
-    frameBlocksLayout->addStretch();
+    labelBlocksIcon->setPixmap(QIcon(":/icons/connect0s").pixmap(18, 44)); //Initialize with 'searching' icon so people with slow connections see something
+    labelBlocksIcon->setToolTip("Looking for more network connections");
+    labelBlocksIcon->setObjectName("labelBlocksIcon");
 
+    toolbar2->addWidget(labelConnectionsIcon);
+    toolbar2->addWidget(labelBlocksIcon);
+    toolbar2->addWidget(labelEncryptionIcon);
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
@@ -258,12 +252,12 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     QString curStyle = QApplication::style()->metaObject()->className();
     if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
     {
-        progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
+        //progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
-    statusBar()->addWidget(progressBarLabel);
-    statusBar()->addWidget(progressBar);
-    statusBar()->addPermanentWidget(frameBlocks);
+
+    
+// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);

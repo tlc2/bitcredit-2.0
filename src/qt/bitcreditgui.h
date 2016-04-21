@@ -18,6 +18,7 @@
 #include <QMenu>
 #include <QPoint>
 #include <QSystemTrayIcon>
+#include <QToolBar>
 
 class ClientModel;
 class NetworkStyle;
@@ -91,6 +92,8 @@ private:
     QWidget *sendrec;
     QPushButton *bsendtab;
     QPushButton *brectab;
+
+    QToolBar *toolbar2;
 
     UnitDisplayStatusBarControl *unitDisplayControl;
     QLabel *labelEncryptionIcon;
