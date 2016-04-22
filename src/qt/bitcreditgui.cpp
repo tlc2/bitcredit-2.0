@@ -533,6 +533,54 @@ void BitcreditGUI::createToolBars()
         brectab->setObjectName("brectab");
         brectab->setCheckable(true);
         connect(brectab, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
+
+        // utilities and settings 'toolbar'
+        uands = new QWidget(this);
+        uands->setFixedHeight(25);
+        uands->setFixedWidth(830);
+        uands->move(10, 135);
+        uands->setObjectName("uands");
+        uands->hide();
+
+        bbcrstatstab = new QPushButton(uands);
+        bbcrstatstab->setFixedHeight(25);
+        bbcrstatstab->setFixedWidth(207);
+        bbcrstatstab->move(0,0);
+        bbcrstatstab->setText("BCR Network Stats");
+        bbcrstatstab->setObjectName("bbcrstatstab");
+        bbcrstatstab->setCheckable(true);
+        bbcrstatstab->setObjectName("bbcrstatstab");
+        //connect(bbcrstatstab, SIGNAL(clicked()), this, SLOT(gotoUtilitiesPage()));
+
+        bexplorertab = new QPushButton(uands);
+        bexplorertab->setFixedHeight(25);
+        bexplorertab->setFixedWidth(207);
+        bexplorertab->move(208, 0);
+        bexplorertab->setText("Block Explorer");
+        bexplorertab->setObjectName("bexplorertab");
+        bexplorertab->setCheckable(true);
+        bexplorertab->setObjectName("bexplorertab");
+        //connect(bexplorertab, SIGNAL(clicked()), this, SLOT(gotoStatisticsPage()));
+        
+        bmarkettab = new QPushButton(uands);
+        bmarkettab->setFixedHeight(25);
+        bmarkettab->setFixedWidth(207);
+        bmarkettab->move(416, 0);
+        bmarkettab->setText("Market Data");
+        bmarkettab->setObjectName("bmarkettab");
+        bmarkettab->setCheckable(true);
+        bmarkettab->setObjectName("bmarkettab");
+        //connect(bmarkettab, SIGNAL(clicked()), this, SLOT(gotoStatisticsPage()));
+
+        bothertab = new QPushButton(uands);
+        bothertab->setFixedHeight(25);
+        bothertab->setFixedWidth(206);
+        bothertab->move(624, 0);
+        bothertab->setText("Other Stuff");
+        bothertab->setObjectName("bothertab");
+        bothertab->setCheckable(true);
+        bothertab->setObjectName("bothertab");
+        //connect(bothertab, SIGNAL(clicked()), this, SLOT(gotoOtherPage()));
      }
 }
 
@@ -734,6 +782,7 @@ void BitcreditGUI::gotoOverviewPage()
     if (walletFrame) walletFrame->gotoOverviewPage();
     bover->hide();
     sendrec->hide();
+    uands->hide();
 }
 
 void BitcreditGUI::gotoHistoryPage()
@@ -788,6 +837,7 @@ void BitcreditGUI::gotoUtilitiesPage()
     Logo->setStyleSheet("background-image: url(':css/logo-utilities');");
     if (walletFrame) walletFrame->gotoUtilitiesPage();
     bover->show();
+    uands->show();
 }
 
 void BitcreditGUI::gotoSignMessageTab(QString addr)

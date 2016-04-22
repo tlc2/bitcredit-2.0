@@ -90,6 +90,12 @@ private:
     QWidget *sendrec;
     QPushButton *bsendtab;
     QPushButton *brectab;
+    
+    QWidget *uands;
+    QPushButton *bbcrstatstab;
+    QPushButton *bexplorertab;
+    QPushButton *bmarkettab;
+    QPushButton *bothertab;
 
     QWidget *toolbar2;
 

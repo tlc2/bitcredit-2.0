@@ -95,6 +95,75 @@ background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0
 background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
 }
 
+
+/* Utilities and settings toolbar */
+
+#bbcrstatstab
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#bbcrstatstab:hover
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+#bbcrstatstab:checked
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+
+#bexplorertab
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#bexplorertab:hover
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+#bexplorertab:checked
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+
+#bmarkettab
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#bmarkettab:hover
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+#bmarkettab:checked
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+
+#bothertab
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#bothertab:hover
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+#bothertab:checked
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+
+
+
 /* About / Hide / Quit buttons */
 
 #aboutButton
