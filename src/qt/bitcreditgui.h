@@ -209,6 +209,9 @@ private Q_SLOTS:
     void gotoP2PPage();
     void gotoAssetsPage();
     void gotoUtilitiesPage();
+    void gotoBlockExplorerPage();
+    void gotoExchangeBrowserPage();
+    void gotoOtherPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

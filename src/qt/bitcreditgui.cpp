@@ -550,7 +550,7 @@ void BitcreditGUI::createToolBars()
         bbcrstatstab->setObjectName("bbcrstatstab");
         bbcrstatstab->setCheckable(true);
         bbcrstatstab->setObjectName("bbcrstatstab");
-        //connect(bbcrstatstab, SIGNAL(clicked()), this, SLOT(gotoUtilitiesPage()));
+        connect(bbcrstatstab, SIGNAL(clicked()), this, SLOT(gotoUtilitiesPage()));
 
         bexplorertab = new QPushButton(uands);
         bexplorertab->setFixedHeight(25);
@@ -560,7 +560,7 @@ void BitcreditGUI::createToolBars()
         bexplorertab->setObjectName("bexplorertab");
         bexplorertab->setCheckable(true);
         bexplorertab->setObjectName("bexplorertab");
-        //connect(bexplorertab, SIGNAL(clicked()), this, SLOT(gotoStatisticsPage()));
+        connect(bexplorertab, SIGNAL(clicked()), this, SLOT(gotoBlockExplorerPage()));
         
         bmarkettab = new QPushButton(uands);
         bmarkettab->setFixedHeight(25);
@@ -570,7 +570,7 @@ void BitcreditGUI::createToolBars()
         bmarkettab->setObjectName("bmarkettab");
         bmarkettab->setCheckable(true);
         bmarkettab->setObjectName("bmarkettab");
-        //connect(bmarkettab, SIGNAL(clicked()), this, SLOT(gotoStatisticsPage()));
+        connect(bmarkettab, SIGNAL(clicked()), this, SLOT(gotoExchangeBrowserPage()));
 
         bothertab = new QPushButton(uands);
         bothertab->setFixedHeight(25);
@@ -580,7 +580,7 @@ void BitcreditGUI::createToolBars()
         bothertab->setObjectName("bothertab");
         bothertab->setCheckable(true);
         bothertab->setObjectName("bothertab");
-        //connect(bothertab, SIGNAL(clicked()), this, SLOT(gotoOtherPage()));
+        connect(bothertab, SIGNAL(clicked()), this, SLOT(gotoOtherPage()));
      }
 }
 
@@ -834,10 +834,50 @@ void BitcreditGUI::gotoAssetsPage()
 
 void BitcreditGUI::gotoUtilitiesPage()
 {
-    Logo->setStyleSheet("background-image: url(':css/logo-utilities');");
+    Logo->setStyleSheet("background-image: url(':css/logo-finstats');");
     if (walletFrame) walletFrame->gotoUtilitiesPage();
     bover->show();
     uands->show();
+    bbcrstatstab->setChecked(true);
+    bexplorertab->setChecked(false);
+    bmarkettab->setChecked(false);
+    bothertab->setChecked(false);
+}
+
+void BitcreditGUI::gotoBlockExplorerPage()
+{
+    Logo->setStyleSheet("background-image: url(':css/logo-explorer');");
+    //if (walletFrame) walletFrame->gotoBlockExplorerPage();
+    bover->show();
+    uands->show();
+    bbcrstatstab->setChecked(false);
+    bexplorertab->setChecked(true);
+    bmarkettab->setChecked(false);
+    bothertab->setChecked(false);
+}
+
+void BitcreditGUI::gotoExchangeBrowserPage()
+{
+    Logo->setStyleSheet("background-image: url(':css/logo-market');");
+    //if (walletFrame) walletFrame->gotoExchangeBrowserPage();
+    bover->show();
+    uands->show();
+    bbcrstatstab->setChecked(false);
+    bexplorertab->setChecked(false);
+    bmarkettab->setChecked(true);
+    bothertab->setChecked(false);
+}
+
+void BitcreditGUI::gotoOtherPage()
+{
+    Logo->setStyleSheet("background-image: url(':css/logo-other');");
+    //if (walletFrame) walletFrame->gotoOtherPage();
+    bover->show();
+    uands->show();
+    bbcrstatstab->setChecked(false);
+    bexplorertab->setChecked(false);
+    bmarkettab->setChecked(false);
+    bothertab->setChecked(true);
 }
 
 void BitcreditGUI::gotoSignMessageTab(QString addr)

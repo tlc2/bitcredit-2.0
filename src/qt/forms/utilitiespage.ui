@@ -40,14 +40,14 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>337</x>
+      <x>277</x>
       <y>20</y>
-      <width>141</width>
+      <width>301</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>Placeholder</string>
+     <string>Placeholder -  NETWORK FINANCIAL STATS page</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
