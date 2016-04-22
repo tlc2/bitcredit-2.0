@@ -119,9 +119,9 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     spinnerFrame(0),
     platformStyle(platformStyle)
 {
-    setFixedSize(850, 640);
+    setFixedSize(850, 650);
     //setWindowFlags(Qt::FramelessWindowHint);
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 640), this);
+    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 650), this);
 
     // load stylesheet
     QFile qss(":css/dyno");
@@ -240,11 +240,33 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     labelBlocksIcon->setFixedHeight(20);
     labelBlocksIcon->setFixedWidth(20);
     labelBlocksIcon->move(40, 0);
-    //QLabel *spacer2 = new QLabel(toolbar2);
-    //spacer2->setFixedHeight(30);
-    //spacer2->setFixedWidth(200);
-    //spacer2->move(200,0);
-    //spacer2->setText("spacer2");
+    
+    QPushButton *aboutButton = new QPushButton(toolbar2);
+    //aboutButton->setStyleSheet("padding: none; border: none; background-color: #232323; background-image: url(':/icons/about'); background-repeat: none; background-position: center;");
+    aboutButton->setFixedHeight(30);
+    aboutButton->setFixedWidth(30);
+    aboutButton->move(720, 0);
+    aboutButton->setToolTip("About Bitcredit");
+    aboutButton->setObjectName("aboutButton");
+    connect(aboutButton, SIGNAL(clicked()), this, SLOT(aboutClicked()));
+    
+    QPushButton *hideButton = new QPushButton(toolbar2);
+    //hideButton->setStyleSheet("padding: none; border: none; background-color: #232323; background-image: url(':/icons/hide'); background-repeat: none; background-position: center;");
+    hideButton->setFixedHeight(30);
+    hideButton->setFixedWidth(30);
+    hideButton->move(760, 0);
+    hideButton->setToolTip("Minimise");
+    hideButton->setObjectName("hideButton");
+    connect(hideButton, SIGNAL(clicked()), this, SLOT(toggleHidden()));
+
+    QPushButton *quitButton = new QPushButton(toolbar2);
+    //quitButton->setStyleSheet("padding: none; border: none; background-color: #232323;  background-image: url(':/icons/quit'); background-repeat: none; background-position: center;");
+    quitButton->setFixedHeight(30);
+    quitButton->setFixedWidth(30);
+    quitButton->move(800, 0);
+    quitButton->setToolTip("Exit");
+    quitButton->setObjectName("quitButton");
+    connect(quitButton, SIGNAL(clicked()), qApp, SLOT(quit()));
     
     // Progress bar and label for blocks download (these will float if called since we haven't added them to anything else)
     progressBarLabel = new QLabel();
@@ -354,12 +376,18 @@ void BitcreditGUI::createActions()
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&About %1").arg(tr(PACKAGE_NAME)), this);
+
+
+    aboutAction = new QAction(platformStyle->TextColorIcon(":/icons/about"), tr("&About %1").arg(tr(PACKAGE_NAME)), toolbar2);
     aboutAction->setStatusTip(tr("Show information about %1").arg(tr(PACKAGE_NAME)));
-    aboutAction->setMenuRole(QAction::AboutRole);
+    //aboutAction->setMenuRole(QAction::AboutRole);
+
+
     aboutQtAction = new QAction(platformStyle->TextColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
+
+
     optionsAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Options..."), this);
     optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(tr(PACKAGE_NAME)));
     optionsAction->setMenuRole(QAction::PreferencesRole);
