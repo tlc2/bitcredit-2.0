@@ -23,6 +23,9 @@
 #include "p2ppage.h"
 #include "assetspage.h"
 #include "utilitiespage.h"
+#include "blockexplorerpage.h"
+#include "exchangebrowserpage.h"
+#include "otherpage.h"
 
 #include "ui_interface.h"
 
@@ -69,6 +72,9 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     p2pPage = new P2PPage(this);
     assetsPage = new AssetsPage(this);
     utilitiesPage = new UtilitiesPage(this);
+    blockExplorerPage = new BlockExplorerPage(this);
+    exchangeBrowserPage = new ExchangeBrowserPage(this);
+    otherPage = new OtherPage(this);
 
     addWidget(overviewPage);
     addWidget(transactionsPage);
@@ -78,6 +84,9 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     addWidget(p2pPage);
     addWidget(assetsPage);
     addWidget(utilitiesPage);
+    addWidget(blockExplorerPage);
+    addWidget(exchangeBrowserPage);
+    addWidget(otherPage);
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -231,6 +240,20 @@ void WalletView::gotoUtilitiesPage()
     setCurrentWidget(utilitiesPage);
 }
 
+void WalletView::gotoBlockExplorerPage()
+{
+    setCurrentWidget(blockExplorerPage);
+}
+
+void WalletView::gotoExchangeBrowserPage()
+{
+    setCurrentWidget(exchangeBrowserPage);
+}
+
+void WalletView::gotoOtherPage()
+{
+    setCurrentWidget(otherPage);
+}
 
 void WalletView::gotoSignMessageTab(QString addr)
 {

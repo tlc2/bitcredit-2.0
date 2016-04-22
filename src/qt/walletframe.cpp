@@ -162,6 +162,27 @@ void WalletFrame::gotoUtilitiesPage()
         i.value()->gotoUtilitiesPage();
 }
 
+void WalletFrame::gotoBlockExplorerPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoBlockExplorerPage();
+}
+
+void WalletFrame::gotoExchangeBrowserPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoExchangeBrowserPage();
+}
+
+void WalletFrame::gotoOtherPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoOtherPage();
+}
+
 void WalletFrame::gotoSignMessageTab(QString addr)
 {
     WalletView *walletView = currentWalletView();

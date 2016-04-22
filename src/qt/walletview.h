@@ -14,6 +14,9 @@ class BidPage;
 class P2PPage;
 class AssetsPage;
 class UtilitiesPage;
+class BlockExplorerPage;
+class ExchangeBrowserPage;
+class OtherPage;
 class ClientModel;
 class OverviewPage;
 class PlatformStyle;
@@ -75,6 +78,9 @@ private:
     P2PPage *p2pPage;
     AssetsPage *assetsPage;
     UtilitiesPage *utilitiesPage;
+    BlockExplorerPage *blockExplorerPage;
+    ExchangeBrowserPage *exchangeBrowserPage;
+    OtherPage *otherPage;
 
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
@@ -94,6 +100,9 @@ public Q_SLOTS:
     void gotoP2PPage();
     void gotoAssetsPage();
     void gotoUtilitiesPage();
+    void gotoBlockExplorerPage();
+    void gotoExchangeBrowserPage();
+    void gotoOtherPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

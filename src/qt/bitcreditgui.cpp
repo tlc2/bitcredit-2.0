@@ -847,7 +847,7 @@ void BitcreditGUI::gotoUtilitiesPage()
 void BitcreditGUI::gotoBlockExplorerPage()
 {
     Logo->setStyleSheet("background-image: url(':css/logo-explorer');");
-    //if (walletFrame) walletFrame->gotoBlockExplorerPage();
+    if (walletFrame) walletFrame->gotoBlockExplorerPage();
     bover->show();
     uands->show();
     bbcrstatstab->setChecked(false);
@@ -859,7 +859,7 @@ void BitcreditGUI::gotoBlockExplorerPage()
 void BitcreditGUI::gotoExchangeBrowserPage()
 {
     Logo->setStyleSheet("background-image: url(':css/logo-market');");
-    //if (walletFrame) walletFrame->gotoExchangeBrowserPage();
+    if (walletFrame) walletFrame->gotoExchangeBrowserPage();
     bover->show();
     uands->show();
     bbcrstatstab->setChecked(false);
@@ -871,7 +871,7 @@ void BitcreditGUI::gotoExchangeBrowserPage()
 void BitcreditGUI::gotoOtherPage()
 {
     Logo->setStyleSheet("background-image: url(':css/logo-other');");
-    //if (walletFrame) walletFrame->gotoOtherPage();
+    if (walletFrame) walletFrame->gotoOtherPage();
     bover->show();
     uands->show();
     bbcrstatstab->setChecked(false);
