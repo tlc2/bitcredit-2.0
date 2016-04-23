@@ -435,11 +435,27 @@ void BitcreditGUI::createActions()
     if(walletFrame)
     {
         connect(encryptWalletAction, SIGNAL(triggered(bool)), walletFrame, SLOT(encryptWallet(bool)));
+
+        // cryptit signal triggerred from otherPage via walletView, jesus christ #4
+        //connect(this, SIGNAL(enc()), walletFrame, SLOT(encryptWallet(bool)));    
+        
         connect(backupWalletAction, SIGNAL(triggered()), walletFrame, SLOT(backupWallet()));
+
+        // backitup signal triggerred from otherPage via walletView, jesus christ
+        connect(this, SIGNAL(backitup()), walletFrame, SLOT(backupWallet()));
+
         connect(changePassphraseAction, SIGNAL(triggered()), walletFrame, SLOT(changePassphrase()));
         connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
         connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
+
         connect(usedSendingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedSendingAddresses()));
+        
+        // usedsending signal triggerred from otherPage via walletView, jesus christ #2
+        connect(this, SIGNAL(usedsending()), walletFrame, SLOT(usedSendingAddresses()));
+        
+        // usedreceiving signal triggerred from otherPage via walletView, jesus christ #3
+        connect(this, SIGNAL(usedreceiving()), walletFrame, SLOT(usedReceivingAddresses()));
+        
         connect(usedReceivingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedReceivingAddresses()));
         connect(openAction, SIGNAL(triggered()), this, SLOT(openClicked()));
     }
@@ -447,6 +463,26 @@ void BitcreditGUI::createActions()
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_C), this, SLOT(showDebugWindowActivateConsole()));
     new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_D), this, SLOT(showDebugWindow()));
+}
+
+void BitcreditGUI::enc()
+{
+    //if(walletFrame) encryptWalletAction->activate(QAction::Trigger);
+}
+
+void BitcreditGUI::emitbackitup()
+{
+    Q_EMIT backitup();
+}
+
+void BitcreditGUI::emitusedsending()
+{
+    Q_EMIT usedsending();
+}
+
+void BitcreditGUI::emitusedreceiving()
+{
+    Q_EMIT usedreceiving();
 }
 
 void BitcreditGUI::createMenuBar()

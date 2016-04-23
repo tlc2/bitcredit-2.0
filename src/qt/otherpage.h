@@ -22,11 +22,33 @@ public:
 
     void setClientModel(ClientModel *model);
 
+Q_SIGNALS:
+    void bURIclicked(); 
+    void bBackupclicked(); 
+    void bSignmessageclicked();
+    void bVerifymessageclicked(); 
+    void bSendingaddressesclicked();
+    void bReceivingaddressesclicked();
+    void bEncclicked(); 
+    void bOptionsclicked();
+    void bRPCclicked();
+    void bHelpclicked();
+
 private:
     Ui::OtherPage *ui;
     ClientModel *clientModel;
 
-
+private Q_SLOTS:
+    void emitbURIclicked();
+    void emitbBackupclicked();
+    void emitbSignmessageclicked();
+    void emitbVerifymessageclicked();
+    void emitbSendingaddressesclicked();
+    void emitbReceivingaddressesclicked();
+    void emitbEncclicked();
+    void emitbOptionsclicked();
+    void emitbRPCclicked();
+    void emitbHelpclicked();
 };
 
 #endif // OTHERPAGE_H

@@ -140,7 +140,6 @@ private:
     int spinnerFrame;
 
     const PlatformStyle *platformStyle;
- 
 
     /** Create the main UI actions. */
     void createActions();
@@ -164,6 +163,14 @@ private:
 Q_SIGNALS:
     /** Signal raised when a URI was entered or dragged to the GUI */
     void receivedURI(const QString &uri);
+
+    // called from walletView to call bitcreditgui->walletFrame->blah()
+    void backitup();
+    void usedsending();
+    void usedreceiving();
+    //void enc();
+    
+    
 
 public Q_SLOTS:
     /** Set number of connections shown in the UI */
@@ -212,6 +219,13 @@ private Q_SLOTS:
     void gotoBlockExplorerPage();
     void gotoExchangeBrowserPage();
     void gotoOtherPage();
+    
+    void emitbackitup();
+    void emitusedsending();
+    void emitusedreceiving();
+    void enc(); 
+    
+    
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

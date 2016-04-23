@@ -111,9 +111,10 @@ void WalletView::setBitcreditGUI(BitcreditGUI *gui)
 {
     if (gui)
     {
+        // keep header balance uipdated
         connect(overviewPage, SIGNAL(textChanged(QString)), gui->labelHeaderBalance, SLOT(setText(QString)));
         
-        // connect signals from menu pages to bitcreditgui slots to switch pages
+        // connect signals from menu page to bitcreditgui slots to switch pages
         connect(overviewPage, SIGNAL(btxclicked()), gui, SLOT(gotoHistoryPage()));
         connect(overviewPage, SIGNAL(bsendclicked()), gui, SLOT(gotoSendCoinsPage()));
         connect(overviewPage, SIGNAL(brecclicked()), gui, SLOT(gotoReceiveCoinsPage()));
@@ -122,6 +123,19 @@ void WalletView::setBitcreditGUI(BitcreditGUI *gui)
         connect(overviewPage, SIGNAL(bassetsclicked()), gui, SLOT(gotoAssetsPage()));
         connect(overviewPage, SIGNAL(butilitiesclicked()), gui, SLOT(gotoUtilitiesPage()));
         
+        // connect signals from otherpage to bitcreditgui slots to call menu actions
+        connect(otherPage, SIGNAL(bURIclicked()), gui, SLOT(openClicked()));
+        connect(otherPage, SIGNAL(bBackupclicked()), gui, SLOT(emitbackitup()));
+        connect(otherPage, SIGNAL(bSignmessageclicked()), gui, SLOT(gotoSignMessageTab()));
+        connect(otherPage, SIGNAL(bVerifymessageclicked()), gui, SLOT(gotoVerifyMessageTab()));
+        connect(otherPage, SIGNAL(bSendingaddressesclicked()), gui, SLOT(emitusedsending()));
+        connect(otherPage, SIGNAL(bReceivingaddressesclicked()), gui, SLOT(emitusedreceiving()));
+        connect(otherPage, SIGNAL(bEncclicked()), gui, SLOT(emitenc()));
+        connect(otherPage, SIGNAL(bOptionsclicked()), gui, SLOT(optionsClicked()));
+        connect(otherPage, SIGNAL(bRPCclicked()), gui, SLOT(showDebugWindowActivateConsole()));
+        connect(otherPage, SIGNAL(bHelpclicked()), gui, SLOT(showHelpMessageClicked()));
+        
+
         // Clicking on a transaction on the overview page simply sends you to transaction history page
         connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), gui, SLOT(gotoHistoryPage()));
 
