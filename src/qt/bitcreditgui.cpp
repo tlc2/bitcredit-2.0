@@ -437,7 +437,7 @@ void BitcreditGUI::createActions()
         connect(encryptWalletAction, SIGNAL(triggered(bool)), walletFrame, SLOT(encryptWallet(bool)));
 
         // cryptit signal triggerred from otherPage via walletView, jesus christ #4
-        //connect(this, SIGNAL(enc()), walletFrame, SLOT(encryptWallet(bool)));    
+        connect(this, SIGNAL(enc(bool)), walletFrame, SLOT(encryptWallet(bool)));    
         
         connect(backupWalletAction, SIGNAL(triggered()), walletFrame, SLOT(backupWallet()));
 
@@ -467,7 +467,7 @@ void BitcreditGUI::createActions()
 
 void BitcreditGUI::enc()
 {
-    //if(walletFrame) encryptWalletAction->activate(QAction::Trigger);
+    if(walletFrame) encryptWalletAction->activate(QAction::Trigger);
 }
 
 void BitcreditGUI::emitbackitup()

@@ -7,6 +7,9 @@ OtherPage::OtherPage(QWidget *parent)
 {
     ui->setupUi(this);
     
+    // help stylesheet find things
+    ui->bRPC->setObjectName("bRPC");
+
     connect(ui->bURI, SIGNAL(clicked()), this, SLOT(emitbURIclicked()));
     connect(ui->bBackup, SIGNAL(clicked()), this, SLOT(emitbBackupclicked()));
     connect(ui->bSignmessage, SIGNAL(clicked()), this, SLOT(emitbSignmessageclicked()));

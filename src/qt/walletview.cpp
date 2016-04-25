@@ -130,7 +130,7 @@ void WalletView::setBitcreditGUI(BitcreditGUI *gui)
         connect(otherPage, SIGNAL(bVerifymessageclicked()), gui, SLOT(gotoVerifyMessageTab()));
         connect(otherPage, SIGNAL(bSendingaddressesclicked()), gui, SLOT(emitusedsending()));
         connect(otherPage, SIGNAL(bReceivingaddressesclicked()), gui, SLOT(emitusedreceiving()));
-        connect(otherPage, SIGNAL(bEncclicked()), gui, SLOT(emitenc()));
+        connect(otherPage, SIGNAL(bEncclicked()), gui, SLOT(enc()));
         connect(otherPage, SIGNAL(bOptionsclicked()), gui, SLOT(optionsClicked()));
         connect(otherPage, SIGNAL(bRPCclicked()), gui, SLOT(showDebugWindowActivateConsole()));
         connect(otherPage, SIGNAL(bHelpclicked()), gui, SLOT(showHelpMessageClicked()));

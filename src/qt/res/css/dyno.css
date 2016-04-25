@@ -11,18 +11,12 @@ color: white;
 background-color: #232323;
 }
 
-
-
-
 QLineEdit
 {
 color: #ffffff;
 background-color: #444444;
 border: none;
 }
-
-
-
 
 
 /*   Header  */
@@ -59,6 +53,8 @@ qproperty-alignment: AlignCenter;
 background-color: #232323;
 }
 
+
+
 /* bitcreditgui sendrec 'toolbar' */
 #sendrec
 {
@@ -94,6 +90,8 @@ background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0
 {
 background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
 }
+
+
 
 
 /* Utilities and settings toolbar */
@@ -164,6 +162,8 @@ background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0
 
 
 
+
+
 /* About / Hide / Quit buttons */
 
 #aboutButton
@@ -210,7 +210,15 @@ background-color: #444444;
 
 
 
+
+
 /* OverviewPage (MENU) buttons)   */
+
+#OtherPage
+{
+border: none;
+}
+
 
 #bover
 {
@@ -313,6 +321,27 @@ border: none;
 background-color: #444444;
 }
 
+
+/* otherStuff page buttons  *?
+
+#bRPC
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#bRPC:hover
+{
+background-color: #444444;
+border: none;
+}
+
+
+
+
+/*   Everything else - mostly placeholding   */
+ 
 QTableView
 {
     alternate-background-color: #444444;
