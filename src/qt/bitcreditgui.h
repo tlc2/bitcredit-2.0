@@ -223,7 +223,8 @@ private Q_SLOTS:
     void emitbackitup();
     void emitusedsending();
     void emitusedreceiving();
-    void enc(); 
+    void enc();
+    void changepw(); 
     
     
 

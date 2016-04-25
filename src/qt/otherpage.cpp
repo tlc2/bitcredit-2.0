@@ -17,6 +17,7 @@ OtherPage::OtherPage(QWidget *parent)
     connect(ui->bSendingaddresses, SIGNAL(clicked()), this, SLOT(emitbSendingaddressesclicked()));
     connect(ui->bReceivingaddresses, SIGNAL(clicked()), this, SLOT(emitbReceivingaddressesclicked()));
     connect(ui->bEnc, SIGNAL(clicked()), this, SLOT(emitbEncclicked()));
+    connect(ui->bChange, SIGNAL(clicked()), this, SLOT(emitbChangeclicked()));
     connect(ui->bOptions, SIGNAL(clicked()), this, SLOT(emitbOptionsclicked()));
     connect(ui->bRPC, SIGNAL(clicked()), this, SLOT(emitbRPCclicked()));
     connect(ui->bHelp, SIGNAL(clicked()), this, SLOT(emitbHelpclicked()));
@@ -56,6 +57,11 @@ void OtherPage::emitbReceivingaddressesclicked()
 void OtherPage::emitbEncclicked()
 {
     Q_EMIT bEncclicked();
+}
+
+void OtherPage::emitbChangeclicked()
+{
+    Q_EMIT bChangeclicked();
 }
 
 void OtherPage::emitbOptionsclicked()

@@ -470,6 +470,11 @@ void BitcreditGUI::enc()
     if(walletFrame) encryptWalletAction->activate(QAction::Trigger);
 }
 
+void BitcreditGUI::changepw()
+{
+    if(walletFrame) changePassphraseAction->activate(QAction::Trigger);
+}
+
 void BitcreditGUI::emitbackitup()
 {
     Q_EMIT backitup();

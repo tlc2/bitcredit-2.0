@@ -29,7 +29,8 @@ Q_SIGNALS:
     void bVerifymessageclicked(); 
     void bSendingaddressesclicked();
     void bReceivingaddressesclicked();
-    void bEncclicked(); 
+    void bEncclicked();
+    void bChangeclicked(); 
     void bOptionsclicked();
     void bRPCclicked();
     void bHelpclicked();
@@ -46,6 +47,7 @@ private Q_SLOTS:
     void emitbSendingaddressesclicked();
     void emitbReceivingaddressesclicked();
     void emitbEncclicked();
+    void emitbChangeclicked();
     void emitbOptionsclicked();
     void emitbRPCclicked();
     void emitbHelpclicked();
