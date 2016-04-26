@@ -1336,4 +1336,14 @@ void BitcreditGUI::unsubscribeFromCoreSignals()
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
 }
 
+void BitcreditGUI::mousePressEvent(QMouseEvent *event) 
+{
+    m_nMouseClick_X_Coordinate = event->x();
+    m_nMouseClick_Y_Coordinate = event->y();
+}
+
+void BitcreditGUI::mouseMoveEvent(QMouseEvent *event) 
+{
+    move(event->globalX() - m_nMouseClick_X_Coordinate, event->globalY() - m_nMouseClick_Y_Coordinate);
+}
 
