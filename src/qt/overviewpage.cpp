@@ -217,7 +217,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     ui->labelBalance->setText(BitcreditUnits::formatWithUnit(unit, balance, false, BitcreditUnits::separatorAlways));
 
     QString bal = ui->labelBalance->text();
-    someFunctionThatChangesText("Available Balance:\n" + bal);
+    someFunctionThatChangesText(bal);
  
      //ui->labelUnconfirmed->setText(BitcreditUnits::formatWithUnit(unit, unconfirmedBalance, false, BitcreditUnits::separatorAlways));
     //ui->labelImmature->setText(BitcreditUnits::formatWithUnit(unit, immatureBalance, false, BitcreditUnits::separatorAlways));

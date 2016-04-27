@@ -34,12 +34,26 @@ border: none;
 background-color: #232323;
 }
 
+#bframe
+{
+border: 1px solid #ff1a00;
+}
+
+#labelBalance
+{
+font: 12pt;
+background-color: #232323;
+color: white;
+
+qproperty-alignment: AlignCenter;
+}
+
 #labelHeaderBalance
 {
 font: 16pt;
 background-color: #232323;
 color: white;
-border: 1px solid #ff1a00;
+
 qproperty-alignment: AlignCenter;
 }
 
@@ -365,6 +379,7 @@ QPushButton
 color: white;
 background-color: #323232;
 border: none;
+outline: none;
 }
 QPushButton:hover
 {
@@ -435,7 +450,53 @@ QHeaderView::section
     border: 1px solid #6c6c6c;
 }
 
+Qcombobox QListItem
+{
+    color: white;
+    background-color: #323232;
+}
 
+
+
+QComboBox
+{
+padding: 0px 0px 0px 0px;
+background-color: #323232;
+selection-background-color: #232323;
+color: #ffffff;
+}
+
+QComboBox QAbstractItemView
+{
+selection-background-color: #444444;
+background-color: #323232;
+color: #ffffff;
+}
+
+QComboBox::drop-down
+{
+background-color: #323232;
+color: #ffffff;
+subcontrol-origin: padding;
+subcontrol-position: top right;
+width: 15px;
+border-left-width: 0px;
+border-left-color: darkgray;
+border-left-style: solid; /* just a single line */
+border-top-right-radius: 3px; /* same radius as the QComboBox */
+border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow
+{
+image: url(':css/down_arrow');
+}
+
+QAbstractSpinBox   /* bitcreditamountfields on send / receive pages) */
+{
+border:none;
+padding: none;
+}
 
 
 

@@ -72,8 +72,8 @@ const std::string BitcreditGUI::DEFAULT_UIPLATFORM =
         "windows"
 #else
         "other"
-#endif
-        ;
+#endif 
+;
 
 const QString BitcreditGUI::DEFAULT_WALLET = "~Default";
 
@@ -128,7 +128,6 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     qss.open(QFile::ReadOnly);
     qApp->setStyleSheet(qss.readAll());
     qss.close();
-
 
     QString windowTitle = tr(PACKAGE_NAME) + " - ";
 #ifdef ENABLE_WALLET
@@ -191,13 +190,28 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     Logo->setFixedHeight(80);
     Logo->setObjectName("Logo");
     connect(Logo, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
-    
+
+    // balance frame
+    bframe = new QFrame(this);
+    bframe->move(290, 20);
+    bframe->setFixedWidth(540);
+    bframe->setFixedHeight(100);
+    bframe->setObjectName("bframe");    
+
+    // available balance label
+    labelBalance = new QLabel(bframe);
+    labelBalance->move(10, 25);
+    labelBalance->setFixedWidth(520);
+    labelBalance->setFixedHeight(20);
+    labelBalance->setText("Available Balance:");
+    labelBalance->setObjectName("labelBalance");    
+
     // balance label  
-    labelHeaderBalance = new QLabel(this);
-    labelHeaderBalance->move(290, 30);
-    labelHeaderBalance->setFixedWidth(540);
-    labelHeaderBalance->setFixedHeight(80);
-    labelHeaderBalance->setText("Available Balance:\n");
+    labelHeaderBalance = new QLabel(bframe);
+    labelHeaderBalance->move(10, 45);
+    labelHeaderBalance->setFixedWidth(520);
+    labelHeaderBalance->setFixedHeight(30);
+    labelHeaderBalance->setText("0.00");
     labelHeaderBalance->setObjectName("labelHeaderBalance");
     
     // Create actions for the toolbar, menu bar and tray/dock icon

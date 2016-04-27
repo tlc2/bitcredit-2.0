@@ -11,6 +11,7 @@
 
 #include "amount.h"
 
+#include <QFrame>
 #include <QLabel>
 #include <QPushButton>
 #include <QMainWindow>
@@ -90,6 +91,8 @@ private:
 
     QPushButton *Logo;
     QPushButton *bover;
+    QFrame *bframe;
+    QLabel *labelBalance;
 
     QWidget *sendrec;
     QPushButton *bsendtab;
