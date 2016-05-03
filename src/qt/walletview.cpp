@@ -68,7 +68,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     usedReceivingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::ReceivingTab, this);
 
     // add other BCR pages
-    bidPage = new BidPage(platformStyle);
+    bidPage = new BidPage(this);
     p2pPage = new P2PPage(this);
     assetsPage = new AssetsPage(this);
     utilitiesPage = new UtilitiesPage(this);

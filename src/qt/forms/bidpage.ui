@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>830</width>
-    <height>390</height>
+    <width>849</width>
+    <height>389</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,101 +21,11 @@
     <rect>
      <x>11</x>
      <y>8</y>
-     <width>811</width>
-     <height>374</height>
+     <width>829</width>
+     <height>358</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="6" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLineEdit" name="lineEditBid">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>120</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Enter a BTC amount and press Enter to calculate</string>
-        </property>
-        <property name="text">
-         <string>0.00000000</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>15</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BTC bid, given other existing bids, would win appx.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelBCR">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>...?</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLabel" name="labelTotal_2">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>15</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>0.00000000</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0" alignment="Qt::AlignRight">
-     <widget class="QLabel" name="label_2">
-      <property name="maximumSize">
-       <size>
-        <width>200</width>
-        <height>15</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>1. Enter wallet passphrase:</string>
-      </property>
-     </widget>
-    </item>
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0">
     <item row="3" column="1">
      <widget class="QLabel" name="labelEstprice_2">
       <property name="maximumSize">
@@ -136,165 +46,31 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QPushButton" name="pushButtonRefresh">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+    <item row="8" column="1" alignment="Qt::AlignVCenter">
+     <widget class="QLineEdit" name="lineEditPassphrase">
       <property name="minimumSize">
        <size>
-        <width>2</width>
+        <width>400</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>500</width>
         <height>25</height>
        </size>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>130</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>Load current bids in bidtracker directory</string>
-      </property>
-      <property name="text">
-       <string>Update</string>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
       </property>
      </widget>
     </item>
-    <item row="6" column="2">
-     <widget class="QPushButton" name="pushButtonBTC">
-      <property name="maximumSize">
-       <size>
-        <width>130</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>Launch bitcoin-qt (if installed)</string>
-      </property>
-      <property name="text">
-       <string>Bid</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0">
-     <widget class="QLabel" name="labelRedeem">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Redeem won BCR</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="0" alignment="Qt::AlignRight">
-     <widget class="QLabel" name="labelRedeem_2">
-      <property name="maximumSize">
-       <size>
-        <width>220</width>
-        <height>15</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>2. Enter privkey of address bid from:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0" alignment="Qt::AlignRight">
-     <widget class="QLabel" name="label_7">
-      <property name="maximumSize">
-       <size>
-        <width>10</width>
-        <height>15</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>A</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" alignment="Qt::AlignLeft">
-     <widget class="QLabel" name="labelNext">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Current Bid Period</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0" alignment="Qt::AlignRight|Qt::AlignTop">
-     <widget class="QLabel" name="label">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>15</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Bid with Bitcoin, send your bid to: </string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="2">
+    <item row="9" column="2" alignment="Qt::AlignVCenter">
      <widget class="QPushButton" name="pushButtonImport">
       <property name="minimumSize">
        <size>
         <width>130</width>
-        <height>0</height>
+        <height>30</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -317,8 +93,8 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="labelCalc">
+    <item row="2" column="0" alignment="Qt::AlignRight">
+     <widget class="QLabel" name="labelCurrentbids">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -328,18 +104,76 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>20</height>
+        <height>30</height>
        </size>
       </property>
       <property name="font">
        <font>
         <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
-       <string>Calculator</string>
+       <string>Total Current Bids (BTC):</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0" alignment="Qt::AlignRight">
+     <widget class="QLabel" name="label_2">
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>1. Enter wallet passphrase:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+     <widget class="QLabel" name="labelEstprice">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Estimated BCR rate:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+     <widget class="QLabel" name="label_7">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>10</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>A</string>
       </property>
      </widget>
     </item>
@@ -538,51 +372,27 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="1">
-     <widget class="QLineEdit" name="lineEditPrivkey">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+    <item row="4" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+     <widget class="QLabel" name="label">
       <property name="minimumSize">
        <size>
-        <width>300</width>
-        <height>0</height>
+        <width>0</width>
+        <height>30</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
-        <height>25</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>Paste the privkey of the address you sent your bid from here</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0" alignment="Qt::AlignRight">
-     <widget class="QLabel" name="labelCurrentbids">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
+        <width>250</width>
         <height>15</height>
        </size>
       </property>
       <property name="font">
        <font>
         <pointsize>10</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
        </font>
       </property>
       <property name="text">
-       <string>Total Current Bids (BTC):</string>
+       <string>Bid with Bitcoin, send your bid to: </string>
       </property>
      </widget>
     </item>
@@ -608,58 +418,48 @@
        </font>
       </property>
       <property name="text">
-       <string>Current BTC reserves:</string>
+       <string>Current BTC reserves</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
-    <item row="3" column="0" alignment="Qt::AlignRight">
-     <widget class="QLabel" name="labelEstprice">
+    <item row="1" column="0" alignment="Qt::AlignLeft|Qt::AlignVCenter">
+     <widget class="QLabel" name="labelNext">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>15</height>
+        <height>30</height>
        </size>
       </property>
       <property name="font">
        <font>
         <pointsize>10</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">
-       <string>Estimated BCR rate:</string>
+       <string>                             Current Bid Period</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
-     <widget class="QLineEdit" name="lineEditPassphrase">
-      <property name="minimumSize">
-       <size>
-        <width>400</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>500</width>
-        <height>25</height>
-       </size>
-      </property>
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="2">
-     <widget class="QPushButton" name="pushButtonUnlock">
+    <item row="8" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+     <widget class="QPushButton" name="bUnlock">
       <property name="minimumSize">
        <size>
         <width>130</width>
-        <height>0</height>
+        <height>30</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -673,7 +473,118 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="9" column="1" alignment="Qt::AlignVCenter">
+     <widget class="QLineEdit" name="lineEditPrivkey">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Paste the privkey of the address you sent your bid from here</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLabel" name="labelTotal_2">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>0.00000000</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item alignment="Qt::AlignVCenter">
+       <widget class="QLineEdit" name="lineEditBid">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Enter a BTC amount and press Enter to calculate</string>
+        </property>
+        <property name="text">
+         <string>0.00000000</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignVCenter">
+       <widget class="QLabel" name="label_4">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>15</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BTC bid, given other existing bids, would win appx.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelBCR">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>...?</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="4" column="1" alignment="Qt::AlignLeft">
      <widget class="QPushButton" name="pushButtonBTCExplorer">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -681,10 +592,16 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>330</width>
-        <height>15</height>
+        <height>30</height>
        </size>
       </property>
       <property name="font">
@@ -708,11 +625,149 @@
       </property>
      </widget>
     </item>
+    <item row="4" column="2">
+     <widget class="QPushButton" name="pushButtonBTC">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>130</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>Launch bitcoin-qt (if installed)</string>
+      </property>
+      <property name="text">
+       <string>Bid</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" alignment="Qt::AlignVCenter">
+     <widget class="QLabel" name="labelCalc">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Calculator</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0" alignment="Qt::AlignVCenter">
+     <widget class="QLabel" name="labelRedeem">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Redeem won BCR</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0" alignment="Qt::AlignRight">
+     <widget class="QLabel" name="labelRedeem_2">
+      <property name="maximumSize">
+       <size>
+        <width>220</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>2. Enter privkey of address bid from:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="pushButtonRefresh">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>2</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>130</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Load current bids in bidtracker directory</string>
+      </property>
+      <property name="text">
+       <string>Update</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="labelReserves">
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <zorder>gridLayoutWidget</zorder>
-  <zorder>pushButtonRefresh</zorder>
-  <zorder>pushButtonRefresh</zorder>
  </widget>
  <resources/>
  <connections/>

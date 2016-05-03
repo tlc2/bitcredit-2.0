@@ -492,10 +492,71 @@ QComboBox::down-arrow
 image: url(':css/down_arrow');
 }
 
+#BitcreditAmountField
+{
+background-color: green;
+color: blue;
+}
+
+QSpinBox
+{
+background-color: white;
+color: black;
+border-width: 0;
+padding-left: none;
+padding-top: none;
+padding-botton: none;
+
+}
+
 QAbstractSpinBox   /* bitcreditamountfields on send / receive pages) */
 {
-border:none;
-padding: none;
+background-color: white;
+color: black;
+border-width: 0;
+padding-left: none;
+padding-top: none;
+padding-botton: none;
+}
+
+QScrollBar:vertical 
+{
+border: 1px solid #ff1a00;
+background: #232323;
+width: 15px;
+margin: 22px 0 22px 0;
+}
+QScrollBar::handle:vertical {
+background: #444444;
+min-height: 20px;
+}
+QScrollBar::add-line:vertical {
+border: 1px solid #ff1a00;
+background: #323232;
+height: 20px;
+subcontrol-position: bottom;
+subcontrol-origin: margin;
+}
+QScrollBar::sub-line:vertical {
+border: 1px solid #ff1a00;
+background: #323232;
+height: 20px;
+subcontrol-position: top;
+subcontrol-origin: margin;
+}
+QScrollBar::up-arrow:vertical 
+{
+border: none;
+image: url(':css/up_arrow');
+}
+QScrollBar::down-arrow:vertical 
+{
+border: none;
+image: url(':css/down_arrow');
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical 
+{
+background: none;
 }
 
 

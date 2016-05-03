@@ -7,7 +7,6 @@
 #include <QFrame>
 #include <QLabel>
 
-class PlatformStyle;
 
 namespace Ui
 {
@@ -19,7 +18,7 @@ class BidPage: public QWidget
     Q_OBJECT
 
 public:
-    BidPage(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    BidPage(QWidget *parent = 0);
     ~BidPage();
 
     QString str;
@@ -35,6 +34,7 @@ private:
     void setNumBlocks(int count);
     int getNumBlocks();
     void Estimate();
+    void RPC();
 
     QString getDefaultDataDirectory();
     QString pathAppend(const QString& path1, const QString& path2);

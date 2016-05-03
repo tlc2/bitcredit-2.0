@@ -8,7 +8,8 @@
 #include "net.h"
 #include "basenodeman.h"
 #include "bidtracker.h"
-#include "platformstyle.h"
+
+#include <cstdlib>
 
 #include <fstream>
 #include <QMessageBox>
@@ -20,7 +21,7 @@
 #include <QFile>
 #include <QTextStream>
 
-BidPage::BidPage(const PlatformStyle *platformStyle, QWidget *parent)
+BidPage::BidPage(QWidget *parent)
     : QWidget(parent), ui(new Ui::BidPage)
 {
     ui->setupUi(this);
@@ -31,6 +32,7 @@ BidPage::BidPage(const PlatformStyle *platformStyle, QWidget *parent)
     connect(ui->pushButtonBTC, SIGNAL(clicked()), this, SLOT(SummonBTCWallet()));
     connect(ui->pushButtonRefresh, SIGNAL(clicked()), this, SLOT(GetBids()));
     connect(ui->lineEditBid, SIGNAL(returnPressed()), this, SLOT(Estimate()));
+    connect(ui->bUnlock, SIGNAL(clicked()), this, SLOT(RPC()));
 
 }
 
@@ -157,6 +159,23 @@ void BidPage::SummonBTCWallet()
         proc->startDetached("bitcredit-qt");
     #elif _WIN32
         proc->startDetached("bitcredit-qt.exe");
+    #endif
+}
+
+void BidPage::RPC()
+{
+    //QProcess *proc2 = new QProcess(this);
+    ui->lineEditPassphrase->setText("FARGLE");
+    #ifdef linux
+        //QString call = "electrum daemon start";
+        //proc2->start(call);
+        //proc2->waitForFinished();
+        //QString output(proc2->readAllStandardOutput());
+        //ui->lineEditPassphrase->setText(output);
+        ui->lineEditPassphrase->setText("FARGLE");
+    #elif _WIN32
+        //proc->startDetached("bitcredit-cli.exe + call");
+        //system("START firefox/WINWORD");
     #endif
 }
 
