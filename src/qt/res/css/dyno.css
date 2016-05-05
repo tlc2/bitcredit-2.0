@@ -105,6 +105,41 @@ background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0
 background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
 }
 
+/* bitcreditgui p2p lend / borrow 'toolbar' */
+#p2p
+{
+border: none;
+}
+#bborrow
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#bborrow:hover
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+#bborrow:checked
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.02 #ff1a00);
+}
+#blend
+{
+font: 12pt;
+background-color: #323232;
+color: #ffffff;
+border: none;
+}
+#blend:hover
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
+}
+#blend:checked
+{
+background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #444444, stop:0.4 #444444, stop:0.2 #444444, stop:0.05 #ff1a00);
+}
 
 
 
@@ -311,6 +346,7 @@ border: none;
 background-color: #444444;
 }
 
+
 #bassets
 {
 font: 12pt;
@@ -356,6 +392,12 @@ border: none;
 
 /*   Everything else - mostly placeholding   */
  
+QTextEdit
+{
+background-color: #323232;
+color: #ffffff;
+}
+
 QTableView
 {
     alternate-background-color: #444444;

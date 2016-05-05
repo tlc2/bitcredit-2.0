@@ -62,6 +62,7 @@ public Q_SLOTS:
     
     void gotoBidPage();
     void gotoP2PPage();
+    void gotoP2PLPage();
     void gotoAssetsPage();
     void gotoUtilitiesPage();
     void gotoBlockExplorerPage();

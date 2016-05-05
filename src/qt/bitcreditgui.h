@@ -98,6 +98,10 @@ private:
     QPushButton *bsendtab;
     QPushButton *brectab;
     
+    QWidget *p2p;
+    QPushButton *bborrow;
+    QPushButton *blend;
+    
     QWidget *uands;
     QPushButton *bbcrstatstab;
     QPushButton *bexplorertab;
@@ -221,6 +225,7 @@ private Q_SLOTS:
     
     void gotoBidPage();
     void gotoP2PPage();
+    void gotoP2PLPage();
     void gotoAssetsPage();
     void gotoUtilitiesPage();
     void gotoBlockExplorerPage();

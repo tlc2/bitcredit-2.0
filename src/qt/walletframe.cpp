@@ -148,6 +148,13 @@ void WalletFrame::gotoP2PPage()
         i.value()->gotoP2PPage();
 }
 
+void WalletFrame::gotoP2PLPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoP2PLPage();
+}
+
 void WalletFrame::gotoAssetsPage()
 {
     QMap<QString, WalletView*>::const_iterator i;

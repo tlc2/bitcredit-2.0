@@ -99,6 +99,7 @@ QT_FORMS_UI = \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/bidpage.ui \
   qt/forms/p2ppage.ui \
+  qt/forms/p2plpage.ui \
   qt/forms/assetspage.ui \
   qt/forms/blockexplorerpage.ui \
   qt/forms/exchangebrowserpage.ui \
@@ -152,6 +153,7 @@ QT_MOC_CPP = \
   qt/moc_walletmodel.cpp \
   qt/moc_bidpage.cpp \
   qt/moc_p2ppage.cpp \
+  qt/moc_p2plpage.cpp \
   qt/moc_assetspage.cpp \
   qt/moc_blockexplorerpage.cpp \
   qt/moc_exchangebrowserpage.cpp \
@@ -232,6 +234,7 @@ BITCREDIT_QT_H = \
   qt/walletview.h \
   qt/bidpage.h \
   qt/p2ppage.h \
+  qt/p2plpage.h \
   qt/assetspage.h \
   qt/utilitiespage.h \
   qt/blockexplorerpage.h \
@@ -347,6 +350,7 @@ BITCREDIT_QT_CPP += \
   qt/walletmodeltransaction.cpp \
   qt/bidpage.cpp \
   qt/p2ppage.cpp \
+  qt/p2plpage.cpp \
   qt/assetspage.cpp \
   qt/utilitiespage.cpp \
   qt/blockexplorerpage.cpp \

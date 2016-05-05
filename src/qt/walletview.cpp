@@ -21,6 +21,7 @@
 
 #include "bidpage.h"
 #include "p2ppage.h"
+#include "p2plpage.h"
 #include "assetspage.h"
 #include "utilitiespage.h"
 #include "blockexplorerpage.h"
@@ -70,6 +71,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     // add other BCR pages
     bidPage = new BidPage(this);
     p2pPage = new P2PPage(this);
+    p2plPage = new P2PLPage(this);
     assetsPage = new AssetsPage(this);
     utilitiesPage = new UtilitiesPage(this);
     blockExplorerPage = new BlockExplorerPage(this);
@@ -82,6 +84,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     addWidget(sendCoinsPage);
     addWidget(bidPage);
     addWidget(p2pPage);
+    addWidget(p2plPage);
     addWidget(assetsPage);
     addWidget(utilitiesPage);
     addWidget(blockExplorerPage);
@@ -120,6 +123,8 @@ void WalletView::setBitcreditGUI(BitcreditGUI *gui)
         connect(overviewPage, SIGNAL(brecclicked()), gui, SLOT(gotoReceiveCoinsPage()));
         connect(overviewPage, SIGNAL(bgetbcrclicked()), gui, SLOT(gotoBidPage()));
         connect(overviewPage, SIGNAL(bp2pclicked()), gui, SLOT(gotoP2PPage()));
+        connect(overviewPage, SIGNAL(bborrowclicked()), gui, SLOT(gotoP2PPage()));
+        connect(overviewPage, SIGNAL(blendclicked()), gui, SLOT(gotoP2PLPage()));
         connect(overviewPage, SIGNAL(bassetsclicked()), gui, SLOT(gotoAssetsPage()));
         connect(overviewPage, SIGNAL(butilitiesclicked()), gui, SLOT(gotoUtilitiesPage()));
         
@@ -243,6 +248,11 @@ void WalletView::gotoBidPage()
 void WalletView::gotoP2PPage()
 {
     setCurrentWidget(p2pPage);
+}
+
+void WalletView::gotoP2PLPage()
+{
+    setCurrentWidget(p2plPage);
 }
 
 void WalletView::gotoAssetsPage()

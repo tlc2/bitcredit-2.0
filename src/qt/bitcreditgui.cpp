@@ -227,7 +227,6 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     // Create system tray icon and notification
     createTrayIcon(networkStyle);
 
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // create bottom 'toolbar'...
     QWidget *toolbar2 = new QWidget(this);
     toolbar2->setFixedHeight(30);
@@ -297,10 +296,6 @@ BitcreditGUI::BitcreditGUI(const PlatformStyle *platformStyle, const NetworkStyl
     {
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
-
-
-    
-// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
@@ -589,6 +584,32 @@ void BitcreditGUI::createToolBars()
         brectab->setCheckable(true);
         connect(brectab, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
 
+        // p2p finance page lend / borrow toolbar
+        p2p = new QWidget(this);
+        p2p->setFixedHeight(25);
+        p2p->setFixedWidth(830);
+        p2p->move(10, 135);
+        p2p->setObjectName("uands");
+        p2p->hide();
+
+        bborrow = new QPushButton(p2p);
+        bborrow->setFixedHeight(25);
+        bborrow->setFixedWidth(415);
+        bborrow->move(0,0);
+        bborrow->setText("Borrow BCR");
+        bborrow->setObjectName("bborrow");
+        bborrow->setCheckable(true);
+        connect(bborrow, SIGNAL(clicked()), this, SLOT(gotoP2PPage()));
+        
+        blend = new QPushButton(p2p);
+        blend->setFixedHeight(25);
+        blend->setFixedWidth(415);
+        blend->move(415,0);
+        blend->setText("Lend BCR");
+        blend->setObjectName("blend");
+        blend->setCheckable(true);
+        connect(blend, SIGNAL(clicked()), this, SLOT(gotoP2PLPage()));
+
         // utilities and settings 'toolbar'
         uands = new QWidget(this);
         uands->setFixedHeight(25);
@@ -838,6 +859,7 @@ void BitcreditGUI::gotoOverviewPage()
     bover->hide();
     sendrec->hide();
     uands->hide();
+    p2p->hide();
 }
 
 void BitcreditGUI::gotoHistoryPage()
@@ -877,7 +899,20 @@ void BitcreditGUI::gotoP2PPage()
 {
     Logo->setStyleSheet("background-image: url(':css/logo-p2p');");
     if (walletFrame) walletFrame->gotoP2PPage();
+    p2p->show();
     bover->show();
+    bborrow->setChecked(true);
+    blend->setChecked(false);
+}
+
+void BitcreditGUI::gotoP2PLPage()
+{
+    Logo->setStyleSheet("background-image: url(':css/logo-p2p');");
+    if (walletFrame) walletFrame->gotoP2PLPage();
+    p2p->show();
+    bover->show();
+    bborrow->setChecked(false);
+    blend->setChecked(true);
 }
 
 void BitcreditGUI::gotoAssetsPage()

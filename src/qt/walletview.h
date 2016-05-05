@@ -12,6 +12,7 @@
 class BitcreditGUI;
 class BidPage;
 class P2PPage;
+class P2PLPage;
 class AssetsPage;
 class UtilitiesPage;
 class BlockExplorerPage;
@@ -76,6 +77,7 @@ private:
     
     BidPage *bidPage;
     P2PPage *p2pPage;
+    P2PLPage *p2plPage;
     AssetsPage *assetsPage;
     UtilitiesPage *utilitiesPage;
     BlockExplorerPage *blockExplorerPage;
@@ -98,6 +100,7 @@ public Q_SLOTS:
     
     void gotoBidPage();
     void gotoP2PPage();
+    void gotoP2PLPage();
     void gotoAssetsPage();
     void gotoUtilitiesPage();
     void gotoBlockExplorerPage();
