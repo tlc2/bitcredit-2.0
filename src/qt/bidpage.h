@@ -28,6 +28,10 @@ public:
     void setClientModel(ClientModel *model);
 
 private:
+    Ui::BidPage *ui;
+    ClientModel *clientModel;
+
+private Q_SLOTS:
     void SummonBTCWallet();   
     void SummonBTCExplorer(); 
     void GetBids();
@@ -36,12 +40,8 @@ private:
     void Estimate();
     void RPC();
 
-    QString getDefaultDataDirectory();
+    QString getDataDirectory();
     QString pathAppend(const QString& path1, const QString& path2);
-
-private:
-    Ui::BidPage *ui;
-    ClientModel *clientModel;
 
 };
 

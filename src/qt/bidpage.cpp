@@ -32,8 +32,7 @@ BidPage::BidPage(QWidget *parent)
     connect(ui->pushButtonBTC, SIGNAL(clicked()), this, SLOT(SummonBTCWallet()));
     connect(ui->pushButtonRefresh, SIGNAL(clicked()), this, SLOT(GetBids()));
     connect(ui->lineEditBid, SIGNAL(returnPressed()), this, SLOT(Estimate()));
-    connect(ui->bUnlock, SIGNAL(clicked()), this, SLOT(RPC()));
-
+    connect(ui->bImport, SIGNAL(clicked()), this, SLOT(RPC()));
 }
 
 void BidPage::setClientModel(ClientModel *model)
@@ -77,7 +76,7 @@ void BidPage::GetBids()
     Bidtracker r;
     double btcassets = r.getbalance("https://blockchain.info/q/addressbalance/16bi8R4FoDHfjNJ1RhpvcAEn4Cz78FbtZB");
     QString reserves = QString::number(btcassets/COIN, 'f', 8);
-    ui->label_BTCassets->setText("Current BTC reserves: " + reserves);
+    ui->labelReserves->setText(reserves);
 
     // calc time until next 00:00 GMT
     long int startdate = 1450396800; // 18 December 2015 00:00
@@ -88,7 +87,7 @@ void BidPage::GetBids()
     ui->labelNumber->setText(GUIUtil::formatDurationStr(until));
 
     // get default datadir, tack on bidtracker
-    QString dataDir = getDefaultDataDirectory();
+    QString dataDir = getDataDirectory();
     QString bidDir = "bidtracker";
     QString datPath = pathAppend(dataDir, bidDir);
 
@@ -142,9 +141,9 @@ QString BidPage::pathAppend(const QString& path1, const QString& path2)
     return QDir::cleanPath(path1 + QDir::separator() + path2);
 }
 
-QString BidPage::getDefaultDataDirectory()
+QString BidPage::getDataDirectory()
 {
-    return GUIUtil::boostPathToQString(GetDefaultDataDir());
+    return GUIUtil::boostPathToQString(GetDataDir());
 }
 
 void BidPage::SummonBTCExplorer()
@@ -164,19 +163,67 @@ void BidPage::SummonBTCWallet()
 
 void BidPage::RPC()
 {
-    //QProcess *proc2 = new QProcess(this);
-    ui->lineEditPassphrase->setText("FARGLE");
+    // check there's something to work with
+    if (ui->lineEditPassphrase->text() == "") 
+    {
+        ui->lineEditPassphrase->setText("ENTER YOUR WALLET PASSPHRASE");
+        return;
+    }
+    if (ui->lineEditPrivkey->text() == "") 
+    {
+        ui->lineEditPrivkey->setText("ENTER THE BITCOIN ADDRESS PRIVATE KEY");
+        return;        
+    }
+
+    // get working data directory
+    QString cwd = GUIUtil::boostPathToQString(GetDataDir());
+
+    // get password
+    QString pwd = ui->lineEditPassphrase->text();
+
+    // build RPC call
+    QString callnix = cwd + "/bitcredit-cli --datadir=" + cwd + " walletpassphrase " + pwd + " 60";
+    QString callwin = cwd + "/bitcredit-cli.exe --datadir=" + cwd + " walletpassphrase " + pwd + " 60";
+
+    // unlock wallet
+    QProcess *proc2 = new QProcess(this);
     #ifdef linux
-        //QString call = "electrum daemon start";
-        //proc2->start(call);
-        //proc2->waitForFinished();
-        //QString output(proc2->readAllStandardOutput());
-        //ui->lineEditPassphrase->setText(output);
-        ui->lineEditPassphrase->setText("FARGLE");
+        proc2->start(callnix);
+        proc2->waitForFinished();
+        QString output(proc2->readAllStandardOutput()); // check for any output
+        // reset pwd field
+        ui->lineEditPassphrase->setText("");
     #elif _WIN32
-        //proc->startDetached("bitcredit-cli.exe + call");
-        //system("START firefox/WINWORD");
+        proc2->start(callwin);
+        proc2->waitForFinished();
+        QString output(proc2->readAllStandardOutput()); // check for any output
+        // reset pwd field
+        ui->lineEditPassphrase->setText("");       
     #endif
+
+    // get privkey
+    QString privkey = ui->lineEditPrivkey->text();
+
+    // build RPC call
+    QString callnix2 = cwd + "/bitcredit-cli --datadir=" + cwd + " importprivkey " + privkey;
+    QString callwin2 = cwd + "/bitcredit-cli.exe --datadir=" + cwd + " importprivkey " + privkey;
+
+    // import privkey
+    QProcess *proc3 = new QProcess(this);
+    #ifdef linux
+        proc3->start(callnix2);
+        proc3->waitForFinished();
+        QString output2(proc3->readAllStandardOutput()); // check for any output
+        // reset privkey field
+        ui->lineEditPrivkey->setText("");
+    #elif _WIN32
+        proc3->start(callwin2);
+        proc3->waitForFinished();
+        QString output2(proc3->readAllStandardOutput()); // check for any output
+        // reset privkey field
+        ui->lineEditPrivkey->setText(output);
+    #endif    
+
 }
 
 BidPage::~BidPage()

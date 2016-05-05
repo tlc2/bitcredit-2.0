@@ -498,26 +498,6 @@ background-color: green;
 color: blue;
 }
 
-QSpinBox
-{
-background-color: white;
-color: black;
-border-width: 0;
-padding-left: none;
-padding-top: none;
-padding-botton: none;
-
-}
-
-QAbstractSpinBox   /* bitcreditamountfields on send / receive pages) */
-{
-background-color: white;
-color: black;
-border-width: 0;
-padding-left: none;
-padding-top: none;
-padding-botton: none;
-}
 
 QScrollBar:vertical 
 {
